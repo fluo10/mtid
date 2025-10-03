@@ -6,7 +6,7 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 use crate::DoubleMessage;
 use crate::{utils::is_delimiter, Error, TripodId, Single};
 
-#[derive(Copy, Clone, Debug, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Double(u32);
 
 impl TripodId for Double{

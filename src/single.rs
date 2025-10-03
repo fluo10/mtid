@@ -113,7 +113,7 @@ fn u16_to_string(int: u16) -> Result<String, Error> {
 /// 
 /// assert_eq!(Single::from_str("012").unwrap(), Single::try_from(35).unwrap());
 /// ```
-#[derive(Copy, Clone, Debug, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Single(u16);
 
 

@@ -17,7 +17,7 @@ use crate::TripodId;
 /// 
 /// let _ = Triple::from_str("012-abc-def");
 /// ``` 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Triple(u64);
 
 impl TripodId for Triple{

@@ -5,6 +5,8 @@ mod triple;
 mod utils;
 #[cfg(feature="rusqlite")]
 mod rusqlite;
+#[cfg(feature="sea-orm")]
+mod sea_orm;
 #[cfg(feature="serde")]
 mod serde;
 
