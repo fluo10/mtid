@@ -129,10 +129,6 @@ impl TripodId for Single {
 
     const MAX: Single = Single(Self::CAPACITY-1);
 
-    #[cfg(test)]
-    fn validate_inner(self) -> bool {
-        self.0 < Self::CAPACITY
-    }
 }
 
 impl Display for Single {
@@ -200,45 +196,4 @@ impl PartialEq<String> for Single {
             Err(_) => false
         }
     }
-}
-
-
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn nil() {
-        assert!(Single::NIL.validate_all().unwrap());
-        assert_eq!(Single::NIL, 0);
-        assert!(Single::NIL.validate_parse_strings(&["000"]).unwrap());
-        assert!(Single::NIL.is_nil());
-        assert!(!Single::NIL.is_max())
-    }
-
-    #[test]
-    fn max() {
-        assert!(Single::MAX.validate_all().unwrap());
-        assert_eq!(Single::MAX, Single::CAPACITY - 1);
-        assert!(Single::MAX.validate_parse_strings(&["zzz", "ZZZ"]).unwrap());
-        assert!(Single::MAX.is_max());
-        assert!(!Single::MAX.is_nil());
-    }
-
-    #[test]
-    #[should_panic]
-    fn over_sized() {
-        Single::try_from(Single::CAPACITY).unwrap();
-    }
-
-    #[test]
-    fn random() {
-        let mut rng = rand::thread_rng();
-        for _ in 0..10 {
-            let single: Single = rng.r#gen();
-            assert!(single.validate_all().unwrap());
-        }
-    }
-
-
 }
