@@ -12,7 +12,7 @@ impl TripodIdValidator for Single {}
 fn nil() {
     assert!(Single::NIL.validate_all().unwrap());
     assert_eq!(Single::NIL, 0);
-    assert!(Single::NIL.validate_parse_strings(&["000"]).unwrap());
+    assert_eq!(Single::NIL, Single::from_str("000").unwrap());
     assert!(Single::NIL.is_nil());
     assert!(!Single::NIL.is_max())
 }
@@ -21,7 +21,7 @@ fn nil() {
 fn max() {
     assert!(Single::MAX.validate_all().unwrap());
     assert_eq!(Single::MAX, Single::CAPACITY - 1);
-    assert!(Single::MAX.validate_parse_strings(&["zzz", "ZZZ"]).unwrap());
+    assert_eq!(Single::MAX, Single::from_str("zzZ").unwrap());
     assert!(Single::MAX.is_max());
     assert!(!Single::MAX.is_nil());
 }

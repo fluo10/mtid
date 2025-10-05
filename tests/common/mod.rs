@@ -1,14 +1,6 @@
 use tripod_id::{TripodId, Error};
 
 pub trait TripodIdValidator: tripod_id::TripodId {
-    fn validate_parse_strings(self, strings: &[&str]) -> Result<bool, Error> {
-        let mut result: bool = true;
-        for string in strings {
-            result = result && (self == string.to_string())
-        }
-        Ok(result)
-    }
-
     fn validate_inner_value(self) -> bool {
         let int = self.into();
         Self::CAPACITY > int
@@ -33,7 +25,8 @@ pub trait TripodIdValidator: tripod_id::TripodId {
     fn validate_all(self) -> Result<bool, Error> {
         let mut result = self.validate_inner_value()
             && self.validate_string_convertion()? 
-            && self.validate_integer_conversion()?;
+            && self.validate_integer_conversion()?
+            && self.validate_tuple_conversion();
         #[cfg(feature="prost")]
         {
             result = result && self.validate_message_conversion()?;
