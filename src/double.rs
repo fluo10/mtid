@@ -4,7 +4,9 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::DoubleMessage;
-use crate::{utils::is_delimiter, Error, TripodId, Single};
+use crate::{common::is_delimiter, Error, TripodId, Single};
+
+const MAX_VALUE: u32 = Double::CAPACITY -1;
 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Double(u32);
@@ -18,7 +20,10 @@ impl TripodId for Double{
 
     const NIL: Self = Self(0);
 
-    const MAX: Self = Self(Self::CAPACITY -1);
+    const MAX: Self = Self(MAX_VALUE);
+    fn from_int_lossy(int: Self::Integer) -> Self {
+        Self(int & MAX_VALUE)
+    }
 
 }
 
@@ -31,15 +36,15 @@ impl Display for Double {
 
 impl From<(Single, Single)> for Double {
     fn from(value: (Single, Single)) -> Self {
-        Self(u32::from(u16::from(value.0)) * u32::from(Single::CAPACITY) + u32::from(u16::from(value.1)))
+        Self((u32::from(u16::from(value.0)) << 15)+ u32::from(u16::from(value.1)))
     }
 } 
 
 impl From<Double> for (Single, Single) {
     fn from(value: Double) -> Self {
         (
-            Single::try_from(u16::try_from(value.0/(Single::CAPACITY as u32)).unwrap()).unwrap(),
-            Single::try_from(u16::try_from(value.0 % (Single::CAPACITY as u32)).unwrap()).unwrap()
+            Single::from_int_lossy((value.0 >> 15) as u16),
+            Single::from_int_lossy(value.0 as u16)
         )
     }
 }
@@ -48,6 +53,7 @@ impl FromStr for Double {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let chars: Vec<char> = s.chars().collect();
         let tuple = match s.len() {
             7 => {
                 let delimiter = s[3..4].chars().next().unwrap();
@@ -66,7 +72,7 @@ impl FromStr for Double {
             },
             x => { 
                 Err(Error::InvalidLength{
-                    expected: (6, 7),
+                    expected: vec![6, 7],
                     found: x,
                     raw: s.to_string()
                 })

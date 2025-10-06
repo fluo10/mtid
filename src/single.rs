@@ -1,119 +1,10 @@
-use std::{fmt::Display, str::FromStr};
+use std::{char::MAX, fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::SingleMessage;
-use crate::{error::Error, TripodId};
-
-
-const BASE: u8 = 32;
-const SQUARED_BASE: u16 = (BASE as u16).pow(2);
-const CUBED_BASE: u16 = (BASE as u16).pow(3);
-
-fn u8_to_char(i: u8) -> Option<char> {
-    const CHARACTERS: &[char;BASE as usize] = &[
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z'
-    ];
-    if i < BASE {
-        Some(char::from(CHARACTERS[usize::from(i)]))
-    } else {
-        None
-    }
-}
-
-fn char_to_u8(c: char) -> Option<u8> {
-    Some(match c {
-        '0' => 0,
-        '1' => 1,
-        '2' => 2,
-        '3' => 3,
-        '4' => 4,
-        '5' => 5,
-        '6' => 6,
-        '7' => 7,
-        '8' => 8,
-        '9' => 9,
-        'a' => 10,
-        'b' => 11,
-        'c' => 12,
-        'd' => 13,
-        'e' => 14,
-        'f' => 15,
-        'g' => 16,
-        'h' => 17,
-        'i' => 1,
-        'j' => 18,
-        'k' => 19,
-        'l' => 1,
-        'm' => 20,
-        'n' => 21,
-        'o' => 0,
-        'p' => 22,
-        'q' => 23,
-        'r' => 24,
-        's' => 25,
-        't' => 26,
-        'u' => 27,
-        'v' => 27,
-        'w' => 28,
-        'x' => 29,
-        'y' => 30,
-        'z' => 31,
-        'A' => 10,
-        'B' => 11,
-        'C' => 12,
-        'D' => 13,
-        'E' => 14,
-        'F' => 15,
-        'G' => 16,
-        'H' => 17,
-        'I' => 1,
-        'J' => 18,
-        'K' => 19,
-        'L' => 1,
-        'M' => 20,
-        'N' => 21,
-        'O' => 0,
-        'P' => 22,
-        'Q' => 23,
-        'R' => 24,
-        'S' => 25,
-        'T' => 26,
-        'U' => 27,
-        'V' => 27,
-        'W' => 28,
-        'X' => 29,
-        'Y' => 30,
-        'Z' => 31,
-        _ => return None 
-    })
-}
-
-fn str_to_u16(s: &str) -> Result<u16, Error> {
-    if s.len() != 3 {
-        return Err(Error::InvalidChunk(format!("Chunk '{}' is not 3 characters", s)))
-    }
-    let mut buf : [u16;3] = [0;3];
-    for (i, c) in s.chars().enumerate() {
-        buf[i] = (BASE as u16).pow((2 - i) as u32) * (char_to_u8(c).ok_or(Error::InvalidChunk(format!("Invalid char: {}", c)))? as u16);
-    }
-
-    Ok(buf.iter().sum())
-}
-fn u16_to_string(int: u16) -> Result<String, Error> {
-    if int >= CUBED_BASE {
-        return Err(Error::OutsideOfRange{
-            expected: CUBED_BASE as u64,
-            found: int as u64
-        })
-    }
-    let first_char = u8_to_char((int / SQUARED_BASE) as u8).unwrap();
-    let second_char = u8_to_char(((int % SQUARED_BASE)/ (BASE as u16)) as u8).unwrap();
-    let third_char = u8_to_char((int % (BASE as u16)) as u8).unwrap();
-    Ok(format!("{}{}{}", first_char, second_char, third_char))
-}
+use crate::{error::Error, TripodId, common::*};
 
 /// Single size tripod id.
 /// 
@@ -141,11 +32,16 @@ impl TripodId for Single {
 
     const MAX: Single = Single(Self::CAPACITY-1);
 
+    fn from_int_lossy(int: Self::Integer) -> Self {
+        Self(int & u16::from(Self::MAX))
+    }
+
 }
 
 impl Display for Single {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", u16_to_string(self.0).unwrap())
+        let chars = u16_to_chars(self.0);
+        write!(f, "{}{}{}", chars.0, chars.1, chars.2)
     }
 }
 
@@ -153,7 +49,12 @@ impl FromStr for Single {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(Self(str_to_u16(s)?))
+        let len = s.len();
+        if len != 3 {
+            return Err(Error::InvalidLength { expected: vec![3], found: len, raw: s.to_string() })
+        }
+        let chars: Vec<char> = s.chars().collect();
+        Ok(Self(chars_to_u16((chars[0], chars[1], chars[2]))?))
     }
 }
 
@@ -177,6 +78,8 @@ impl TryFrom<u16> for Single {
         }
     }
 }
+
+
 
 impl From<Single> for u16 {
     fn from(value: Single) -> Self {
@@ -210,22 +113,3 @@ impl PartialEq<String> for Single {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::single::BASE;
-
-    #[test]
-    fn valid_int() {
-        for i in 0..BASE {
-            assert_eq!(i, char_to_u8(u8_to_char(i).unwrap()).unwrap());
-        }
-    }
-
-    #[test]
-    fn invalid_int() {
-        for i in BASE..=u8::MAX {
-            assert_eq!(u8_to_char(i), None);
-        }
-    }
-}

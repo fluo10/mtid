@@ -7,9 +7,9 @@ pub enum Error {
     },
     #[error("Invalid chunk: {0}")]
     InvalidChunk(String),
-    #[error("Length of id expected {} or {} but found {found}: {raw}", .expected.0, .expected.1 )]
+    #[error("Length of id expected [ {} ] but found {found}: {raw}", .expected.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", ") )]
     InvalidLength{
-        expected: (u8, u8),
+        expected: Vec<u8>,
         found: usize,
         raw: String
     },
@@ -23,6 +23,8 @@ pub enum Error {
     InvalidDelimiter{
         found: Vec<char>,
         raw: String,
-    }
+    },
+    #[error("Alphanumeric value is expected! found: '{0}'")]
+    InvalidChar(char),
 }
 

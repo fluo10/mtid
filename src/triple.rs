@@ -1,12 +1,14 @@
 #[cfg(feature="prost")]
 use crate::TripleMessage;
-use crate::{utils::is_delimiter, Double, Error, Single};
+use crate::{common::is_delimiter, Double, Error, Single};
 
 use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 use crate::TripodId;
+
+const MAX_VALUE: u64 = Triple::CAPACITY - 1;
 
 /// Triple length tripod id.
 /// 
@@ -29,7 +31,11 @@ impl TripodId for Triple{
 
     const NIL: Self = Self(0);
 
-    const MAX: Self = Self(Self::CAPACITY - 1);
+    const MAX: Self = Self(MAX_VALUE);
+
+    fn from_int_lossy(int: Self::Integer) -> Self {
+        Self(int & u64::from(Self::MAX)) 
+    }
 
 }
 
@@ -66,7 +72,7 @@ impl FromStr for Triple {
                 }
                 x => {
                     Err(Self::Err::InvalidLength{
-                        expected: (9, 11),
+                        expected: vec![9, 11],
                         found: x,
                         raw: s.to_string()
                     })
@@ -108,9 +114,9 @@ impl From<Triple> for u64 {
 impl From<(Single, Single, Single)> for Triple {
     fn from(value: (Single, Single, Single)) -> Self {
         Self(
-            (u16::from(value.0) as u64) * (Double::CAPACITY as u64)
-                + (u16::from(value.1) as u64) * (Single::CAPACITY as u64)
-                + (u16::from(value.2) as u64)
+            ((u16::from(value.0) as u64) << 30)
+                | ((u16::from(value.1) as u64) << 15) 
+                | (u16::from(value.2) as u64)
         )
     }
 }
@@ -118,9 +124,9 @@ impl From<(Single, Single, Single)> for Triple {
 impl From<Triple> for (Single, Single, Single) {
     fn from(value: Triple) -> Self {
         (
-            Single::try_from(u16::try_from(value.0 / (Double::CAPACITY as u64)).unwrap()).unwrap(),
-            Single::try_from(u16::try_from((value.0 % (Double::CAPACITY as u64)) /(Single::CAPACITY as u64)).unwrap()).unwrap(),
-            Single::try_from(u16::try_from(value.0 % (Single::CAPACITY as u64)).unwrap()).unwrap()
+            Single::from_int_lossy((value.0 >> 30) as u16),
+            Single::from_int_lossy((value.0 >> 15) as u16),
+            Single::from_int_lossy(value.0 as u16)
         )
     }
 }
