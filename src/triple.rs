@@ -1,20 +1,16 @@
 #[cfg(feature="prost")]
 use crate::TripleMessage;
-use crate::{common::is_delimiter, Double, Error, Single};
+use crate::{common::is_delimiter, macros::tripod_id_impl, double::Double, Error, single::Single};
 
 use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-use crate::TripodId;
-
-const MAX_VALUE: u64 = Triple::CAPACITY - 1;
-
 /// Triple length tripod id.
 /// 
 /// # Examples 
 /// ```
-/// # use tripod_id::{TripodId, Triple};
+/// # use tripod_id::Triple;
 /// # use std::str::FromStr;
 /// 
 /// let _ = Triple::from_str("012-abc-def");
@@ -22,21 +18,15 @@ const MAX_VALUE: u64 = Triple::CAPACITY - 1;
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Triple(u64);
 
-impl TripodId for Triple{
-    type Integer = u64;
-    type Tuple = (Single, Single, Single);
-    #[cfg(feature="prost")]
-    type Message = TripleMessage;
-    const CAPACITY: Self::Integer = (Single::CAPACITY as u64).pow(3);
-
-    const NIL: Self = Self(0);
-
-    const MAX: Self = Self(MAX_VALUE);
-
-    fn from_int_lossy(int: Self::Integer) -> Self {
-        Self(int & u64::from(Self::MAX)) 
+impl Triple {
+    tripod_id_impl!{
+        Self = Triple,
+        ActualT = u64,
+        BITS = 45,
+        CAPACITY = (Single::CAPACITY as u64).pow(3),
+        NIL_STR = "000-000-000",
+        MAX_STR = "zzz-zzz-zzz",
     }
-
 }
 
 impl Display for Triple {
@@ -114,8 +104,8 @@ impl From<Triple> for u64 {
 impl From<(Single, Single, Single)> for Triple {
     fn from(value: (Single, Single, Single)) -> Self {
         Self(
-            ((u16::from(value.0) as u64) << 30)
-                | ((u16::from(value.1) as u64) << 15) 
+            ((u16::from(value.0) as u64) << Double::BITS)
+                | ((u16::from(value.1) as u64) << Single::BITS) 
                 | (u16::from(value.2) as u64)
         )
     }
@@ -124,8 +114,8 @@ impl From<(Single, Single, Single)> for Triple {
 impl From<Triple> for (Single, Single, Single) {
     fn from(value: Triple) -> Self {
         (
-            Single::from_int_lossy((value.0 >> 30) as u16),
-            Single::from_int_lossy((value.0 >> 15) as u16),
+            Single::from_int_lossy((value.0 >> Double::BITS) as u16),
+            Single::from_int_lossy((value.0 >> Single::BITS) as u16),
             Single::from_int_lossy(value.0 as u16)
         )
     }

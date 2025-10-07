@@ -1,10 +1,10 @@
-use std::{char::MAX, fmt::Display, str::FromStr};
+use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::SingleMessage;
-use crate::{error::Error, TripodId, common::*};
+use crate::{common::*, error::Error, macros::tripod_id_impl};
 
 /// Single size tripod id.
 /// 
@@ -12,30 +12,22 @@ use crate::{error::Error, TripodId, common::*};
 /// 
 /// ```
 /// use std::str::FromStr;
-/// use tripod_id::{TripodId,Single};
+/// use tripod_id::Single;
 /// 
 /// assert_eq!(Single::from_str("012").unwrap(), Single::try_from(34).unwrap());
 /// ```
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Single(u16);
 
-
-impl TripodId for Single {
-    type Integer = u16;
-    type Tuple = (Single,);
-    #[cfg(feature="prost")]
-    type Message = SingleMessage;
-
-    const CAPACITY: Self::Integer = CUBED_BASE;
-
-    const NIL: Single = Single(0);
-
-    const MAX: Single = Single(Self::CAPACITY-1);
-
-    fn from_int_lossy(int: Self::Integer) -> Self {
-        Self(int & u16::from(Self::MAX))
+impl Single {
+    tripod_id_impl!{
+        Self = Single,
+        ActualT = u16,
+        BITS = 15,
+        CAPACITY = CUBED_BASE,
+        NIL_STR = "000",
+        MAX_STR = "ZZZ",
     }
-
 }
 
 impl Display for Single {

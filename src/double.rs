@@ -4,27 +4,22 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::DoubleMessage;
-use crate::{common::is_delimiter, Error, TripodId, Single};
+use crate::{common::{is_delimiter, CUBED_BASE}, macros::tripod_id_impl, Error, single::Single,};
 
-const MAX_VALUE: u32 = Double::CAPACITY -1;
-
+/// Double length tripod id.
+/// 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Double(u32);
 
-impl TripodId for Double{
-    type Tuple = (Single, Single);
-    type Integer = u32;
-    #[cfg(feature="prost")]
-    type Message = DoubleMessage;
-    const CAPACITY: Self::Integer = (Single::CAPACITY as u32).pow(2);
-
-    const NIL: Self = Self(0);
-
-    const MAX: Self = Self(MAX_VALUE);
-    fn from_int_lossy(int: Self::Integer) -> Self {
-        Self(int & MAX_VALUE)
+impl Double {
+    tripod_id_impl!{
+        Self = Double,
+        ActualT = u32,
+        BITS = 30,
+        CAPACITY = (Single::CAPACITY as u32).pow(2),
+        NIL_STR = "000-000",
+        MAX_STR = "zzz-zzz",
     }
-
 }
 
 impl Display for Double {
@@ -36,14 +31,14 @@ impl Display for Double {
 
 impl From<(Single, Single)> for Double {
     fn from(value: (Single, Single)) -> Self {
-        Self((u32::from(u16::from(value.0)) << 15)+ u32::from(u16::from(value.1)))
+        Self((u32::from(u16::from(value.0)) << Single::BITS)+ u32::from(u16::from(value.1)))
     }
 } 
 
 impl From<Double> for (Single, Single) {
     fn from(value: Double) -> Self {
         (
-            Single::from_int_lossy((value.0 >> 15) as u16),
+            Single::from_int_lossy((value.0 >> Single::BITS) as u16),
             Single::from_int_lossy(value.0 as u16)
         )
     }

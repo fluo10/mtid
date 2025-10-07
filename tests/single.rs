@@ -1,12 +1,15 @@
-mod common;
+mod validator;
 use std::str::FromStr;
 
-use tripod_id::{Single, TripodId};
+use tripod_id::Single;
 use rand::Rng;
 
-use crate::common::TripodIdValidator;
+use crate::validator::TripodIdValidator;
 
-impl TripodIdValidator for Single {}
+impl TripodIdValidator for Single {
+    type Integer = u16;
+    type Tuple = (Single,);
+}
 
 #[test]
 fn nil() {

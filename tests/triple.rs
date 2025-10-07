@@ -1,8 +1,11 @@
-mod common;
+mod validator;
 
-use common::TripodIdValidator;
-use tripod_id::{Single, Triple, TripodId};
-impl TripodIdValidator for Triple{}
+use validator::TripodIdValidator;
+use tripod_id::{Single, Triple};
+impl TripodIdValidator for Triple{
+    type Integer = u64;
+    type Tuple = (Single, Single, Single);
+}
 
 use rand::Rng;
 
