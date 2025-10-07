@@ -2,7 +2,7 @@
 
 use std::u32;
 
-use tripod_id::{TripodId, Single, Double, Triple};
+use tripod_id::{Stid, Dtid, Ttid};
 use rand::Rng;
 use sea_orm::{
     entity::{prelude::*, *}, DatabaseBackend, MockDatabase, MockExecResult, Transaction
@@ -13,9 +13,9 @@ use sea_orm::{
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: u32,
-    pub single: Single,
-    pub double: Double, 
-    pub triple: Triple,
+    pub single: Stid,
+    pub double: Dtid, 
+    pub triple: Ttid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -70,9 +70,9 @@ async fn assert_model(model: Model) {
 async fn nil() {
     assert_model(Model{
         id: 1,
-        single: Single::NIL,
-        double: Double::NIL,
-        triple: Triple::NIL
+        single: Stid::NIL,
+        double: Dtid::NIL,
+        triple: Ttid::NIL
     }).await;
 }
 
@@ -80,9 +80,9 @@ async fn nil() {
 async fn max() {
     assert_model(Model {
         id: u32::MAX,
-        single: Single::MAX,
-        double: Double::MAX,
-        triple: Triple::MAX
+        single: Stid::MAX,
+        double: Dtid::MAX,
+        triple: Ttid::MAX
     }).await;
 }
 

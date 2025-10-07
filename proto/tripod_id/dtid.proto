@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tripod_id;
 
-// Double size tripod id message
-message Double {
+// Double size Tripod ID message
+message Dtid {
     uint32 id = 1;
 }

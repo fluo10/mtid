@@ -3,48 +3,48 @@ use std::{fmt::Display, str::FromStr};
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
-use crate::DoubleMessage;
-use crate::{common::{is_delimiter, CUBED_BASE}, macros::tripod_id_impl, Error, single::Single,};
+use crate::DtidMessage;
+use crate::{utils::{is_delimiter, CUBED_BASE}, macros::tripod_id_impl, Error, Stid,};
 
-/// Double length tripod id.
+/// Double length Tripod ID.
 /// 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-pub struct Double(u32);
+pub struct Dtid(u32);
 
-impl Double {
+impl Dtid {
     tripod_id_impl!{
-        Self = Double,
+        Self = Dtid,
         ActualT = u32,
         BITS = 30,
-        CAPACITY = (Single::CAPACITY as u32).pow(2),
+        CAPACITY = (Stid::CAPACITY as u32).pow(2),
         NIL_STR = "000-000",
         MAX_STR = "zzz-zzz",
     }
 }
 
-impl Display for Double {
+impl Display for Dtid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let tuple: (Single, Single) = (*self).into();
+        let tuple: (Stid, Stid) = (*self).into();
         write!(f, "{}-{}", tuple.0, tuple.1)
     }
 }
 
-impl From<(Single, Single)> for Double {
-    fn from(value: (Single, Single)) -> Self {
-        Self((u32::from(u16::from(value.0)) << Single::BITS)+ u32::from(u16::from(value.1)))
+impl From<(Stid, Stid)> for Dtid {
+    fn from(value: (Stid, Stid)) -> Self {
+        Self((u32::from(u16::from(value.0)) << Stid::BITS)+ u32::from(u16::from(value.1)))
     }
 } 
 
-impl From<Double> for (Single, Single) {
-    fn from(value: Double) -> Self {
+impl From<Dtid> for (Stid, Stid) {
+    fn from(value: Dtid) -> Self {
         (
-            Single::from_int_lossy((value.0 >> Single::BITS) as u16),
-            Single::from_int_lossy(value.0 as u16)
+            Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
+            Stid::from_int_lossy(value.0 as u16)
         )
     }
 }
 
-impl FromStr for Double {
+impl FromStr for Dtid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -53,7 +53,7 @@ impl FromStr for Double {
             7 => {
                 let delimiter = s[3..4].chars().next().unwrap();
                 if is_delimiter(delimiter) {
-                    Ok((Single::from_str(&s[0..3])?,Single::from_str(&s[4..7])?))
+                    Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?))
                 } else {
                     Err(Error::InvalidDelimiter{
                         found: vec![delimiter],
@@ -63,7 +63,7 @@ impl FromStr for Double {
                 
             },
             6 => {
-                Ok((Single::from_str(&s[0..3])?,Single::from_str(&s[3..6])?))
+                Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?))
             },
             x => { 
                 Err(Error::InvalidLength{
@@ -78,14 +78,14 @@ impl FromStr for Double {
 }
 
 
-impl Distribution<Double> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Double {
-        Double(rng.gen_range(0..Double::CAPACITY))
+impl Distribution<Dtid> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Dtid {
+        Dtid(rng.gen_range(0..Dtid::CAPACITY))
 
     }
 }
 
-impl TryFrom<u32> for Double {
+impl TryFrom<u32> for Dtid {
     type Error = Error;
 
     fn try_from(value: u32) -> Result<Self, Self::Error> {
@@ -100,20 +100,20 @@ impl TryFrom<u32> for Double {
     }
 }
 
-impl From<Double> for u32 {
-    fn from(value: Double) -> Self {
+impl From<Dtid> for u32 {
+    fn from(value: Dtid) -> Self {
         value.0
     }
 }
 
 
-impl PartialEq<u32> for Double {
+impl PartialEq<u32> for Dtid {
     fn eq(&self, other: &u32) -> bool {
         &u32::from(*self) == other
     }
 }
 
-impl PartialEq<String> for Double {
+impl PartialEq<String> for Dtid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,

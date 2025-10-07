@@ -1,0 +1,52 @@
+use prost::Name;
+
+use crate::{prost::{Stid}, Error};
+
+impl Name for Stid {
+    const NAME: &'static str = "Stid";
+    const PACKAGE: &'static str = super::PACKAGE_NAME;
+}
+
+impl From<crate::Stid> for Stid {
+    fn from(value: crate::Stid) -> Self {
+        Self {
+            id: u32::from(u16::from(value)) 
+        }
+    }
+}
+impl TryFrom<Stid> for crate::Stid {
+    type Error = Error;
+
+    fn try_from(value: Stid) -> Result<Self, Self::Error> {
+        Self::try_from(
+            u16::try_from(value.id).or(Err(Error::OutsideOfRange {
+                expected: u64::from(crate::Stid::CAPACITY),
+                found: u64::from(value.id) 
+            }))?
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{Stid, StidMessage};
+
+    #[test]
+    fn nil() {
+        let nil = StidMessage{id: 0};
+        assert_eq!(Stid::NIL, Stid::try_from(nil).unwrap());
+    }
+
+    #[test]
+    fn max() {
+        let max = StidMessage{id: u32::from(Stid::CAPACITY)-1};
+        assert_eq!(Stid::MAX, Stid::try_from(max).unwrap());
+    }
+
+    #[test]
+    #[should_panic]
+    fn oversized () {
+        let oversized = StidMessage{id: u32::from(Stid::CAPACITY)};
+        let _ = Stid::try_from(oversized).unwrap();
+    }
+}

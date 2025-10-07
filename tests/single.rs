@@ -1,45 +1,45 @@
 mod validator;
 use std::str::FromStr;
 
-use tripod_id::Single;
+use tripod_id::Stid;
 use rand::Rng;
 
 use crate::validator::TripodIdValidator;
 
-impl TripodIdValidator for Single {
+impl TripodIdValidator for Stid {
     type Integer = u16;
-    type Tuple = (Single,);
+    type Tuple = (Stid,);
 }
 
 #[test]
 fn nil() {
-    assert!(Single::NIL.validate_all().unwrap());
-    assert_eq!(Single::NIL, 0);
-    assert_eq!(Single::NIL, Single::from_str("000").unwrap());
-    assert!(Single::NIL.is_nil());
-    assert!(!Single::NIL.is_max())
+    assert!(Stid::NIL.validate_all().unwrap());
+    assert_eq!(Stid::NIL, 0);
+    assert_eq!(Stid::NIL, Stid::from_str("000").unwrap());
+    assert!(Stid::NIL.is_nil());
+    assert!(!Stid::NIL.is_max())
 }
 
 #[test]
 fn max() {
-    assert!(Single::MAX.validate_all().unwrap());
-    assert_eq!(Single::MAX, Single::CAPACITY - 1);
-    assert_eq!(Single::MAX, Single::from_str("zzZ").unwrap());
-    assert!(Single::MAX.is_max());
-    assert!(!Single::MAX.is_nil());
+    assert!(Stid::MAX.validate_all().unwrap());
+    assert_eq!(Stid::MAX, Stid::CAPACITY - 1);
+    assert_eq!(Stid::MAX, Stid::from_str("zzZ").unwrap());
+    assert!(Stid::MAX.is_max());
+    assert!(!Stid::MAX.is_nil());
 }
 
 #[test]
 fn boundary_value() {
-    let _ = Single::try_from(Single::CAPACITY-1).unwrap();
-    let _ = Single::try_from(Single::CAPACITY).unwrap_err();
+    let _ = Stid::try_from(Stid::CAPACITY-1).unwrap();
+    let _ = Stid::try_from(Stid::CAPACITY).unwrap_err();
 }
 
 #[test]
 fn random_int() {
     let mut rng = rand::thread_rng();
     for _ in 0..10 {
-        let single: Single = rng.r#gen();
+        let single: Stid = rng.r#gen();
         assert!(single.validate_all().unwrap());
     }
 }
@@ -47,10 +47,10 @@ fn random_int() {
 #[test]
 fn oversized_random_int() {
     let mut rng = rand::thread_rng();
-    let _ = Single::try_from(0).unwrap();
+    let _ = Stid::try_from(0).unwrap();
     for _ in 0..10 {
-        let value: u16 = rng.gen_range(Single::CAPACITY..u16::MAX);
-        let _ = Single::try_from(value).unwrap_err();
+        let value: u16 = rng.gen_range(Stid::CAPACITY..u16::MAX);
+        let _ = Stid::try_from(value).unwrap_err();
     }
 }
 
@@ -63,7 +63,7 @@ fn random_str() {
             rng.sample(rand::distributions::Alphanumeric) as char,
             rng.sample(rand::distributions::Alphanumeric) as char,
         );
-        let single = Single::from_str(&value).unwrap();
+        let single = Stid::from_str(&value).unwrap();
         assert!(single.validate_all().unwrap());
     }
 }

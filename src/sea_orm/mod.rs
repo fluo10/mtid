@@ -1,3 +1,3 @@
-mod single;
-mod double;
-mod triple;
+mod stid;
+mod dtid;
+mod ttid;

@@ -5,11 +5,17 @@
 //! ## Example
 //! ```
 //! use std::str::FromStr;
-//! use tripod_id::{Single, Double, Triple, Error};
+//! use tripod_id::{Stid, Dtid, Ttid, Error};
 //! # fn main() -> Result<(), Error> {
-//! let single: Single = Single::from_str("012")?;
-//! let double: Double = Double::from_str("345-678")?;
-//! let triple: Triple = Triple::from_str("9ab-dce-fgh")?;
+//! 
+//! // Single length Tripod ID
+//! let single: Stid = Stid::from_str("012")?;
+//! 
+//! // Double length Tripod ID
+//! let double: Dtid = Dtid::from_str("345-678")?;
+//! 
+//! // Triple length Tripod ID
+//! let triple: Ttid = Ttid::from_str("9ab-dce-fgh")?;
 //! # Ok(())
 //! # }
 //! ```
@@ -19,11 +25,11 @@
 //! 
 //! 
 
-mod single;
-mod double;
+mod stid;
+mod dtid;
 mod error;
-mod triple;
-mod common;
+mod ttid;
+mod utils;
 mod macros;
 
 #[cfg(feature="rusqlite")]
@@ -33,15 +39,15 @@ mod sea_orm;
 #[cfg(feature="serde")]
 mod serde;
 
-pub use single::Single;
-pub use double::Double;
-pub use triple::Triple;
+pub use stid::Stid;
+pub use dtid::Dtid;
+pub use ttid::Ttid;
 pub use error::Error;
 
 #[cfg(feature="prost")]
 pub mod prost;
 #[cfg(feature="prost")]
-pub use prost::{ SingleMessage, DoubleMessage, TripleMessage ,TripodIdMessage};
+pub use prost::{ StidMessage, DtidMessage, TtidMessage};
 
 
 

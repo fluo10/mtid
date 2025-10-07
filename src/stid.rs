@@ -3,25 +3,25 @@ use std::{fmt::Display, str::FromStr};
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
-use crate::SingleMessage;
-use crate::{common::*, error::Error, macros::tripod_id_impl};
+use crate::StidMessage;
+use crate::{utils::*, error::Error, macros::tripod_id_impl};
 
-/// Single size tripod id.
+/// Single length Tripod ID.
 /// 
 /// # Examples
 /// 
 /// ```
 /// use std::str::FromStr;
-/// use tripod_id::Single;
+/// use tripod_id::Stid;
 /// 
-/// assert_eq!(Single::from_str("012").unwrap(), Single::try_from(34).unwrap());
+/// assert_eq!(Stid::from_str("012").unwrap(), Stid::try_from(34).unwrap());
 /// ```
 #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
-pub struct Single(u16);
+pub struct Stid(u16);
 
-impl Single {
+impl Stid {
     tripod_id_impl!{
-        Self = Single,
+        Self = Stid,
         ActualT = u16,
         BITS = 15,
         CAPACITY = CUBED_BASE,
@@ -30,14 +30,14 @@ impl Single {
     }
 }
 
-impl Display for Single {
+impl Display for Stid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let chars = u16_to_chars(self.0);
         write!(f, "{}{}{}", chars.0, chars.1, chars.2)
     }
 }
 
-impl FromStr for Single {
+impl FromStr for Stid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -50,13 +50,13 @@ impl FromStr for Single {
     }
 }
 
-impl Distribution<Single> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Single {
-        Single(rng.gen_range(0..Single::CAPACITY))
+impl Distribution<Stid> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Stid {
+        Stid(rng.gen_range(0..Stid::CAPACITY))
     }
 }
 
-impl TryFrom<u16> for Single {
+impl TryFrom<u16> for Stid {
     type Error = Error;
 
     fn try_from(value: u16) -> Result<Self, Self::Error> {
@@ -73,30 +73,30 @@ impl TryFrom<u16> for Single {
 
 
 
-impl From<Single> for u16 {
-    fn from(value: Single) -> Self {
+impl From<Stid> for u16 {
+    fn from(value: Stid) -> Self {
         value.0
     }
 }
 
-impl From<(Single,)> for Single {
-    fn from(value: (Single,)) -> Self {
+impl From<(Stid,)> for Stid {
+    fn from(value: (Stid,)) -> Self {
         value.0
     }
 }
-impl From<Single> for (Single,) {
-    fn from(value: Single) -> Self {
+impl From<Stid> for (Stid,) {
+    fn from(value: Stid) -> Self {
         (value,)
     }
 }
 
-impl PartialEq<u16> for Single {
+impl PartialEq<u16> for Stid {
     fn eq(&self, other: &u16) -> bool {
         &u16::from(*self) == other
     }
 }
 
-impl PartialEq<String> for Single {
+impl PartialEq<String> for Stid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,

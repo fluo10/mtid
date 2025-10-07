@@ -2,9 +2,9 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize, de::Error};
 
-use crate::{Double, Single, Triple};
+use crate::{Dtid, Stid, Ttid};
 
-impl Serialize for Single {
+impl Serialize for Stid {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer {
@@ -12,16 +12,16 @@ impl Serialize for Single {
     }
 }
 
-impl<'de> Deserialize<'de> for Single {
+impl<'de> Deserialize<'de> for Stid {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: serde::Deserializer<'de> {
         let s  = String::deserialize(deserializer)?;
-        Single::from_str(&s).map_err(|e| D::Error::custom(e))
+        Stid::from_str(&s).map_err(|e| D::Error::custom(e))
     }
 }
 
-impl Serialize for Double {
+impl Serialize for Dtid {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer {
@@ -29,16 +29,16 @@ impl Serialize for Double {
     }
 }
 
-impl<'de> Deserialize<'de> for Double {
+impl<'de> Deserialize<'de> for Dtid {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: serde::Deserializer<'de> {
         let s  = String::deserialize(deserializer)?;
-        Double::from_str(&s).map_err(|e| D::Error::custom(e))
+        Dtid::from_str(&s).map_err(|e| D::Error::custom(e))
     }
 }
 
-impl Serialize for Triple {
+impl Serialize for Ttid {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer {
@@ -46,33 +46,30 @@ impl Serialize for Triple {
     }
 }
 
-impl<'de> Deserialize<'de> for Triple {
+impl<'de> Deserialize<'de> for Ttid {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
             D: serde::Deserializer<'de> {
         let s  = String::deserialize(deserializer)?;
-        Triple::from_str(&s).map_err(|e| D::Error::custom(e))
+        Ttid::from_str(&s).map_err(|e| D::Error::custom(e))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use serde_test::{assert_tokens, Token};
-
-    use crate::TripodId;
-
     
     #[test]
-    fn single() {
-        assert_tokens(&crate::Single::NIL, &[Token::Str("000")]);
+    fn Stid() {
+        assert_tokens(&crate::Stid::NIL, &[Token::Str("000")]);
     }
 
     #[test]
     fn double() {
-        assert_tokens(&crate::Double::NIL, &[Token::Str("000-000")]);
+        assert_tokens(&crate::Dtid::NIL, &[Token::Str("000-000")]);
     }
     #[test]
     fn triple() {
-        assert_tokens(&crate::Triple::NIL, &[Token::Str("000-000-000")]);
+        assert_tokens(&crate::Ttid::NIL, &[Token::Str("000-000-000")]);
     }
 }

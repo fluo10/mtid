@@ -1,43 +1,43 @@
 #[cfg(feature="prost")]
-use crate::TripleMessage;
-use crate::{common::is_delimiter, macros::tripod_id_impl, double::Double, Error, single::Single};
+use crate::TtidMessage;
+use crate::{utils::is_delimiter, macros::tripod_id_impl, dtid::Dtid, Error, Stid};
 
 use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-/// Triple length tripod id.
+/// Triple length Tripod ID.
 /// 
 /// # Examples 
 /// ```
-/// # use tripod_id::Triple;
+/// # use tripod_id::Ttid;
 /// # use std::str::FromStr;
 /// 
-/// let _ = Triple::from_str("012-abc-def");
+/// let _ = Ttid::from_str("012-abc-def");
 /// ``` 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
-pub struct Triple(u64);
+pub struct Ttid(u64);
 
-impl Triple {
+impl Ttid {
     tripod_id_impl!{
-        Self = Triple,
+        Self = Ttid,
         ActualT = u64,
         BITS = 45,
-        CAPACITY = (Single::CAPACITY as u64).pow(3),
+        CAPACITY = (Stid::CAPACITY as u64).pow(3),
         NIL_STR = "000-000-000",
         MAX_STR = "zzz-zzz-zzz",
     }
 }
 
-impl Display for Triple {
+impl Display for Ttid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         
-        let tuple: (Single, Single, Single) = (*self).into();
+        let tuple: (Stid, Stid, Stid) = (*self).into();
         write!(f, "{}-{}-{}", tuple.0, tuple.1, tuple.2)
     }
 }
 
-impl FromStr for Triple {
+impl FromStr for Ttid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -48,7 +48,7 @@ impl FromStr for Triple {
                         s[7..8].chars().next().unwrap(),
                     ];
                     if is_delimiter(delimiter[0]) && is_delimiter(delimiter[1]) {
-                        Ok(Self::from((Single::from_str(&s[0..3])?,Single::from_str(&s[4..7])?,Single::from_str(&s[8..11])?)))
+                        Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?,Stid::from_str(&s[8..11])?)))
                     } else {
                         Err(Error::InvalidDelimiter{
                             found: Vec::from(delimiter),
@@ -58,7 +58,7 @@ impl FromStr for Triple {
 
                 }
                 9 => {
-                    Ok(Self::from((Single::from_str(&s[0..3])?,Single::from_str(&s[3..6])?,Single::from_str(&s[6..9])?)))
+                    Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?,Stid::from_str(&s[6..9])?)))
                 }
                 x => {
                     Err(Self::Err::InvalidLength{
@@ -73,14 +73,14 @@ impl FromStr for Triple {
 }
 
 
-impl Distribution<Triple> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Triple {
-        Triple(rng.gen_range(0..Triple::CAPACITY))
+impl Distribution<Ttid> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Ttid {
+        Ttid(rng.gen_range(0..Ttid::CAPACITY))
 
     }
 }
 
-impl TryFrom<u64> for Triple {
+impl TryFrom<u64> for Ttid {
     type Error = Error;
 
     fn try_from(value: u64) -> Result<Self, Self::Error> {
@@ -95,39 +95,39 @@ impl TryFrom<u64> for Triple {
     }
 }
 
-impl From<Triple> for u64 {
-    fn from(value: Triple) -> Self {
+impl From<Ttid> for u64 {
+    fn from(value: Ttid) -> Self {
         value.0
     }
 }
 
-impl From<(Single, Single, Single)> for Triple {
-    fn from(value: (Single, Single, Single)) -> Self {
+impl From<(Stid, Stid, Stid)> for Ttid {
+    fn from(value: (Stid, Stid, Stid)) -> Self {
         Self(
-            ((u16::from(value.0) as u64) << Double::BITS)
-                | ((u16::from(value.1) as u64) << Single::BITS) 
+            ((u16::from(value.0) as u64) << Dtid::BITS)
+                | ((u16::from(value.1) as u64) << Stid::BITS) 
                 | (u16::from(value.2) as u64)
         )
     }
 }
 
-impl From<Triple> for (Single, Single, Single) {
-    fn from(value: Triple) -> Self {
+impl From<Ttid> for (Stid, Stid, Stid) {
+    fn from(value: Ttid) -> Self {
         (
-            Single::from_int_lossy((value.0 >> Double::BITS) as u16),
-            Single::from_int_lossy((value.0 >> Single::BITS) as u16),
-            Single::from_int_lossy(value.0 as u16)
+            Stid::from_int_lossy((value.0 >> Dtid::BITS) as u16),
+            Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
+            Stid::from_int_lossy(value.0 as u16)
         )
     }
 }
 
-impl PartialEq<u64> for Triple {
+impl PartialEq<u64> for Ttid {
     fn eq(&self, other: &u64) -> bool {
         &u64::from(*self) == other
     }
 }
 
-impl PartialEq<String> for Triple {
+impl PartialEq<String> for Ttid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
