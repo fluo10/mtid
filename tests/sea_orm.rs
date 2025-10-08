@@ -2,14 +2,14 @@
 
 use std::u32;
 
-use tripod_id::{Stid, Dtid, Ttid};
+use mtid::{Stid, Dtid, Ttid};
 use rand::Rng;
 use sea_orm::{
     entity::{prelude::*, *}, DatabaseBackend, MockDatabase, MockExecResult, Transaction
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "tripod_ids")]
+#[sea_orm(table_name = "mtids")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: u32,
@@ -48,17 +48,17 @@ async fn assert_model(model: Model) {
         [
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"INSERT INTO "tripod_ids" ("id", "single", "double", "triple") VALUES (?, ?, ?, ?)"#,
+                r#"INSERT INTO "mtids" ("id", "single", "double", "triple") VALUES (?, ?, ?, ?)"#,
                 [model.id.into(), model.single.into(), model.double.into(), model.triple.into()]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "tripod_ids"."id", "tripod_ids"."single", "tripod_ids"."double", "tripod_ids"."triple" FROM "tripod_ids" WHERE "tripod_ids"."id" = ? LIMIT ?"#,
+                r#"SELECT "mtids"."id", "mtids"."single", "mtids"."double", "mtids"."triple" FROM "mtids" WHERE "mtids"."id" = ? LIMIT ?"#,
                 [1u32.into(), 1u64.into()]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "tripod_ids"."id", "tripod_ids"."single", "tripod_ids"."double", "tripod_ids"."triple" FROM "tripod_ids" LIMIT ?"#,
+                r#"SELECT "mtids"."id", "mtids"."single", "mtids"."double", "mtids"."triple" FROM "mtids" LIMIT ?"#,
                 [1u64.into()]
             )
         ]

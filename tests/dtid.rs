@@ -1,11 +1,11 @@
 mod validator;
 
-use tripod_id::{Dtid, Stid};
+use mtid::{Dtid, Stid};
 
-use validator::TripodIdValidator;
+use validator::MtidValidator;
 use rand::Rng;
 
-impl TripodIdValidator for Dtid {
+impl MtidValidator for Dtid {
     type Integer = u32;
     type Tuple = (Stid, Stid);
 }

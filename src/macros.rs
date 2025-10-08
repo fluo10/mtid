@@ -1,4 +1,4 @@
-macro_rules! tripod_id_impl {
+macro_rules! mtid_impl {
     (
         Self = $SelfT:ty,
         ActualT = $ActualT:ident,
@@ -12,12 +12,12 @@ macro_rules! tripod_id_impl {
         /// This is not equal actually stored size.
         pub const BITS: u32 = $BITS;
         
-        /// The capacity value of this tripod id type
+        /// The capacity value of this triplet id type
         /// 
         /// #Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::CAPACITY -1);")]
         /// # Ok(())
@@ -27,12 +27,12 @@ macro_rules! tripod_id_impl {
 
         const CAPACITY_MINUS_ONE: $ActualT = Self::CAPACITY - 1;
 
-        /// The smallest value that can be represented by this tripod id type.
+        /// The smallest value that can be represented by this triplet id type.
         /// 
         /// # Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert_eq!(", stringify!($SelfT), "::NIL, ", stringify!($NIL_STR), ".parse::<", stringify!($SelfT), ">()?);")]
         /// # Ok(())
@@ -41,12 +41,12 @@ macro_rules! tripod_id_impl {
         /// 
         pub const NIL: Self = Self(0);
 
-        /// The largest value that can be represent by this tripod id type.
+        /// The largest value that can be represent by this triplet id type.
         /// 
         /// # Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($MAX_STR), ".parse::<",stringify!($SelfT),">()?);")]
         /// # Ok(())
@@ -54,12 +54,12 @@ macro_rules! tripod_id_impl {
         /// ```
         pub const MAX: Self = Self(Self::CAPACITY_MINUS_ONE);
         
-        /// Test if the tripod id is nil.
+        /// Test if the triplet id is nil.
         /// 
         /// # Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert!(", stringify!($NIL_STR), ".parse::<",stringify!($SelfT),">()?.is_nil());")]
         /// # Ok(())
@@ -69,12 +69,12 @@ macro_rules! tripod_id_impl {
             self.0 == 0
         }
 
-        /// Test if the tripod id is max.
+        /// Test if the triplet id is max.
         /// 
         /// # Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert!(", stringify!($MAX_STR), ".parse::<",stringify!($SelfT),">()?.is_max());")]
         /// # Ok(())
@@ -90,7 +90,7 @@ macro_rules! tripod_id_impl {
         /// # Examples
         /// 
         /// ```
-        /// # use tripod_id::*;
+        /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!(
             "assert!(",
@@ -114,4 +114,4 @@ macro_rules! tripod_id_impl {
     };
 }
 
-pub(crate) use tripod_id_impl;
+pub(crate) use mtid_impl;

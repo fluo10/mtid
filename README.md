@@ -1,22 +1,10 @@
-# Tripod ID
-Distributable user-friendly id.
+# MTID (Multi-length Triplet ID)
 
-## Examples
+A human-friendly identifier format based on 3-character blocks ("triplets").
+This crate provide multiple fixed-length variants:
 
-- `123` : shortest version
-- `456-789` : default size, still user freindly and sufficient randomness (for personal data)
-- `abc-def-ghj` : long version. alphabets except i, l and o are also valid　
-## Specs
-### Characters
+- `Stid`: Single triplet (e.g. `abc`)
+- `Dtid`: Double triplet (e.g. `456-789`) (Recommended)
+- `Ttid`: Triple triplet (e.g. `abc-def-ghj`)
 
-
-
-## Perpose
-When I considering implementing IDs for users(not for internal system) to specify items, such as GitHub commit hashes or issue numbers, the following issues arose.
-
-- Sequential numbers like Git issues are difficult to implement in distributes systems because collitions are unavoidable.
-- Random number like UUID is too long for users
-- Short random number like 7-digit commit hash seems good but is is not standardized specification.
-
-So I decided to make my own ID specifications.
-
+For a language agnostic specification of the MTID format, see [SPECS.md](./SPECS.md).

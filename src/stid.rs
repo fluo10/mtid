@@ -4,15 +4,15 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::StidMessage;
-use crate::{utils::*, error::Error, macros::tripod_id_impl};
+use crate::{utils::*, error::Error, macros::mtid_impl};
 
-/// Single length Tripod ID.
+/// Single length Triplet ID.
 /// 
 /// # Examples
 /// 
 /// ```
 /// use std::str::FromStr;
-/// use tripod_id::Stid;
+/// use mtid::Stid;
 /// 
 /// assert_eq!(Stid::from_str("012").unwrap(), Stid::try_from(34).unwrap());
 /// ```
@@ -20,7 +20,7 @@ use crate::{utils::*, error::Error, macros::tripod_id_impl};
 pub struct Stid(u16);
 
 impl Stid {
-    tripod_id_impl!{
+    mtid_impl!{
         Self = Stid,
         ActualT = u16,
         BITS = 15,

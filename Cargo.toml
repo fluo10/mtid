@@ -1,10 +1,10 @@
 [package]
-name = "tripod-id"
+name = "mtid"
 edition = "2024"
 version = "0.1.0-alpha"
-description = "Human-friendly id for personal distributed system"
+description = "Multi-length triplet id: Human-friendly id for personal distributed system"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/fluo10/tripod-id"
+repository = "https://github.com/fluo10/mtid"
 
 [features]
 default=[]

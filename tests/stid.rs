@@ -1,12 +1,12 @@
 mod validator;
 use std::str::FromStr;
 
-use tripod_id::Stid;
+use mtid::Stid;
 use rand::Rng;
 
-use crate::validator::TripodIdValidator;
+use crate::validator::MtidValidator;
 
-impl TripodIdValidator for Stid {
+impl MtidValidator for Stid {
     type Integer = u16;
     type Tuple = (Stid,);
 }

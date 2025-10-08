@@ -1,20 +1,20 @@
-//! # TripodID
+//! # TripletID
 //! 
 //! A distributable human-friendry identifier.
 //! 
 //! ## Example
 //! ```
 //! use std::str::FromStr;
-//! use tripod_id::{Stid, Dtid, Ttid, Error};
+//! use mtid::{Stid, Dtid, Ttid, Error};
 //! # fn main() -> Result<(), Error> {
 //! 
-//! // Single length Tripod ID
+//! // Single length Triplet ID
 //! let single: Stid = Stid::from_str("012")?;
 //! 
-//! // Double length Tripod ID
+//! // Double length Triplet ID
 //! let double: Dtid = Dtid::from_str("345-678")?;
 //! 
-//! // Triple length Tripod ID
+//! // Triple length Triplet ID
 //! let triple: Ttid = Ttid::from_str("9ab-dce-fgh")?;
 //! # Ok(())
 //! # }
@@ -46,8 +46,17 @@ pub use error::Error;
 
 #[cfg(feature="prost")]
 pub mod prost;
-#[cfg(feature="prost")]
-pub use prost::{ StidMessage, DtidMessage, TtidMessage};
 
+/// Alias of single triplet-id message
+#[cfg(feature="prost")]
+pub type StidMessage = prost::Stid;
+
+/// Alias of double triplet-id message
+#[cfg(feature="prost")]
+pub type DtidMessage = prost::Dtid;
+
+/// Alias of triple triplet-id message
+#[cfg(feature="prost")]
+pub type TtidMessage = prost::Ttid;
 
 

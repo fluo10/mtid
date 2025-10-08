@@ -9,7 +9,7 @@ impl From<Dtid> for sea_orm::Value {
 impl sea_orm::TryGetable for Dtid {
     fn try_get_by<I: sea_orm::ColIdx>(res: &sea_orm::QueryResult, index: I) -> Result<Self, sea_orm::TryGetError> {
         match <u32 as sea_orm::TryGetable>::try_get_by(res, index) {
-            Ok(x) => Dtid::try_from(x).map_err(|e| sea_orm::TryGetError::DbErr(sea_orm::DbErr::TryIntoErr { from: stringify!(u32), into: stringify!(tripod_id::Dtid), source: Box::new(e) })),
+            Ok(x) => Dtid::try_from(x).map_err(|e| sea_orm::TryGetError::DbErr(sea_orm::DbErr::TryIntoErr { from: stringify!(u32), into: stringify!(mtid::Dtid), source: Box::new(e) })),
             Err(x) => Err(x)
         }
     }

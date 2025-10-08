@@ -1,8 +1,8 @@
 mod validator;
 
-use validator::TripodIdValidator;
-use tripod_id::{Stid, Ttid};
-impl TripodIdValidator for Ttid{
+use validator::MtidValidator;
+use mtid::{Stid, Ttid};
+impl MtidValidator for Ttid{
     type Integer = u64;
     type Tuple = (Stid, Stid, Stid);
 }

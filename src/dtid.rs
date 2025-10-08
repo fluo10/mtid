@@ -4,15 +4,15 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 #[cfg(feature="prost")]
 use crate::DtidMessage;
-use crate::{utils::{is_delimiter, CUBED_BASE}, macros::tripod_id_impl, Error, Stid,};
+use crate::{utils::{is_delimiter, CUBED_BASE}, macros::mtid_impl, Error, Stid,};
 
-/// Double length Tripod ID.
+/// Double length Triplet ID.
 /// 
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Dtid(u32);
 
 impl Dtid {
-    tripod_id_impl!{
+    mtid_impl!{
         Self = Dtid,
         ActualT = u32,
         BITS = 30,

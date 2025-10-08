@@ -1,16 +1,16 @@
 #[cfg(feature="prost")]
 use crate::TtidMessage;
-use crate::{utils::is_delimiter, macros::tripod_id_impl, dtid::Dtid, Error, Stid};
+use crate::{utils::is_delimiter, macros::mtid_impl, dtid::Dtid, Error, Stid};
 
 use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-/// Triple length Tripod ID.
+/// Triple length Triplet ID.
 /// 
 /// # Examples 
 /// ```
-/// # use tripod_id::Ttid;
+/// # use mtid::Ttid;
 /// # use std::str::FromStr;
 /// 
 /// let _ = Ttid::from_str("012-abc-def");
@@ -19,7 +19,7 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 pub struct Ttid(u64);
 
 impl Ttid {
-    tripod_id_impl!{
+    mtid_impl!{
         Self = Ttid,
         ActualT = u64,
         BITS = 45,

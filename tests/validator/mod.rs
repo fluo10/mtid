@@ -1,9 +1,9 @@
 use std::{fmt::Display, str::FromStr};
 
-use tripod_id::Error;
+use mtid::Error;
 
 
-pub trait TripodIdValidator: From<Self::Tuple> + FromStr<Err = Error> + Display + TryFrom<Self::Integer, Error = Error> + Copy+ PartialEq {
+pub trait MtidValidator: From<Self::Tuple> + FromStr<Err = Error> + Display + TryFrom<Self::Integer, Error = Error> + Copy+ PartialEq {
     type Integer: From<Self>;
     type Tuple: From<Self>;
     
