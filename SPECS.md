@@ -25,9 +25,10 @@ Each MTID consists of one or more 3-character blocks separated by hyphens(`-`). 
 
 ### Examples
 
-- `abs` (Single block)
-- `abc-def` (Double block)
-- `abc-def-ghi` (Triple block)
+- `012` (Single block)
+- `345-678` (Double block)
+- `9ab-cde-fgh` (Triple block)
+- `jkm-npq-rst-uwx` (Quadruple block)
 
 ## Encoding/Decoding
 
@@ -88,17 +89,22 @@ MTID uses a custom base encoding/decoding to convert integer value into/from cha
 
 MTID supports multiple fixed-length variants:
 
-| Name                       | Format        | Bit Width |
-|:---------------------------|:--------------|----------:|
-| `STID` (Single Triplet ID) | `abc`         | 15 bits
-| `DTID` (Double Triplet ID) | `abc-def`     | 30 bits
-| `TTID` (Triple Triplet ID) | `abc-def-ghj` | 45 bits
+| Name                          | Format            | Bit Width |
+|:------------------------------|:------------------|----------:|
+| `STID` (Single Triplet ID)    | `abc`             | 15 bits
+| `DTID` (Double Triplet ID)    | `abc-def`         | 30 bits
+| `TTID` (Triple Triplet ID)    | `abc-def-ghj`     | 45 bits
+| `QTID` (Quadruple Triplet ID) | `abc-def-ghj-kmn` | 60 bits
 
 ## Examples
 
-|Integer | STID  | DTID | TTID |
-|-------:|:-----:|:----:|:-----:|
-|    `0` | `000` | `000-000` | `000-000-000` |
+|Integer                      | STID  | DTID      | TTID          | QTID              |
+|----------------------------:|:-----:|:---------:|:-------------:|:-----------------:|
+|                         `0` | `000` | `000-000` | `000-000-000` | `000-000-000-000` |
+|                    `32_767` | `zzz` | `000-zzz` | `000-000-zzz` | `000-000-000-zzz` |
+|             `1_073_741_823` | `-`   | `zzz-zzz` | `000-zzz-zzz` | `000-000-zzz-zzz` |
+|        `35_184_372_088_831` | `-`   | `-`       | `zzz-zzz-zzz` | `000-zzz-zzz-zzz` |
+| `1_152_921_504_606_846_975` | `-`   | `-`       | `-`           | `zzz-zzz-zzz-zzz` |
 
 ## Implementation Notes
 

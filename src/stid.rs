@@ -2,8 +2,6 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-#[cfg(feature="prost")]
-use crate::StidMessage;
 use crate::{utils::*, error::Error, macros::mtid_impl};
 
 /// Single length Triplet ID.
@@ -34,6 +32,13 @@ impl Display for Stid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let chars = u16_to_chars(self.0);
         write!(f, "{}{}{}", chars.0, chars.1, chars.2)
+    }
+}
+
+impl TryFrom<(char, char, char)> for Stid {
+    type Error = Error;
+    fn try_from(value: (char, char, char)) -> Result<Self, Self::Error> {
+        chars_to_u16(value).map(|x| Self(x))
     }
 }
 

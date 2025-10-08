@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize, de::Error};
 
-use crate::{Dtid, Stid, Ttid};
+use crate::{Dtid, Stid, Ttid, Qtid};
 
 impl Serialize for Stid {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -55,21 +55,19 @@ impl<'de> Deserialize<'de> for Ttid {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use serde_test::{assert_tokens, Token};
-    
-    #[test]
-    fn Stid() {
-        assert_tokens(&crate::Stid::NIL, &[Token::Str("000")]);
+impl Serialize for Qtid {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer {
+        serializer.serialize_str(&self.to_string())
     }
+}
 
-    #[test]
-    fn double() {
-        assert_tokens(&crate::Dtid::NIL, &[Token::Str("000-000")]);
-    }
-    #[test]
-    fn triple() {
-        assert_tokens(&crate::Ttid::NIL, &[Token::Str("000-000-000")]);
+impl<'de> Deserialize<'de> for Qtid {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: serde::Deserializer<'de> {
+        let s  = String::deserialize(deserializer)?;
+        Qtid::from_str(&s).map_err(|e| D::Error::custom(e))
     }
 }

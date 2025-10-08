@@ -1,5 +1,3 @@
-use std::{fmt::Display, ops::Sub, str::FromStr};
-
 use crate::Error;
 
 const ENCODE_CHARACTERS: &[char;32] = &[
@@ -7,7 +5,6 @@ const ENCODE_CHARACTERS: &[char;32] = &[
         'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'w', 'x', 'y', 'z'
     ];
 pub const BASE: u8 = ENCODE_CHARACTERS.len() as u8;
-pub const SQUARED_BASE: u16 = (BASE as u16).pow(2);
 pub const CUBED_BASE: u16 = (BASE as u16).pow(3);
 
 // Encode u8 to char.

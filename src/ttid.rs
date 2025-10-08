@@ -1,5 +1,3 @@
-#[cfg(feature="prost")]
-use crate::TtidMessage;
 use crate::{utils::is_delimiter, macros::mtid_impl, dtid::Dtid, Error, Stid};
 
 use std::{fmt::Display, str::FromStr};

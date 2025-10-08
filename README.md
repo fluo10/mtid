@@ -6,5 +6,6 @@ This crate provide multiple fixed-length variants:
 - `Stid`: Single triplet (e.g. `abc`)
 - `Dtid`: Double triplet (e.g. `456-789`) (Recommended)
 - `Ttid`: Triple triplet (e.g. `abc-def-ghj`)
+- `Qtid`: Quadruple triplet (e.g. `abc-def-ghj-kmn`)
 
 For a language agnostic specification of the MTID format, see [SPECS.md](./SPECS.md).

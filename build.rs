@@ -4,7 +4,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         &[
             "proto/mtid/stid.proto",
             "proto/mtid/dtid.proto",
-            "proto/mtid/ttid.proto"
+            "proto/mtid/ttid.proto",
+            "proto/mtid/qtid.proto",
         ],
         &["proto/"]
     )?;

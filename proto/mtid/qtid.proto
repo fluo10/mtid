@@ -1,0 +1,7 @@
+syntax = "proto3";
+package mtid;
+
+// Quadruple size Triplet ID message
+message Qtid {
+    uint64 id = 1;
+}

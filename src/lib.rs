@@ -4,18 +4,20 @@
 //! 
 //! ## Example
 //! ```
-//! use std::str::FromStr;
-//! use mtid::{Stid, Dtid, Ttid, Error};
+//! use mtid::{Stid, Dtid, Ttid, Qtid, Error};
 //! # fn main() -> Result<(), Error> {
 //! 
 //! // Single length Triplet ID
-//! let single: Stid = Stid::from_str("012")?;
+//! let single: Stid = "012".parse()?;
 //! 
 //! // Double length Triplet ID
-//! let double: Dtid = Dtid::from_str("345-678")?;
+//! let double: Dtid = "345-678".parse()?;
 //! 
 //! // Triple length Triplet ID
-//! let triple: Ttid = Ttid::from_str("9ab-dce-fgh")?;
+//! let triple: Ttid = "9ab-dce-fgh".parse()?;
+//! 
+//! // Quadruple length Triplet ID
+//! let quadruple: Qtid = "jkm-npq-rst-uwx".parse()?;
 //! # Ok(())
 //! # }
 //! ```
@@ -27,8 +29,9 @@
 
 mod stid;
 mod dtid;
-mod error;
 mod ttid;
+mod qtid;
+mod error;
 mod utils;
 mod macros;
 
@@ -42,6 +45,7 @@ mod serde;
 pub use stid::Stid;
 pub use dtid::Dtid;
 pub use ttid::Ttid;
+pub use qtid::Qtid;
 pub use error::Error;
 
 #[cfg(feature="prost")]
@@ -59,4 +63,6 @@ pub type DtidMessage = prost::Dtid;
 #[cfg(feature="prost")]
 pub type TtidMessage = prost::Ttid;
 
-
+/// Alias of triple triplet-id message
+#[cfg(feature="prost")]
+pub type QtidMessage = prost::Qtid;
