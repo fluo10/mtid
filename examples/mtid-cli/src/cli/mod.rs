@@ -8,7 +8,7 @@ use clap::{Parser, Subcommand};
 use crate::cli::{args::LengthOptions, decode::DecodeArgs, encode::EncodeArgs, generate::GenerateArgs};
 
 #[derive(Debug, Parser)]
-#[command(version,about, long_about)]
+#[command(version,about, long_about, infer_subcommands =true)]
 pub struct Cli {
     #[command(subcommand)]
     command: CliSubcommand,
@@ -32,6 +32,7 @@ impl CliSubcommand {
         match self {
             Self::Decode(x) => x.run(),
             Self::Encode(x) => x.run(),
+
             Self::Generate(x) => x.run()
         }
     }

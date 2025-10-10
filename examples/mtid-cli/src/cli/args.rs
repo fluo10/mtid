@@ -8,19 +8,19 @@ use clap::Args;
 #[group(multiple = false,)]
 pub struct LengthOptions {
 
-    /// Force to use STID (Single-length Triplet ID)
+    /// Use STID (Single-length Triplet ID)
     #[arg(short, long, visible_alias = "stid")]
     pub single: bool,
 
-    /// Force to use DTID (Double-length Triplet ID)
+    /// Use DTID (Double-length Triplet ID)
     #[arg(short, long, visible_alias = "dtid")]
     pub double: bool,
 
-    /// Force to use TTID (Triple-length Triplet ID)
+    /// Use TTID (Triple-length Triplet ID)
     #[arg(short, long, visible_alias = "ttid")]
     pub triple: bool,
     
-    /// Force to use QTID (Quadruple-length Triplet ID)
+    /// Use QTID (Quadruple-length Triplet ID)
     #[arg(short, long, visible_alias = "qtid")]
     pub quadruple: bool,
 }
