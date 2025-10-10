@@ -15,7 +15,7 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 /// 
 /// let _ = Qtid::from_str("012-abc-def");
 /// ``` 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Qtid(u64);
 
 impl Qtid {
@@ -26,6 +26,7 @@ impl Qtid {
         CAPACITY = (Stid::CAPACITY as u64).pow(4),
         NIL_STR = "000-000-000-000",
         MAX_STR = "zzz-zzz-zzz-zzz",
+        MAX_INT = 1152921504606846975,
     }
 }
 

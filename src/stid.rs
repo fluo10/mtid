@@ -14,7 +14,7 @@ use crate::{utils::*, error::Error, macros::mtid_impl};
 /// 
 /// assert_eq!(Stid::from_str("012").unwrap(), Stid::try_from(34).unwrap());
 /// ```
-#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Stid(u16);
 
 impl Stid {
@@ -24,7 +24,8 @@ impl Stid {
         BITS = 15,
         CAPACITY = CUBED_BASE,
         NIL_STR = "000",
-        MAX_STR = "ZZZ",
+        MAX_STR = "zzz",
+        MAX_INT = 32767,
     }
 }
 

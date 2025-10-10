@@ -6,6 +6,7 @@ macro_rules! mtid_impl {
         CAPACITY = $CAPACITY:expr,
         NIL_STR = $NIL_STR:literal,
         MAX_STR = $MAX_STR:literal,
+        MAX_INT = $MAX_INT:literal,
     ) => {
 
         /// The size of the integer type in bits.
@@ -35,6 +36,7 @@ macro_rules! mtid_impl {
         /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert_eq!(", stringify!($SelfT), "::NIL, ", stringify!($NIL_STR), ".parse::<", stringify!($SelfT), ">()?);")]
+        #[doc = concat!("assert_eq!(", stringify!($SelfT), "::NIL, ", stringify!($SelfT), "::try_from(0)?);")]
         /// # Ok(())
         /// # }
         /// ```
@@ -49,6 +51,7 @@ macro_rules! mtid_impl {
         /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($MAX_STR), ".parse::<",stringify!($SelfT),">()?);")]
+        #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::try_from(", stringify!($MAX_INT), ")?);")]
         /// # Ok(())
         /// # }
         /// ```

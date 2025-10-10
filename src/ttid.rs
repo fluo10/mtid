@@ -13,7 +13,7 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 /// 
 /// let _ = Ttid::from_str("012-abc-def");
 /// ``` 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Ttid(u64);
 
 impl Ttid {
@@ -24,6 +24,7 @@ impl Ttid {
         CAPACITY = (Stid::CAPACITY as u64).pow(3),
         NIL_STR = "000-000-000",
         MAX_STR = "zzz-zzz-zzz",
+        MAX_INT = 35184372088831,
     }
 }
 

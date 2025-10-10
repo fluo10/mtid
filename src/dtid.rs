@@ -8,7 +8,7 @@ use crate::{utils::{is_delimiter, CUBED_BASE}, macros::mtid_impl, Error, Stid,};
 
 /// Double length Triplet ID.
 /// 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
 pub struct Dtid(u32);
 
 impl Dtid {
@@ -19,6 +19,7 @@ impl Dtid {
         CAPACITY = (Stid::CAPACITY as u32).pow(2),
         NIL_STR = "000-000",
         MAX_STR = "zzz-zzz",
+        MAX_INT = 1073741823,
     }
 }
 
