@@ -1,13 +1,13 @@
 use clap::Args;
 
-use crate::cli::args::{Length};
+use crate::cli::args::{LengthOptions};
 
 #[derive(Args, Debug)]
 /// Generate random MTID
 #[command(override_usage("mtid-cli generate [<-s|-d|-t|-q>]"))]
 pub struct GenerateArgs {
     #[command(flatten)]
-    length: Length
+    length: LengthOptions
 }
 
 impl GenerateArgs {

@@ -5,7 +5,7 @@ mod generate;
 
 use clap::{Parser, Subcommand};
 
-use crate::cli::{args::Length, decode::DecodeArgs, encode::EncodeArgs, generate::GenerateArgs};
+use crate::cli::{args::LengthOptions, decode::DecodeArgs, encode::EncodeArgs, generate::GenerateArgs};
 
 #[derive(Debug, Parser)]
 #[command(version,about, long_about)]

@@ -1,6 +1,6 @@
 use clap::Args;
 
-use crate::cli::args::{Length};
+use crate::cli::args::{LengthOptions};
 
 /// Encode integer to MTID string.
 /// 
@@ -8,7 +8,7 @@ use crate::cli::args::{Length};
 #[derive(Args, Debug)]
 pub struct EncodeArgs{
     #[command(flatten)]
-    length: Option<Length>
+    length: LengthOptions
 }
 
 impl EncodeArgs {
