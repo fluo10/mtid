@@ -8,6 +8,7 @@ use crate::cli::length_option::{LengthOption, LengthOptions};
 /// 
 /// If variant flag is not set, most small variant will returned.
 #[derive(Args, Debug)]
+#[command(override_usage("mtid-cli encode [<-s|-d|-t|-q>] <INTEGER>"))]
 pub struct EncodeArgs{
     #[command(flatten)]
     length: LengthOptions,
