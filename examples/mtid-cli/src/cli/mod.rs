@@ -1,14 +1,14 @@
-mod args;
+mod length_option;
 mod encode;
 mod decode;
 mod generate;
 
 use clap::{Parser, Subcommand};
 
-use crate::cli::{args::Length, decode::DecodeArgs, encode::EncodeArgs, generate::GenerateArgs};
+use crate::cli::{decode::DecodeArgs, encode::EncodeArgs, generate::GenerateArgs};
 
 #[derive(Debug, Parser)]
-#[command(version,about, long_about)]
+#[command(version,about, long_about, infer_subcommands =true)]
 pub struct Cli {
     #[command(subcommand)]
     command: CliSubcommand,
@@ -32,6 +32,7 @@ impl CliSubcommand {
         match self {
             Self::Decode(x) => x.run(),
             Self::Encode(x) => x.run(),
+
             Self::Generate(x) => x.run()
         }
     }
