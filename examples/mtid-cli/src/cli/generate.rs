@@ -2,7 +2,7 @@ use clap::Args;
 use mtid::{Stid, Dtid, Ttid, Qtid};
 use rand::Rng;
 
-use crate::cli::args::{LengthOptions};
+use crate::cli::length_option::{LengthOption, LengthOptions};
 
 #[derive(Args, Debug)]
 /// Generate random MTID
@@ -14,16 +14,11 @@ pub struct GenerateArgs {
 
 impl GenerateArgs {
     pub fn run(self) {
-        if self.length.single {
-            println!("{}", rand::thread_rng().r#gen::<Stid>())
-        } else if self.length.double {
-            println!("{}", rand::thread_rng().r#gen::<Dtid>())
-        } else if self.length.triple {
-            println!("{}", rand::thread_rng().r#gen::<Ttid>())
-        } else if self.length.quadruple {
-            println!("{}", rand::thread_rng().r#gen::<Qtid>())
-        } else {
-            println!("{}", rand::thread_rng().r#gen::<Stid>())
+        match LengthOption::from(self.length) {
+            LengthOption::Single | LengthOption::Unset => println!("{}", rand::thread_rng().r#gen::<Stid>()),
+            LengthOption::Double => println!("{}", rand::thread_rng().r#gen::<Dtid>()),
+            LengthOption::Triple => println!("{}", rand::thread_rng().r#gen::<Ttid>()),
+            LengthOption::Quadruple => println!("{}", rand::thread_rng().r#gen::<Qtid>()),
         }
     }
 }

@@ -24,3 +24,24 @@ pub struct LengthOptions {
     #[arg(short, long, visible_alias = "qtid")]
     pub quadruple: bool,
 }
+
+/// Enum parsed from LengthOptions.
+pub enum LengthOption {
+    Unset,
+    Single,
+    Double,
+    Triple,
+    Quadruple,
+}
+
+impl From<LengthOptions> for LengthOption {
+    fn from(value: LengthOptions) -> Self {
+        match (value.single, value.double, value.triple, value.quadruple) {
+            (true, false, false, false) => Self::Single,
+            (false, true, false, false) => Self::Double,
+            (false, false, true, false) => Self::Triple,
+            (false, false, false, true) => Self::Quadruple,
+            (_, _, _, _) => Self::Unset,
+        }
+    }
+}
