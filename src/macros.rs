@@ -1,3 +1,39 @@
+macro_rules! mtid_doc {
+    {
+        Self = $SelfT:ident,
+        ActualT = $ActualT:ident,
+        description = $description:literal,
+        example_str = $example_str:literal,
+        example_int = $example_int:literal
+    } => {
+        #[doc = concat!($description)]
+        /// 
+        /// # Examples
+        /// 
+        /// ```
+        /// # use mtid::*;
+        /// # fn main() -> Result<(), Error> {
+        /// // Generate random value.
+        /// use rand::{Rng, thread_rng};
+        #[doc = concat!("let random = ", stringify!($SelfT), "::random(&mut thread_rng());")]
+        /// 
+        #[doc = concat!("assert_ne!(random, ", stringify!($SelfT), "::NIL);")]
+        /// 
+        /// // Parse from string.
+        #[doc = concat!("let from_str: ", stringify!($SelfT), " = ", stringify!($example_str), ".parse()?;")]
+        /// 
+        /// // Parse from integer.
+        #[doc = concat!("let from_int: ", stringify!($SelfT), " = ", $example_int, ".try_into()?;")]
+        /// 
+        /// assert_eq!(from_str, from_int);
+        /// # Ok(())
+        /// # }
+        /// ```
+        #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+        pub struct $SelfT($ActualT);
+    };
+}
+
 macro_rules! mtid_impl {
     (
         Self = $SelfT:ty,
@@ -134,4 +170,5 @@ macro_rules! mtid_impl {
     };
 }
 
+pub(crate) use mtid_doc;
 pub(crate) use mtid_impl;

@@ -2,20 +2,15 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-use crate::{utils::*, error::Error, macros::mtid_impl};
+use crate::{utils::*, error::Error, macros::{mtid_impl, mtid_doc}};
 
-/// Single length Triplet ID.
-/// 
-/// # Examples
-/// 
-/// ```
-/// use std::str::FromStr;
-/// use mtid::Stid;
-/// 
-/// assert_eq!(Stid::from_str("012").unwrap(), Stid::try_from(34).unwrap());
-/// ```
-#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Stid(u16);
+mtid_doc!{
+    Self = Stid,
+    ActualT = u16,
+    description = "Single length Triplet ID.",
+    example_str = "123",
+    example_int = 1091
+}
 
 impl Stid {
     mtid_impl!{
