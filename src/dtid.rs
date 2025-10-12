@@ -6,21 +6,17 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 use crate::DtidMessage;
 use crate::{utils::{is_delimiter, CUBED_BASE}, macros::mtid_impl, Error, Stid,};
 
-/// Double length Triplet ID.
-/// 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-pub struct Dtid(u32);
-
-impl Dtid {
-    mtid_impl!{
-        Self = Dtid,
-        ActualT = u32,
-        BITS = 30,
-        CAPACITY = (Stid::CAPACITY as u32).pow(2),
-        NIL_STR = "000-000",
-        MAX_STR = "zzz-zzz",
-        MAX_INT = 1073741823,
-    }
+mtid_impl!{
+    Self = Dtid,
+    ActualT = u32,
+    BITS = 30,
+    CAPACITY = (Stid::CAPACITY as u32).pow(2),
+    NIL_STR = "000-000",
+    MAX_STR = "zzz-zzz",
+    MAX_INT = 1073741823,
+    description = "Double length Triplet ID",
+    example_str = "456-789",
+    example_int = 139664649
 }
 
 impl Display for Dtid {

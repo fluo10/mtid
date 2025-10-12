@@ -6,29 +6,19 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-/// Quadruple length Triplet ID.
-/// 
-/// # Examples 
-/// ```
-/// # use mtid::Qtid;
-/// # use std::str::FromStr;
-/// 
-/// let _ = Qtid::from_str("012-abc-def");
-/// ``` 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-pub struct Qtid(u64);
-
-impl Qtid {
-    mtid_impl!{
-        Self = Qtid,
-        ActualT = u64,
-        BITS = 60,
-        CAPACITY = (Stid::CAPACITY as u64).pow(4),
-        NIL_STR = "000-000-000-000",
-        MAX_STR = "zzz-zzz-zzz-zzz",
-        MAX_INT = 1152921504606846975,
-    }
+mtid_impl!{
+    Self = Qtid,
+    ActualT = u64,
+    BITS = 60,
+    CAPACITY = (Stid::CAPACITY as u64).pow(4),
+    NIL_STR = "000-000-000-000",
+    MAX_STR = "zzz-zzz-zzz-zzz",
+    MAX_INT = 1152921504606846975,
+    description = "Quadruple length Triplet ID.",
+    example_str = "kmn-pqr-stv-wxy",
+    example_int = 707829019477668798
 }
+
 
 impl Display for Qtid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

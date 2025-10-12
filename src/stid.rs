@@ -2,27 +2,21 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-use crate::{utils::*, error::Error, macros::{mtid_impl, mtid_doc}};
+use crate::{utils::*, error::Error, macros::mtid_impl};
 
-mtid_doc!{
+mtid_impl!{
     Self = Stid,
     ActualT = u16,
+    BITS = 15,
+    CAPACITY = CUBED_BASE,
+    NIL_STR = "000",
+    MAX_STR = "zzz",
+    MAX_INT = 32767,
     description = "Single length Triplet ID.",
     example_str = "123",
     example_int = 1091
 }
 
-impl Stid {
-    mtid_impl!{
-        Self = Stid,
-        ActualT = u16,
-        BITS = 15,
-        CAPACITY = CUBED_BASE,
-        NIL_STR = "000",
-        MAX_STR = "zzz",
-        MAX_INT = 32767,
-    }
-}
 
 impl Display for Stid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
