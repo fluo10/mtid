@@ -47,7 +47,7 @@ impl FromStr for Stid {
 
 impl Distribution<Stid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Stid {
-        Stid(rng.gen_range(0..Stid::CAPACITY))
+        Stid(rng.gen_range(1..Stid::CAPACITY))
     }
 }
 

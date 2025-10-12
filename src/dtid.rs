@@ -2,9 +2,7 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-#[cfg(feature="prost")]
-use crate::DtidMessage;
-use crate::{utils::{is_delimiter, CUBED_BASE}, macros::mtid_impl, Error, Stid,};
+use crate::{utils::is_delimiter, macros::mtid_impl, Error, Stid,};
 
 mtid_impl!{
     Self = Dtid,
@@ -77,7 +75,7 @@ impl FromStr for Dtid {
 
 impl Distribution<Dtid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Dtid {
-        Dtid(rng.gen_range(0..Dtid::CAPACITY))
+        Dtid(rng.gen_range(1..Dtid::CAPACITY))
 
     }
 }

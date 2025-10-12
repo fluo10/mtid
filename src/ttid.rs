@@ -64,7 +64,7 @@ impl FromStr for Ttid {
 
 impl Distribution<Ttid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Ttid {
-        Ttid(rng.gen_range(0..Ttid::CAPACITY))
+        Ttid(rng.gen_range(1..Ttid::CAPACITY))
 
     }
 }

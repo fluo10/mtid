@@ -1,5 +1,3 @@
-#[cfg(feature="prost")]
-use crate::QtidMessage;
 use crate::{dtid::Dtid, macros::mtid_impl, utils::is_delimiter, Error, Stid, Ttid};
 
 use std::{fmt::Display, str::FromStr};
@@ -82,7 +80,7 @@ impl FromStr for Qtid {
 
 impl Distribution<Qtid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Qtid {
-        Qtid(rng.gen_range(0..Qtid::CAPACITY))
+        Qtid(rng.gen_range(1..Qtid::CAPACITY))
 
     }
 }
