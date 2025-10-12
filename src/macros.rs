@@ -56,6 +56,23 @@ macro_rules! mtid_impl {
         /// # }
         /// ```
         pub const MAX: Self = Self(Self::CAPACITY_MINUS_ONE);
+
+        #[doc = concat!("Generate a new random ", stringify!($SelfT), ".")]
+        /// 
+        /// This method generate a cryptgraphicaly random ID.
+        /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
+        /// 
+        /// # Examples
+        /// 
+        /// ```
+        /// # use mtid::*;
+        /// use rand::{thread_rng, Rng};
+        #[doc = concat!("let id = ", stringify!($SelfT), "::random(&mut thread_rng());")]
+        #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
+        /// ```
+        pub fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
+            Self(rng.gen_range(1..=Self::CAPACITY_MINUS_ONE))
+        }
         
         /// Test if the triplet id is nil.
         /// 
