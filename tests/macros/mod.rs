@@ -39,9 +39,9 @@ macro_rules! impl_tests {
 
         #[test]
         fn random_int() {
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
             for _ in 0..10 {
-                let id: $SelfT = rng.r#gen();
+                let id: $SelfT = rng.random();
                 assert!($SelfT::NIL < id);
                 assert!($SelfT::MAX >= id);
             }
@@ -49,10 +49,10 @@ macro_rules! impl_tests {
 
         #[test]
         fn oversized_random_int() {
-            let mut rng = rand::thread_rng();
+            let mut rng = rand::rng();
             let _ = $SelfT::try_from(0).unwrap();
             for _ in 0..10 {
-                let value: $Integer = rng.gen_range($SelfT::CAPACITY..$Integer::MAX);
+                let value: $Integer = rng.random_range($SelfT::CAPACITY..$Integer::MAX);
                 let _ = $SelfT::try_from(value).unwrap_err();
             }
         }

@@ -1,6 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
-use rand::{distributions::Standard, prelude::Distribution, Rng};
+use rand::{distr::{Distribution, StandardUniform}, Rng};
 
 use crate::{utils::*, error::Error, macros::mtid_impl};
 
@@ -42,12 +42,6 @@ impl FromStr for Stid {
         }
         let chars: Vec<char> = s.chars().collect();
         Ok(Self(chars_to_u16((chars[0], chars[1], chars[2]))?))
-    }
-}
-
-impl Distribution<Stid> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Stid {
-        Stid(rng.gen_range(1..Stid::CAPACITY))
     }
 }
 

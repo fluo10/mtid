@@ -19,8 +19,7 @@ macro_rules! mtid_impl {
         /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         /// // Generate random value.
-        /// use rand::{Rng, thread_rng};
-        #[doc = concat!("let random = ", stringify!($SelfT), "::random(&mut thread_rng());")]
+        #[doc = concat!("let random = ", stringify!($SelfT), "::random();")]
         /// 
         #[doc = concat!("assert_ne!(random, ", stringify!($SelfT), "::NIL);")]
         /// 
@@ -95,12 +94,11 @@ macro_rules! mtid_impl {
             /// 
             /// ```
             /// # use mtid::*;
-            /// use rand::{thread_rng, Rng};
-            #[doc = concat!("let id = ", stringify!($SelfT), "::random(&mut thread_rng());")]
+            #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
             #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
             /// ```
-            pub fn random<R: Rng + ?Sized>(rng: &mut R) -> Self {
-                Self(rng.gen_range(1..=Self::CAPACITY_MINUS_ONE))
+            pub fn random() -> Self {
+                Self(rand::random_range(1..=Self::CAPACITY_MINUS_ONE))
             }
             
             /// Test if the triplet id is nil.
@@ -159,6 +157,12 @@ macro_rules! mtid_impl {
             /// ```
             pub fn from_int_lossy(int: $ActualT) -> Self {
                 Self(int & Self::CAPACITY_MINUS_ONE)
+            }
+        }
+
+        impl Distribution<$SelfT> for StandardUniform {
+            fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
+                $SelfT(rng.random_range(1..=$SelfT::CAPACITY_MINUS_ONE))
             }
         }
     };

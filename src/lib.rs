@@ -12,9 +12,8 @@
 //! 
 //! ```
 //! use mtid::Dtid;
-//! use rand::{Rng, thread_rng};
-//! 
-//! let id = Dtid::random(&mut thread_rng());
+//!
+//! let id = Dtid::random();
 //! println!("{}", id); // e.g. "1a2-b3c"
 //! 
 //! ```
@@ -72,12 +71,10 @@
 //! use mtid::{Stid, Dtid, Ttid, Qtid};
 //! # fn main() -> Result<(), mtid::Error> {
 //! // Generate random MTID
-//! use rand::{Rng, thread_rng};
-//! let mut rng = thread_rng();
-//! let stid = Stid::random(&mut rng); 
-//! let dtid = Dtid::random(&mut rng);
-//! let ttid = Ttid::random(&mut rng);
-//! let qtid = Qtid::random(&mut rng);
+//! let stid = Stid::random(); 
+//! let dtid = Dtid::random();
+//! let ttid = Ttid::random();
+//! let qtid = Qtid::random();
 //! 
 //! // '123', '456-789', 'abc-def-ghj', 'kmn-pqr-stv-wxy'
 //! println!("'{}', '{}', '{}'. '{}'", stid, dtid, ttid, qtid); 
