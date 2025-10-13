@@ -48,13 +48,11 @@ MTID bridges the gap between human readability and technical requirements.
 Add this to your `Cargo.toml`:
 
 ```toml
-[dependencies.mtid]
-version = "0.1.0"
+[dependencies]
+mtid = "0.1.0"
 
-# Optional features
-[dependencies.mtid]
-version = "0.1.0-alpha"
-features = ["serde", "rusqlite", "sea-orm", "prost"] }
+# With optional features
+mtid = { version = "0.1.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
 ### Features

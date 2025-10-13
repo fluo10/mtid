@@ -2,10 +2,14 @@
 name = "mtid-cli"
 edition.workspace = true
 description = "Reference tool to generate/encode/decode MTID, Multi-length Triplet ID"
-categories = ["accessibility", "encoding", "id", "uuid", "command-line-utilities"]
+categories = ["command-line-utilities"]
 license.workspace = true
 repository.workspace = true
 version.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+documentation = "https://docs.rs/mtid-cli"
+readme = "README.md"
 
 [dependencies]
 anyhow = "1.0.100"
