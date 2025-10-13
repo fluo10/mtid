@@ -47,4 +47,4 @@ keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
 version = "0.1.0"
 
 [workspace.dependencies]
-rand = "0.8.5"
+rand = "0.9.2"
