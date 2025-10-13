@@ -8,11 +8,10 @@ repository.workspace = true
 version.workspace = true
 homepage.workspace = true
 keywords.workspace = true
-documentation = "https://docs.rs/mtid-cli"
 readme = "README.md"
 
 [dependencies]
 anyhow = "1.0.100"
 clap = { version = "4.5.48", features = ["derive"] }
-mtid = { path = "../.." }
+mtid = { path = "../..", version = "0.1.0" }
 rand.workspace = true
