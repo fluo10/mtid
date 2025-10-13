@@ -1,7 +1,8 @@
 [package]
 name = "mtid-cli"
 edition.workspace = true
-description = "Reference tool handling MTID, Multi-length Triplet ID"
+description = "Reference tool to generate/encode/decode MTID, Multi-length Triplet ID"
+categories = ["accessibility", "encoding", "id", "uuid", "command-line-utilities"]
 license.workspace = true
 repository.workspace = true
 version.workspace = true
