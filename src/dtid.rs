@@ -44,9 +44,9 @@ impl FromStr for Dtid {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let chars: Vec<char> = s.chars().collect();
-        let tuple = match s.len() {
+        let tuple = match chars.len() {
             7 => {
-                let delimiter = s[3..4].chars().next().unwrap();
+                let delimiter = chars[3];
                 if is_delimiter(delimiter) {
                     Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?))
                 } else {

@@ -1,7 +1,7 @@
 #[macro_use]
 mod macros;
 
-use mtid::{Stid, Qtid};
+use mtid::Qtid;
 
 use rand::Rng;
 

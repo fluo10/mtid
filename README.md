@@ -1,11 +1,12 @@
 # MTID (Multi-length Triplet ID)
 
-A human-friendly identifier format based on 3-character blocks ("triplets").
-This crate provide multiple fixed-length variants:
+<!-- cargo-rdme -->
 
-- `Stid`: Single triplet (e.g. `abc`)
-- `Dtid`: Double triplet (e.g. `456-789`) (Recommended)
-- `Ttid`: Triple triplet (e.g. `abc-def-ghj`)
-- `Qtid`: Quadruple triplet (e.g. `abc-def-ghj-kmn`)
+## License
 
-For a language agnostic specification of the MTID format, see [SPECS.md](./SPECS.md).
+Licensed under either of:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
+- MIT License ([LICENSE-MIT](LICENSE-MIT))
+
+at your option.

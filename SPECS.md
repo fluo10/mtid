@@ -25,9 +25,9 @@ Each MTID consists of one or more 3-character blocks separated by hyphens(`-`). 
 
 ### Examples
 
-- `012` (Single block)
-- `345-678` (Double block)
-- `9ab-cde-fgh` (Triple block)
+- `123` (Single block)
+- `456-789` (Double block)
+- `abc-def-ghj` (Triple block)
 - `jkm-npq-rst-uwx` (Quadruple block)
 
 ## Encoding/Decoding
