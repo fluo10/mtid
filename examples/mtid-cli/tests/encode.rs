@@ -1,11 +1,11 @@
-use std::process::Command;
 use std::path::PathBuf;
+use std::process::Command;
 
-use mtid::{Stid, Dtid, Ttid, Qtid};
+use mtid::{Dtid, Qtid, Stid, Ttid};
 use rand::Rng;
 
 macro_rules! assert_encode {
-    ( 
+    (
         $length_option:literal,
         $mtid_int:expr,
         $mtid_str:expr
@@ -14,13 +14,13 @@ macro_rules! assert_encode {
         let output = Command::new(path)
             .arg("encode")
             .arg($length_option)
-            .arg(format!("{}",$mtid_int))
+            .arg(format!("{}", $mtid_int))
             .output()
             .unwrap()
             .stdout;
         assert_eq!(output, format!("{}\n", $mtid_str).into_bytes());
     };
-    ( 
+    (
         $mtid_int:expr,
         $mtid_str:expr
      ) => {

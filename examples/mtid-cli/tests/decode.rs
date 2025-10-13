@@ -1,11 +1,11 @@
-use std::process::Command;
 use std::path::PathBuf;
+use std::process::Command;
 
-use mtid::{Stid, Dtid, Ttid, Qtid};
+use mtid::{Dtid, Qtid, Stid, Ttid};
 use rand::Rng;
 
 macro_rules! assert_decode {
-    ( 
+    (
         $length_option:literal,
         $mtid_str:expr,
         $mtid_int:expr
@@ -20,7 +20,7 @@ macro_rules! assert_decode {
             .stdout;
         assert_eq!(output, format!("{}\n", $mtid_int).into_bytes());
     };
-    ( 
+    (
         $mtid_str:expr,
         $mtid_int:expr
      ) => {

@@ -30,34 +30,33 @@ impl FromStr for Ttid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        Ok(match s.len() {
-                11 => {
-                    let delimiter = [
-                        s[3..4].chars().next().unwrap(),
-                        s[7..8].chars().next().unwrap(),
-                    ];
-                    if is_delimiter(delimiter[0]) && is_delimiter(delimiter[1]) {
-                        Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?,Stid::from_str(&s[8..11])?)))
-                    } else {
-                        Err(Error::InvalidDelimiter{
-                            found: Vec::from(delimiter),
-                            raw: s.to_string()
-                        })
-                    }
-
-                }
-                9 => {
-                    Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?,Stid::from_str(&s[6..9])?)))
-                }
-                x => {
-                    Err(Self::Err::InvalidLength{
-                        expected: vec![9, 11],
-                        found: x,
+        match s.len() {
+            11 => {
+                let delimiter = [
+                    s[3..4].chars().next().unwrap(),
+                    s[7..8].chars().next().unwrap(),
+                ];
+                if is_delimiter(delimiter[0]) && is_delimiter(delimiter[1]) {
+                    Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?,Stid::from_str(&s[8..11])?)))
+                } else {
+                    Err(Error::InvalidDelimiter{
+                        found: Vec::from(delimiter),
                         raw: s.to_string()
                     })
                 }
-            } ?
-        )
+
+            }
+            9 => {
+                Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?,Stid::from_str(&s[6..9])?)))
+            }
+            x => {
+                Err(Self::Err::InvalidLength{
+                    expected: vec![9, 11],
+                    found: x,
+                    raw: s.to_string()
+                })
+            }
+        } 
     }
 }
 
@@ -77,8 +76,8 @@ impl TryFrom<u64> for Ttid {
             Ok(Self(value))
         } else {
             Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY as u64,
-                found: value as u64
+                expected: Self::CAPACITY,
+                found: value
             })
         }
     }

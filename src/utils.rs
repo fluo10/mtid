@@ -104,10 +104,7 @@ pub fn u16_to_chars(int: u16) -> (char, char, char) {
 
 /// Test if the character is valid delimiter.
 pub fn is_delimiter(c: char) -> bool {
-    match c {
-        '-' | '_' => true,
-        _ => false,
-    }
+    matches!(c, '-' | '_' )
 }
 
 
