@@ -41,7 +41,9 @@ macro_rules! impl_tests {
         fn random_int() {
             let mut rng = rand::thread_rng();
             for _ in 0..10 {
-                let mtid: $SelfT = rng.r#gen();
+                let id: $SelfT = rng.r#gen();
+                assert!($SelfT::NIL < id);
+                assert!($SelfT::MAX >= id);
             }
         }
 

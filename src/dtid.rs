@@ -2,25 +2,19 @@ use std::{fmt::Display, str::FromStr};
 
 use rand::{distributions::Standard, prelude::Distribution, Rng};
 
-#[cfg(feature="prost")]
-use crate::DtidMessage;
-use crate::{utils::{is_delimiter, CUBED_BASE}, macros::mtid_impl, Error, Stid,};
+use crate::{utils::is_delimiter, macros::mtid_impl, Error, Stid,};
 
-/// Double length Triplet ID.
-/// 
-#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
-pub struct Dtid(u32);
-
-impl Dtid {
-    mtid_impl!{
-        Self = Dtid,
-        ActualT = u32,
-        BITS = 30,
-        CAPACITY = (Stid::CAPACITY as u32).pow(2),
-        NIL_STR = "000-000",
-        MAX_STR = "zzz-zzz",
-        MAX_INT = 1073741823,
-    }
+mtid_impl!{
+    Self = Dtid,
+    ActualT = u32,
+    BITS = 30,
+    CAPACITY = (Stid::CAPACITY as u32).pow(2),
+    NIL_STR = "000-000",
+    MAX_STR = "zzz-zzz",
+    MAX_INT = 1073741823,
+    description = "Double length Triplet ID",
+    example_str = "456-789",
+    example_int = 139664649
 }
 
 impl Display for Dtid {
@@ -50,9 +44,9 @@ impl FromStr for Dtid {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let chars: Vec<char> = s.chars().collect();
-        let tuple = match s.len() {
+        let tuple = match chars.len() {
             7 => {
-                let delimiter = s[3..4].chars().next().unwrap();
+                let delimiter = chars[3];
                 if is_delimiter(delimiter) {
                     Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?))
                 } else {
@@ -81,7 +75,7 @@ impl FromStr for Dtid {
 
 impl Distribution<Dtid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Dtid {
-        Dtid(rng.gen_range(0..Dtid::CAPACITY))
+        Dtid(rng.gen_range(1..Dtid::CAPACITY))
 
     }
 }

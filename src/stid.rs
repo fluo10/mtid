@@ -4,30 +4,19 @@ use rand::{distributions::Standard, prelude::Distribution, Rng};
 
 use crate::{utils::*, error::Error, macros::mtid_impl};
 
-/// Single length Triplet ID.
-/// 
-/// # Examples
-/// 
-/// ```
-/// use std::str::FromStr;
-/// use mtid::Stid;
-/// 
-/// assert_eq!(Stid::from_str("012").unwrap(), Stid::try_from(34).unwrap());
-/// ```
-#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Stid(u16);
-
-impl Stid {
-    mtid_impl!{
-        Self = Stid,
-        ActualT = u16,
-        BITS = 15,
-        CAPACITY = CUBED_BASE,
-        NIL_STR = "000",
-        MAX_STR = "zzz",
-        MAX_INT = 32767,
-    }
+mtid_impl!{
+    Self = Stid,
+    ActualT = u16,
+    BITS = 15,
+    CAPACITY = CUBED_BASE,
+    NIL_STR = "000",
+    MAX_STR = "zzz",
+    MAX_INT = 32767,
+    description = "Single length Triplet ID.",
+    example_str = "123",
+    example_int = 1091
 }
+
 
 impl Display for Stid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -58,7 +47,7 @@ impl FromStr for Stid {
 
 impl Distribution<Stid> for Standard {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Stid {
-        Stid(rng.gen_range(0..Stid::CAPACITY))
+        Stid(rng.gen_range(1..Stid::CAPACITY))
     }
 }
 
