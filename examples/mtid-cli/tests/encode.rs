@@ -2,7 +2,6 @@ use std::path::PathBuf;
 use std::process::Command;
 
 use mtid::{Dtid, Qtid, Stid, Ttid};
-use rand::Rng;
 
 macro_rules! assert_encode {
     (
@@ -37,48 +36,48 @@ macro_rules! assert_encode {
 
 #[test]
 fn stid_with_length() {
-    let stid: Stid = rand::thread_rng().r#gen();
+    let stid: Stid = rand::random();
     assert_encode!("-s", u16::from(stid), &stid.to_string());
 }
 
 #[test]
 fn stid_without_length() {
-    let stid: Stid = rand::thread_rng().r#gen();
+    let stid: Stid = rand::random();
     assert_encode!(u16::from(stid), &stid.to_string());
 }
 
 #[test]
 fn dtid_with_length() {
-    let dtid: Dtid = rand::thread_rng().r#gen();
+    let dtid: Dtid = rand::random();
     assert_encode!("-d", u32::from(dtid), &dtid.to_string());
 }
 
 #[test]
 fn dtid_without_length() {
-    let dtid: Dtid = rand::thread_rng().r#gen();
+    let dtid: Dtid = rand::random();
     assert_encode!(u32::from(dtid), &dtid.to_string());
 }
 
 #[test]
 fn ttid_with_length() {
-    let ttid: Ttid = rand::thread_rng().r#gen();
+    let ttid: Ttid = rand::random();
     assert_encode!("-t", u64::from(ttid), &ttid.to_string());
 }
 
 #[test]
 fn ttid_without_length() {
-    let ttid: Ttid = rand::thread_rng().r#gen();
+    let ttid: Ttid = rand::random();
     assert_encode!(u64::from(ttid), &ttid.to_string());
 }
 
 #[test]
 fn qtid_with_length() {
-    let qtid: Qtid = rand::thread_rng().r#gen();
+    let qtid: Qtid = rand::random();
     assert_encode!("-q", u64::from(qtid), &qtid.to_string());
 }
 
 #[test]
 fn qtid_without_length() {
-    let qtid: Qtid = rand::thread_rng().r#gen();
+    let qtid: Qtid = rand::random();
     assert_encode!(u64::from(qtid), &qtid.to_string());
 }

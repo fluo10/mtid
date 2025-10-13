@@ -110,7 +110,7 @@ pub fn is_delimiter(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use rand::{thread_rng, Rng};
+    use rand::{rng, Rng};
 
     use super::*;
 
@@ -123,26 +123,26 @@ mod tests {
 
     #[test]
     fn invalid_u8() {
-        let mut rng = thread_rng();
+        let mut rng = rng();
 
         for _ in 0..BASE {
-            let int = rng.gen_range(BASE..=u8::MAX);
+            let int = rng.random_range(BASE..=u8::MAX);
             assert_ne!(int, char_to_u8(u8_to_char(int)).unwrap());
         }
     }
     #[test]
     fn valid_u16() {
-        let mut rng = thread_rng();
+        let mut rng = rng();
         for _ in 0..BASE {
-            let int = rng.gen_range(0..CUBED_BASE);
+            let int = rng.random_range(0..CUBED_BASE);
             assert_eq!(int, chars_to_u16(u16_to_chars(int)).unwrap())
         }
     }
     #[test]
     fn invalid_u16() {
-        let mut rng = thread_rng();
+        let mut rng = rng();
         for _ in 0..BASE {
-            let int = rng.gen_range(CUBED_BASE..=u16::MAX);
+            let int = rng.random_range(CUBED_BASE..=u16::MAX);
             assert_ne!(int, chars_to_u16(u16_to_chars(int)).unwrap())
         }
     }

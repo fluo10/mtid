@@ -1,6 +1,5 @@
 use clap::Args;
 use mtid::{Dtid, Qtid, Stid, Ttid};
-use rand::Rng;
 
 use crate::cli::length_option::{LengthOption, LengthOptions};
 
@@ -16,11 +15,11 @@ impl GenerateArgs {
     pub fn run(self) {
         match LengthOption::from(self.length) {
             LengthOption::Single | LengthOption::Unset => {
-                println!("{}", rand::thread_rng().r#gen::<Stid>())
+                println!("{}", rand::random::<Stid>())
             }
-            LengthOption::Double => println!("{}", rand::thread_rng().r#gen::<Dtid>()),
-            LengthOption::Triple => println!("{}", rand::thread_rng().r#gen::<Ttid>()),
-            LengthOption::Quadruple => println!("{}", rand::thread_rng().r#gen::<Qtid>()),
+            LengthOption::Double => println!("{}", rand::random::<Dtid>()),
+            LengthOption::Triple => println!("{}", rand::random::<Ttid>()),
+            LengthOption::Quadruple => println!("{}", rand::random::<Qtid>()),
         }
     }
 }

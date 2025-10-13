@@ -88,13 +88,13 @@ async fn max() {
 
 #[tokio::test]
 async fn random() {
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     for _ in 0..10 {
         assert_model(Model {
-            id: rng.r#gen(),
-            single: rng.r#gen(),
-            double: rng.r#gen(),
-            triple: rng.r#gen()
+            id: rng.random(),
+            single: rng.random(),
+            double: rng.random(),
+            triple: rng.random()
         }).await;
     }
 }

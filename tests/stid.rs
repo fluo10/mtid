@@ -13,11 +13,11 @@ impl_tests!{
 #[test]
 fn random_str() {
     for _ in 0..10 {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         let value = format!("{}{}{}",
-            rng.sample(rand::distributions::Alphanumeric) as char,
-            rng.sample(rand::distributions::Alphanumeric) as char,
-            rng.sample(rand::distributions::Alphanumeric) as char,
+            rng.sample(rand::distr::Alphanumeric) as char,
+            rng.sample(rand::distr::Alphanumeric) as char,
+            rng.sample(rand::distr::Alphanumeric) as char,
         );
         let _ = Stid::from_str(&value).unwrap();
     }

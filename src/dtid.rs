@@ -1,7 +1,5 @@
 use std::{fmt::Display, str::FromStr};
 
-use rand::{distributions::Standard, prelude::Distribution, Rng};
-
 use crate::{utils::is_delimiter, macros::mtid_impl, Error, Stid,};
 
 mtid_impl!{
@@ -69,14 +67,6 @@ impl FromStr for Dtid {
             }
         }?;
         Ok(Self::from(tuple))
-    }
-}
-
-
-impl Distribution<Dtid> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Dtid {
-        Dtid(rng.gen_range(1..Dtid::CAPACITY))
-
     }
 }
 

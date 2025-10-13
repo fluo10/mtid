@@ -2,8 +2,6 @@ use crate::{utils::is_delimiter, macros::mtid_impl, dtid::Dtid, Error, Stid};
 
 use std::{fmt::Display, str::FromStr};
 
-use rand::{distributions::Standard, prelude::Distribution, Rng};
-
 mtid_impl!{
     Self = Ttid,
     ActualT = u64,
@@ -57,14 +55,6 @@ impl FromStr for Ttid {
                 })
             }
         } 
-    }
-}
-
-
-impl Distribution<Ttid> for Standard {
-    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Ttid {
-        Ttid(rng.gen_range(1..Ttid::CAPACITY))
-
     }
 }
 
