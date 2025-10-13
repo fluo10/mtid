@@ -11,6 +11,10 @@ macro_rules! mtid_impl {
         example_str = $example_str:literal,
         example_int = $example_int:literal
     ) => {
+        #[cfg(feature = "rand")]
+        use rand::{distr::{Distribution, StandardUniform}, Rng};
+
+
         #[doc = concat!($description)]
         /// 
         /// # Examples
@@ -97,6 +101,7 @@ macro_rules! mtid_impl {
             #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
             #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
             /// ```
+            #[cfg(feature = "rand")]
             pub fn random() -> Self {
                 Self(rand::random_range(1..=Self::CAPACITY_MINUS_ONE))
             }
@@ -160,6 +165,7 @@ macro_rules! mtid_impl {
             }
         }
 
+        #[cfg(feature = "rand")]
         impl Distribution<$SelfT> for StandardUniform {
             fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
                 $SelfT(rng.random_range(1..=$SelfT::CAPACITY_MINUS_ONE))

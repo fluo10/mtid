@@ -2,8 +2,6 @@ use std::{fmt::Display, str::FromStr};
 
 use crate::{utils::is_delimiter, macros::mtid_impl, Error, Stid,};
 
-use rand::{distr::{Distribution, StandardUniform}, Rng};
-
 mtid_impl!{
     Self = Dtid,
     ActualT = u32,

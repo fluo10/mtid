@@ -1,7 +1,5 @@
 use std::{fmt::Display, str::FromStr};
 
-use rand::{distr::{Distribution, StandardUniform}, Rng};
-
 use crate::{utils::*, error::Error, macros::mtid_impl};
 
 mtid_impl!{

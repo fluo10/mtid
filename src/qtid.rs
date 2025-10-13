@@ -2,8 +2,6 @@ use crate::{dtid::Dtid, macros::mtid_impl, utils::is_delimiter, Error, Stid, Tti
 
 use std::{fmt::Display, str::FromStr};
 
-use rand::{distr::{Distribution, StandardUniform}, Rng};
-
 mtid_impl!{
     Self = Qtid,
     ActualT = u64,
