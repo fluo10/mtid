@@ -28,7 +28,7 @@ impl Display for Stid {
 impl TryFrom<(char, char, char)> for Stid {
     type Error = Error;
     fn try_from(value: (char, char, char)) -> Result<Self, Self::Error> {
-        chars_to_u16(value).map(|x| Self(x))
+        chars_to_u16(value).map(Stid)
     }
 }
 

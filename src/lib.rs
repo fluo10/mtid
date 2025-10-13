@@ -32,12 +32,12 @@
 //! ## Which length should I use?
 //! 
 //! - DTID(Double length triplet ID) is recommended for the personal data
-//!     because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
-//!     (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
+//!   because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
+//!   (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
 //! - STID(Single length triplet ID) is recommended if the data is expected to be so few that they can be counted.
 //! - TTID(Triple length triplet ID) is recommended if it is expected that one or more data will be added every second.
 //! - QTID(Quadruple length Triplet ID) is recommended if, the number of data could potentially become so large that it's impossible to predict
-//!     (for example, in a multi-user application where the IDs must be unique across users).
+//!   (for example, in a multi-user application where the IDs must be unique across users).
 //! 
 //! ## Installation
 //! 

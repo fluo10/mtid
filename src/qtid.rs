@@ -32,48 +32,47 @@ impl FromStr for Qtid {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let chars: Vec<char> = s.chars().collect();
         
-        Ok(match chars.len() {
-                15 => {
+    match chars.len() {
+            15 => {
 
-                    let delimiters = (
-                        chars[3],
-                        chars[7],
-                        chars[11]
-                    );
-                    if is_delimiter(delimiters.0) 
-                        && is_delimiter(delimiters.1)
-                        && is_delimiter(delimiters.2) {
-                        Ok(Self::from((
-                            Stid::try_from((chars[0], chars[1], chars[2]))?,
-                            Stid::try_from((chars[4], chars[5], chars[6]))?,
-                            Stid::try_from((chars[8], chars[9], chars[10]))?,
-                            Stid::try_from((chars[12], chars[13], chars[14]))?
-                        )))
-                    } else {
-                        Err(Error::InvalidDelimiter{
-                            found: vec![delimiters.0,delimiters.1, delimiters.2],
-                            raw: s.to_string()
-                        })
-                    }
-
-                }
-                12 => {
+                let delimiters = (
+                    chars[3],
+                    chars[7],
+                    chars[11]
+                );
+                if is_delimiter(delimiters.0) 
+                    && is_delimiter(delimiters.1)
+                    && is_delimiter(delimiters.2) {
                     Ok(Self::from((
                         Stid::try_from((chars[0], chars[1], chars[2]))?,
-                        Stid::try_from((chars[3], chars[4], chars[5]))?,
-                        Stid::try_from((chars[6], chars[7], chars[8]))?,
-                        Stid::try_from((chars[9], chars[10], chars[11]))?
+                        Stid::try_from((chars[4], chars[5], chars[6]))?,
+                        Stid::try_from((chars[8], chars[9], chars[10]))?,
+                        Stid::try_from((chars[12], chars[13], chars[14]))?
                     )))
-                }
-                x => {
-                    Err(Self::Err::InvalidLength{
-                        expected: vec![9, 11],
-                        found: x,
+                } else {
+                    Err(Error::InvalidDelimiter{
+                        found: vec![delimiters.0,delimiters.1, delimiters.2],
                         raw: s.to_string()
                     })
                 }
-            } ?
-        )
+
+            }
+            12 => {
+                Ok(Self::from((
+                    Stid::try_from((chars[0], chars[1], chars[2]))?,
+                    Stid::try_from((chars[3], chars[4], chars[5]))?,
+                    Stid::try_from((chars[6], chars[7], chars[8]))?,
+                    Stid::try_from((chars[9], chars[10], chars[11]))?
+                )))
+            }
+            x => {
+                Err(Self::Err::InvalidLength{
+                    expected: vec![9, 11],
+                    found: x,
+                    raw: s.to_string()
+                })
+            }
+        }
     }
 }
 
@@ -93,8 +92,8 @@ impl TryFrom<u64> for Qtid {
             Ok(Self(value))
         } else {
             Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY as u64,
-                found: value as u64
+                expected: Self::CAPACITY,
+                found: value
             })
         }
     }
