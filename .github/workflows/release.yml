@@ -11,12 +11,8 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
-jobs:
-  Test:
-    uses: ./.github/workflows/rust.yml
-    
+jobs:    
   build:
-    needs: Test
     strategy:
       fail-fast: false
       matrix:
@@ -27,17 +23,17 @@ jobs:
           - target: aarch64-unknown-linux-gnu
             extension: ""
             runner: ubuntu-24.04-arm
-          - target: x86_64-pc-widows-msvc
+          - target: x86_64-pc-windows-msvc
             extension: ".exe"
             runner: windows-latest
           - target: aarch64-pc-windows-msvc
-            extention: ".exe"
+            extension: ".exe"
             runner: windows-11-arm
           - target: aarch64-apple-darwin
             extension: ""
             runner: macos-latest
           
-    runs-on: ${{ matrix.target }}
+    runs-on: ${{ matrix.runner }}
 
     steps:
     - uses: actions/checkout@v4
