@@ -44,10 +44,10 @@
 //! 
 //! ```toml
 //! [dependencies]
-//! mtid = "0.1.0"
+//! mtid = "0.2.0"
 //! 
 //! # With optional features
-//! mtid = { version = "0.1.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
+//! mtid = { version = "0.2.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
 //! ```
 //! 
 //! ## For no_std Environments
@@ -57,7 +57,7 @@
 //! 
 //! ```toml
 //! [dependencies]
-//! mtid = { version = "0.1.0", default-features = false }
+//! mtid = { version = "0.2.0", default-features = false }
 //! ``` 
 //! 
 //! # Features
