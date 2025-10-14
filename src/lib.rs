@@ -102,6 +102,14 @@
 //! # Ok(())
 //! # }
 //! ```
+//! 
+//!
+//! 
+#![cfg_attr(not(feature = "std"), no_std)]
+
+#[cfg(all(not(feature ="std"), not(test)))]
+#[macro_use]
+extern crate core as std;
 
 mod stid;
 mod dtid;

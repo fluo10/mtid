@@ -1,4 +1,4 @@
-use std::{fmt::Display, str::FromStr};
+use core::{fmt::Display, str::FromStr};
 
 use crate::{utils::*, error::Error, macros::mtid_impl};
 
@@ -17,16 +17,21 @@ mtid_impl!{
 
 
 impl Display for Stid {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let chars = u16_to_chars(self.0);
-        write!(f, "{}{}{}", chars.0, chars.1, chars.2)
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let triplet = Triplet::from(*self);
+        triplet.fmt(f)
     }
 }
 
-impl TryFrom<(char, char, char)> for Stid {
-    type Error = Error;
-    fn try_from(value: (char, char, char)) -> Result<Self, Self::Error> {
-        chars_to_u16(value).map(Stid)
+impl From<Stid> for Triplet {
+    fn from(value: Stid) -> Self {
+        Triplet::from_int_lossy(value.0)
+    }
+}
+
+impl From<Triplet> for Stid {
+    fn from(value: Triplet) -> Self {
+        Self::from_int_lossy(u16::from(value))
     }
 }
 
@@ -36,10 +41,12 @@ impl FromStr for Stid {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let len = s.len();
         if len != 3 {
-            return Err(Error::InvalidLength { expected: vec![3], found: len, raw: s.to_string() })
+            return Err(Error::ParseLength { expected_without_delimiter: 3, expected_with_delimiter: None, found: len })
         }
-        let chars: Vec<char> = s.chars().collect();
-        Ok(Self(chars_to_u16((chars[0], chars[1], chars[2]))?))
+        let mut chars = s.chars();
+        Ok(Self(u16::from(Triplet::parse_chars(&mut chars).map_err(|e| {
+            Error::ParseTriplet { source: e, index: 0 }
+        })?)))
     }
 }
 
@@ -50,30 +57,14 @@ impl TryFrom<u16> for Stid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY as u64,
-                found: value as u64
-            })
+            Err(Error::ParseInteger { expected: Self::CAPACITY as u64, found: value as u64 })
         }
     }
 }
 
-
-
 impl From<Stid> for u16 {
     fn from(value: Stid) -> Self {
         value.0
-    }
-}
-
-impl From<(Stid,)> for Stid {
-    fn from(value: (Stid,)) -> Self {
-        value.0
-    }
-}
-impl From<Stid> for (Stid,) {
-    fn from(value: Stid) -> Self {
-        (value,)
     }
 }
 
@@ -82,7 +73,7 @@ impl PartialEq<u16> for Stid {
         &u16::from(*self) == other
     }
 }
-
+#[cfg(feature="std")]
 impl PartialEq<String> for Stid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {

@@ -1,30 +1,74 @@
-#[derive(Debug, thiserror::Error)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
-    #[error("expected under {expected}, found {found}")]
-    OutsideOfRange{
+    ParseInteger{
         expected: u64,
         found: u64,
     },
-    #[error("Invalid chunk: {0}")]
-    InvalidChunk(String),
-    #[error("Length of id expected [ {} ] but found {found}: {raw}", .expected.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(", ") )]
-    InvalidLength{
-        expected: Vec<u8>,
+    ParseLength{
+        expected_without_delimiter: usize,
+        expected_with_delimiter: Option<usize>,
         found: usize,
-        raw: String
     },
-    #[error("Number of chunks expected {expected} but  {found}: {raw}")]
-    InvalidLengthOfChunks{
-        expected: u8,
-        found: usize,
-        raw: String,
+    ParseDelimiter{
+        character: char,
+        index: usize,
     },
-    #[error("Delimiter expected '-' or '_' but '{found:?}' found: {raw}")]
-    InvalidDelimiter{
-        found: Vec<char>,
-        raw: String,
+    ParseTriplet{
+        source: TripletError,
+        index: usize
     },
-    #[error("Alphanumeric value is expected! found: '{0}'")]
-    InvalidChar(char),
 }
+
+
+
+impl core::fmt::Display for Error {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+
+        match self {
+            Error::ParseInteger { expected, found } => {
+                write!(f, "Invalid integer value: epected under {}, found {}.", expected, found)
+            },
+            Error::ParseLength { expected_without_delimiter, expected_with_delimiter, found } => {
+                if let Some(x) = expected_with_delimiter {
+                    write!(f, "Invalid length: expected {} or {}, found {}", expected_without_delimiter, x, found)
+                } else {
+                    write!(f, "Invalid length: expected {} but found {}", expected_without_delimiter, found )
+                }
+            },
+            Error::ParseDelimiter { character, index} => {
+                write!(f, "Invalid delimiter: expected: '-' or '_', found {} at {}", character, index)
+            },
+            Error::ParseTriplet { source, index } => {
+                write!(f, "Invalid triplet: source: {}, index: {}", source, index)
+            }
+
+        }
+        
+    }
+
+}
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub enum TripletError {
+    ParseLength(usize),
+    ParseCharacter{
+        character: char,
+        index: usize
+    }
+}
+
+impl core::fmt::Display for TripletError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        match self {
+            TripletError::ParseLength(length) => {
+                write!(f, "Invalid length: expected 3, found {}", length)
+            },
+            TripletError::ParseCharacter { character, index } => {
+                write!(f, "Invalid character: expected alphanumeric character, found {} at {}", character, index)
+            },
+        }
+    }
+}
+
+#[cfg(feature = "std")]
+impl std::error::Error for Error {}
 

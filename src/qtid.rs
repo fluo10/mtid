@@ -1,6 +1,6 @@
-use crate::{dtid::Dtid, macros::mtid_impl, utils::is_delimiter, Error, Stid, Ttid};
+use crate::{dtid::Dtid, macros::mtid_impl, utils::{is_delimiter, Triplet}, Error, Stid, Ttid};
 
-use std::{fmt::Display, str::FromStr};
+use core::{fmt::Display, str::FromStr};
 
 mtid_impl!{
     Self = Qtid,
@@ -17,7 +17,7 @@ mtid_impl!{
 
 
 impl Display for Qtid {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         
         let tuple: (Stid, Stid, Stid, Stid) = (*self).into();
         write!(f, "{}-{}-{}-{}", tuple.0, tuple.1, tuple.2, tuple.3)
@@ -28,46 +28,49 @@ impl FromStr for Qtid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let chars: Vec<char> = s.chars().collect();
-        
-    match chars.len() {
-            15 => {
-
-                let delimiters = (
-                    chars[3],
-                    chars[7],
-                    chars[11]
-                );
-                if is_delimiter(delimiters.0) 
-                    && is_delimiter(delimiters.1)
-                    && is_delimiter(delimiters.2) {
-                    Ok(Self::from((
-                        Stid::try_from((chars[0], chars[1], chars[2]))?,
-                        Stid::try_from((chars[4], chars[5], chars[6]))?,
-                        Stid::try_from((chars[8], chars[9], chars[10]))?,
-                        Stid::try_from((chars[12], chars[13], chars[14]))?
-                    )))
-                } else {
-                    Err(Error::InvalidDelimiter{
-                        found: vec![delimiters.0,delimiters.1, delimiters.2],
-                        raw: s.to_string()
-                    })
+        let mut chars = s.chars();
+        let len = s.len();
+        match len {
+            12| 15 => {
+                let has_delimiter = len == 15;
+                let first_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 0 }
+                })?;
+                if has_delimiter {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index: 0 })
+                    }
                 }
+                let second_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 1 }
+                })?;
+                if has_delimiter {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index: 1 })
+                    }
+                }
+                let third_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 2 }
+                })?;
+                if has_delimiter {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index:  2})
+                    }
+                }
+                let fourth_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 3 }
+                })?;
 
-            }
-            12 => {
-                Ok(Self::from((
-                    Stid::try_from((chars[0], chars[1], chars[2]))?,
-                    Stid::try_from((chars[3], chars[4], chars[5]))?,
-                    Stid::try_from((chars[6], chars[7], chars[8]))?,
-                    Stid::try_from((chars[9], chars[10], chars[11]))?
-                )))
+                Ok(Self::from((first_triplet, second_triplet, third_triplet, fourth_triplet)))
             }
             x => {
-                Err(Self::Err::InvalidLength{
-                    expected: vec![9, 11],
+                Err(Error::ParseLength{
+                    expected_without_delimiter: 9,
+                    expected_with_delimiter: Some(11),
                     found: x,
-                    raw: s.to_string()
                 })
             }
         }
@@ -81,10 +84,7 @@ impl TryFrom<u64> for Qtid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY,
-                found: value
-            })
+            Err(Error::ParseInteger { expected: Self::CAPACITY, found: value })
         }
     }
 }
@@ -95,8 +95,8 @@ impl From<Qtid> for u64 {
     }
 }
 
-impl From<(Stid, Stid, Stid, Stid)> for Qtid {
-    fn from(value: (Stid, Stid, Stid, Stid)) -> Self {
+impl From<(Triplet, Triplet, Triplet, Triplet)> for Qtid {
+    fn from(value: (Triplet, Triplet, Triplet, Triplet)) -> Self {
         Self(
             ((u16::from(value.0) as u64) << Ttid::BITS)
                 | ((u16::from(value.1) as u64) << Dtid::BITS)
@@ -122,7 +122,7 @@ impl PartialEq<u64> for Qtid {
         &u64::from(*self) == other
     }
 }
-
+#[cfg(feature="std")]
 impl PartialEq<String> for Qtid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {

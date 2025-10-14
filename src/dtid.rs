@@ -1,6 +1,6 @@
-use std::{fmt::Display, str::FromStr};
+use core::{fmt::Display, str::FromStr};
 
-use crate::{utils::is_delimiter, macros::mtid_impl, Error, Stid,};
+use crate::{macros::mtid_impl, utils::{is_delimiter, Triplet}, Error, Stid};
 
 mtid_impl!{
     Self = Dtid,
@@ -16,23 +16,23 @@ mtid_impl!{
 }
 
 impl Display for Dtid {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let tuple: (Stid, Stid) = (*self).into();
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        let tuple: (Triplet, Triplet) = (*self).into();
         write!(f, "{}-{}", tuple.0, tuple.1)
     }
 }
 
-impl From<(Stid, Stid)> for Dtid {
-    fn from(value: (Stid, Stid)) -> Self {
+impl From<(Triplet, Triplet)> for Dtid {
+    fn from(value: (Triplet, Triplet)) -> Self {
         Self((u32::from(u16::from(value.0)) << Stid::BITS)+ u32::from(u16::from(value.1)))
     }
 } 
 
-impl From<Dtid> for (Stid, Stid) {
+impl From<Dtid> for (Triplet, Triplet) {
     fn from(value: Dtid) -> Self {
         (
-            Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Stid::from_int_lossy(value.0 as u16)
+            Triplet::from_int_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_int_lossy(value.0 as u16)
         )
     }
 }
@@ -41,32 +41,32 @@ impl FromStr for Dtid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let chars: Vec<char> = s.chars().collect();
-        let tuple = match chars.len() {
-            7 => {
-                let delimiter = chars[3];
-                if is_delimiter(delimiter) {
-                    Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?))
-                } else {
-                    Err(Error::InvalidDelimiter{
-                        found: vec![delimiter],
-                        raw: s.to_string()
-                    })
+        let mut chars = s.chars();
+        let len = s.len();
+        Ok(match len {
+            7 | 6 => {
+                let first_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 0 }
+                })?;
+                if len == 7 {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index: 3 })
+                    }
                 }
-                
-            },
-            6 => {
-                Ok((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?))
+                let second_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 1 }
+                })?;
+                Self::from((first_triplet, second_triplet))
             },
             x => { 
-                Err(Error::InvalidLength{
-                    expected: vec![6, 7],
+                return Err(Error::ParseLength{
+                    expected_without_delimiter: 6,
+                    expected_with_delimiter: Some(7),
                     found: x,
-                    raw: s.to_string()
                 })
             }
-        }?;
-        Ok(Self::from(tuple))
+        })
     }
 }
 
@@ -77,10 +77,7 @@ impl TryFrom<u32> for Dtid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY as u64,
-                found: value as u64
-            })
+            Err(Error::ParseInteger { expected: Self::CAPACITY as u64, found: value as u64 })
         }
     }
 }
@@ -98,6 +95,7 @@ impl PartialEq<u32> for Dtid {
     }
 }
 
+#[cfg(feature="std")]
 impl PartialEq<String> for Dtid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {

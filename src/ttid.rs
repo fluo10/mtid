@@ -1,6 +1,6 @@
-use crate::{utils::is_delimiter, macros::mtid_impl, dtid::Dtid, Error, Stid};
+use crate::{dtid::Dtid, macros::mtid_impl, utils::{is_delimiter, Triplet}, Error, Stid};
 
-use std::{fmt::Display, str::FromStr};
+use core::{fmt::Display, str::FromStr};
 
 mtid_impl!{
     Self = Ttid,
@@ -17,9 +17,9 @@ mtid_impl!{
 
 
 impl Display for Ttid {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         
-        let tuple: (Stid, Stid, Stid) = (*self).into();
+        let tuple: (Triplet, Triplet, Triplet) = (*self).into();
         write!(f, "{}-{}-{}", tuple.0, tuple.1, tuple.2)
     }
 }
@@ -28,33 +28,43 @@ impl FromStr for Ttid {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s.len() {
-            11 => {
-                let delimiter = [
-                    s[3..4].chars().next().unwrap(),
-                    s[7..8].chars().next().unwrap(),
-                ];
-                if is_delimiter(delimiter[0]) && is_delimiter(delimiter[1]) {
-                    Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[4..7])?,Stid::from_str(&s[8..11])?)))
-                } else {
-                    Err(Error::InvalidDelimiter{
-                        found: Vec::from(delimiter),
-                        raw: s.to_string()
-                    })
+        let mut chars = s.chars();
+        let len = s.len();
+        match len {
+            9 | 11 => {
+                let has_delimiter = len == 11;
+                let first_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 0 }
+                })?;
+                if has_delimiter {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index: 0 })
+                    }
                 }
+                let second_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 1 }
+                })?;
+                if has_delimiter {
+                    let delimiter = chars.next().unwrap();
+                    if !is_delimiter(delimiter) {
+                        return Err(Error::ParseDelimiter { character: delimiter, index: 1 })
+                    }
+                }
+                let third_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
+                    Error::ParseTriplet { source: e, index: 2 }
+                })?;
 
-            }
-            9 => {
-                Ok(Self::from((Stid::from_str(&s[0..3])?,Stid::from_str(&s[3..6])?,Stid::from_str(&s[6..9])?)))
+                Ok(Self::from((first_triplet, second_triplet, third_triplet)))
             }
             x => {
-                Err(Self::Err::InvalidLength{
-                    expected: vec![9, 11],
+                Err(Error::ParseLength{
+                    expected_without_delimiter: 9,
+                    expected_with_delimiter: Some(11),
                     found: x,
-                    raw: s.to_string()
                 })
             }
-        } 
+        }
     }
 }
 
@@ -65,10 +75,7 @@ impl TryFrom<u64> for Ttid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::OutsideOfRange{
-                expected: Self::CAPACITY,
-                found: value
-            })
+            Err(Error::ParseInteger { expected: Self::CAPACITY, found: value })
         }
     }
 }
@@ -79,8 +86,8 @@ impl From<Ttid> for u64 {
     }
 }
 
-impl From<(Stid, Stid, Stid)> for Ttid {
-    fn from(value: (Stid, Stid, Stid)) -> Self {
+impl From<(Triplet, Triplet, Triplet)> for Ttid {
+    fn from(value: (Triplet, Triplet, Triplet)) -> Self {
         Self(
             ((u16::from(value.0) as u64) << Dtid::BITS)
                 | ((u16::from(value.1) as u64) << Stid::BITS) 
@@ -89,12 +96,12 @@ impl From<(Stid, Stid, Stid)> for Ttid {
     }
 }
 
-impl From<Ttid> for (Stid, Stid, Stid) {
+impl From<Ttid> for (Triplet, Triplet, Triplet) {
     fn from(value: Ttid) -> Self {
         (
-            Stid::from_int_lossy((value.0 >> Dtid::BITS) as u16),
-            Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Stid::from_int_lossy(value.0 as u16)
+            Triplet::from_int_lossy((value.0 >> Dtid::BITS) as u16),
+            Triplet::from_int_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_int_lossy(value.0 as u16)
         )
     }
 }
@@ -105,6 +112,7 @@ impl PartialEq<u64> for Ttid {
     }
 }
 
+#[cfg(feature="std")]
 impl PartialEq<String> for Ttid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
