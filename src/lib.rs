@@ -8,7 +8,7 @@
 //! 
 //! For a language agnostic specification of the MTID format, see [SPECS.md](https://github.com/fluo10/mtid/blob/main/SPECS.md)
 //! 
-//! ## Quick Start
+//! # Quick Start
 //! 
 //! ```
 //! use mtid::Dtid;
@@ -18,7 +18,7 @@
 //! 
 //! ```
 //! 
-//! ## Why MTID?
+//! # Why MTID?
 //! 
 //! Traditional identifier systems face challenges in distributed environments:
 //! 
@@ -28,7 +28,7 @@
 //! 
 //! MTID bridges the gap between human readability and technical requirements.
 //! 
-//! ## Which length should I use?
+//! # Which length should I use?
 //! 
 //! - DTID(Double length triplet ID) is recommended for the personal data
 //!   because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
@@ -38,7 +38,7 @@
 //! - QTID(Quadruple length Triplet ID) is recommended if, the number of data could potentially become so large that it's impossible to predict
 //!   (for example, in a multi-user application where the IDs must be unique across users).
 //! 
-//! ## Installation
+//! # Installation
 //! 
 //! Add this to your `Cargo.toml`:
 //! 
@@ -50,7 +50,17 @@
 //! mtid = { version = "0.1.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
 //! ```
 //! 
-//! ## Features
+//! ## For no_std Environments
+//! 
+//! This crate support `no_std`.
+//! For `no_std` environment, you'll need to disable default features.
+//! 
+//! ```toml
+//! [dependencies]
+//! mtid = { version = "0.1.0", default-features = false }
+//! ``` 
+//! 
+//! # Features
 //! 
 //! - **Human-friendly**: Easy to read, type, and communicate
 //! - **Collision-resistant**: Sufficient entropy for distributed systems
@@ -58,14 +68,14 @@
 //! - **Type-safe**: Rust implementation with strong typing
 //! - **Multiple integrations**: Support for serde, rusqlite, sea-orm, and protobuf
 //! 
-//! ### Optional Feature Flags
+//! ## Optional Feature Flags
 //! 
 //! - `serde`: Serialization/deserialization support
 //! - `rusqlite`: SQLite database integration
 //! - `sea-orm`: SeaORM ORM integration  
 //! - `prost`: Protocol Buffers support
 //! 
-//! ## Examples
+//! # Examples
 //! 
 //! ```rust
 //! use mtid::{Stid, Dtid, Ttid, Qtid};
@@ -102,6 +112,14 @@
 //! # Ok(())
 //! # }
 //! ```
+//! 
+//!
+//! 
+#![cfg_attr(not(feature = "std"), no_std)]
+
+#[cfg(all(not(feature ="std"), not(test)))]
+#[macro_use]
+extern crate core as std;
 
 mod stid;
 mod dtid;

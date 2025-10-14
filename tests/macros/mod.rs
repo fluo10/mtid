@@ -40,15 +40,15 @@ macro_rules! impl_tests {
         #[test]
         #[cfg(feature="rand")]
         fn random() {
-            let mut rng = rand::rng();
             for _ in 0..10 {
-                let id: $SelfT = rng.random();
+                let id: $SelfT = rand::random();
                 assert!($SelfT::NIL < id);
                 assert!($SelfT::MAX >= id);
             }
         }
 
         #[test]
+        #[cfg(feature="rand")]
         fn random_int() {
             let mut rng = rand::rng();
             for _ in 0..10 {
@@ -58,6 +58,7 @@ macro_rules! impl_tests {
         }
 
         #[test]
+        #[cfg(feature="rand")]
         fn oversized_random_int() {
             let mut rng = rand::rng();
             for _ in 0..10 {

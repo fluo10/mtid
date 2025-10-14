@@ -1,4 +1,12 @@
-use crate::Error;
+use core::str::Chars;
+
+use crate::{error::TripletError};
+
+/// Triplet Block.
+/// 
+/// Internally, this is tuple struct of 3 chars.
+pub struct Triplet(char, char, char);
+
 
 const ENCODE_CHARACTERS: &[char;32] = &[
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
@@ -14,9 +22,15 @@ pub fn u8_to_char(value: u8) -> char {
     ENCODE_CHARACTERS[usize::from(value)]
 }
 
+/// Check char is valid.
+/// If valid return Some(char) and else return None. 
+fn validate_char(c: char) -> Option<char> {
+    char_to_u8(c).map(|_| c)
+}
+
 // Decode char to u8
-pub fn char_to_u8(c: char) -> Result<u8, Error> {
-    Ok(match c {
+fn char_to_u8(c: char) -> Option<u8> {
+    Some(match c {
         '0' => 0,
         '1' => 1,
         '2' => 2,
@@ -79,27 +93,57 @@ pub fn char_to_u8(c: char) -> Result<u8, Error> {
         'X' => 29,
         'Y' => 30,
         'Z' => 31,
-        _ => return Err(Error::InvalidChar(c)) 
+        _ => return None
     })
 }
+impl core::fmt::Display for Triplet {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}{}{}", self.0, self.1, self.2)
+    }
+}
+impl From<Triplet> for u16 {
 
-// Decode 3 chars to u16.
-pub fn chars_to_u16(chars: (char, char, char)) -> Result<u16, Error> {
-    Ok(
-        ((char_to_u8(chars.0)? as u16) << 10) 
-            | ((char_to_u8(chars.1)? as u16) << 5)
-            | (char_to_u8(chars.2)? as u16)
-    )
+    fn from(value: Triplet) -> Self {
+    
+        ((char_to_u8(value.0).unwrap() as u16) << 10) 
+            | ((char_to_u8(value.1).unwrap() as u16) << 5)
+            | (char_to_u8(value.2).unwrap() as u16)
+    
+    }
 }
 
-// Encode u16 to 3 chars.
-// First 1 bit of arg is ignored.
-pub fn u16_to_chars(int: u16) -> (char, char, char) {
-    (
-        u8_to_char((int >> 10) as u8),
-        u8_to_char((int >> 5) as u8),
-        u8_to_char(int as u8)
-    )
+impl TryFrom<(char, char, char)> for Triplet {
+    type Error = TripletError;
+    fn try_from(value: (char, char, char)) -> Result<Self, Self::Error> {
+        Ok(Self(
+            validate_char(value.0).ok_or(TripletError::ParseCharacter { character: value.0, index: 0 })?,
+            validate_char(value.1).ok_or(TripletError::ParseCharacter { character: value.1, index: 1 })?,
+            validate_char(value.2).ok_or(TripletError::ParseCharacter { character: value.2, index: 2 })?,
+        ))
+    }
+}
+
+impl From<Triplet> for (char, char, char) {
+    fn from(value: Triplet) -> Self {
+        (value.0, value.1, value.2)
+    }
+}
+
+impl Triplet {
+    pub fn parse_chars(value: &mut Chars<'_>) -> Result<Self, TripletError> {
+        Triplet::try_from((
+            value.next().ok_or(TripletError::ParseLength(0))?,
+            value.next().ok_or(TripletError::ParseLength(1))?,
+            value.next().ok_or(TripletError::ParseLength(2))?
+        ))
+    }
+    pub fn from_int_lossy(int: u16) -> Triplet {
+        Self(
+            u8_to_char((int >> 10) as u8),
+            u8_to_char((int >> 5) as u8),
+            u8_to_char(int as u8)
+        )
+    }
 }
 
 /// Test if the character is valid delimiter.
@@ -110,8 +154,6 @@ pub fn is_delimiter(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use rand::{rng, Rng};
-
     use super::*;
 
     #[test]
@@ -122,28 +164,28 @@ mod tests {
     }
 
     #[test]
+    #[cfg(feature="std")]
     fn invalid_u8() {
-        let mut rng = rng();
-
         for _ in 0..BASE {
-            let int = rng.random_range(BASE..=u8::MAX);
+            let int = rand::random_range(BASE..=u8::MAX);
             assert_ne!(int, char_to_u8(u8_to_char(int)).unwrap());
         }
     }
+
     #[test]
+    #[cfg(feature="std")]
     fn valid_u16() {
-        let mut rng = rng();
         for _ in 0..BASE {
-            let int = rng.random_range(0..CUBED_BASE);
-            assert_eq!(int, chars_to_u16(u16_to_chars(int)).unwrap())
+            let int = rand::random_range(0..CUBED_BASE);
+            assert_eq!(int, u16::try_from(Triplet::from_int_lossy(int)).unwrap())
         }
     }
     #[test]
+    #[cfg(feature="std")]
     fn invalid_u16() {
-        let mut rng = rng();
         for _ in 0..BASE {
-            let int = rng.random_range(CUBED_BASE..=u16::MAX);
-            assert_ne!(int, chars_to_u16(u16_to_chars(int)).unwrap())
+            let int = rand::random_range(CUBED_BASE..=u16::MAX);
+            assert_ne!(int, u16::try_from(Triplet::from_int_lossy(int)).unwrap())
         }
     }
 }

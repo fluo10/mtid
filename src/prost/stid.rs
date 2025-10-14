@@ -19,10 +19,7 @@ impl TryFrom<Stid> for crate::Stid {
 
     fn try_from(value: Stid) -> Result<Self, Self::Error> {
         Self::try_from(
-            u16::try_from(value.id).or(Err(Error::OutsideOfRange {
-                expected: u64::from(crate::Stid::CAPACITY),
-                found: u64::from(value.id) 
-            }))?
+            u16::try_from(value.id).or(Err(Error::ParseInteger { expected: u64::from(crate::Stid::CAPACITY), found: value.id as u64}))?
         )
     }
 }

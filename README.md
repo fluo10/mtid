@@ -12,18 +12,17 @@ This crate provide multiple fixed-length variants:
 
 For a language agnostic specification of the MTID format, see [SPECS.md](https://github.com/fluo10/mtid/blob/main/SPECS.md)
 
-### Quick Start
+## Quick Start
 
 ```rust
 use mtid::Dtid;
-use rand::{Rng, thread_rng};
 
-let id = Dtid::random(&mut thread_rng());
+let id = Dtid::random();
 println!("{}", id); // e.g. "1a2-b3c"
 
 ```
 
-### Why MTID?
+## Why MTID?
 
 Traditional identifier systems face challenges in distributed environments:
 
@@ -33,17 +32,17 @@ Traditional identifier systems face challenges in distributed environments:
 
 MTID bridges the gap between human readability and technical requirements.
 
-### Which length should I use?
+## Which length should I use?
 
 - DTID(Double length triplet ID) is recommended for the personal data
-    because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
-    (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
+  because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
+  (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
 - STID(Single length triplet ID) is recommended if the data is expected to be so few that they can be counted.
 - TTID(Triple length triplet ID) is recommended if it is expected that one or more data will be added every second.
 - QTID(Quadruple length Triplet ID) is recommended if, the number of data could potentially become so large that it's impossible to predict
-    (for example, in a multi-user application where the IDs must be unique across users).
+  (for example, in a multi-user application where the IDs must be unique across users).
 
-### Installation
+## Installation
 
 Add this to your `Cargo.toml`:
 
@@ -55,7 +54,17 @@ mtid = "0.1.0"
 mtid = { version = "0.1.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
-### Features
+### For no_std Environments
+
+This crate support `no_std`.
+For `no_std` environment, you'll need to disable default features.
+
+```toml
+[dependencies]
+mtid = { version = "0.1.0", default-features = false }
+``` 
+
+## Features
 
 - **Human-friendly**: Easy to read, type, and communicate
 - **Collision-resistant**: Sufficient entropy for distributed systems
@@ -63,24 +72,22 @@ mtid = { version = "0.1.0", features = ["serde", "rusqlite", "sea-orm", "prost"]
 - **Type-safe**: Rust implementation with strong typing
 - **Multiple integrations**: Support for serde, rusqlite, sea-orm, and protobuf
 
-#### Optional Feature Flags
+### Optional Feature Flags
 
 - `serde`: Serialization/deserialization support
 - `rusqlite`: SQLite database integration
 - `sea-orm`: SeaORM ORM integration  
 - `prost`: Protocol Buffers support
 
-### Examples
+## Examples
 
 ```rust
 use mtid::{Stid, Dtid, Ttid, Qtid};
 // Generate random MTID
-use rand::{Rng, thread_rng};
-let mut rng = thread_rng();
-let stid = Stid::random(&mut rng); 
-let dtid = Dtid::random(&mut rng);
-let ttid = Ttid::random(&mut rng);
-let qtid = Qtid::random(&mut rng);
+let stid = Stid::random(); 
+let dtid = Dtid::random();
+let ttid = Ttid::random();
+let qtid = Qtid::random();
 
 // '123', '456-789', 'abc-def-ghj', 'kmn-pqr-stv-wxy'
 println!("'{}', '{}', '{}'. '{}'", stid, dtid, ttid, qtid); 
@@ -106,6 +113,8 @@ let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
 assert_eq!(valid_id, id_from_overflowed_int);
 
 ```
+
+
 
 <!-- cargo-rdme end -->
 
