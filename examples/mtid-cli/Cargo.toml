@@ -13,5 +13,5 @@ readme = "README.md"
 [dependencies]
 anyhow = "1.0.100"
 clap = { version = "4.5.48", features = ["derive"] }
-mtid = { path = "../..", version = "0.2.0" }
+mtid = { path = "../..", version = "0.2.1" }
 rand.workspace = true
