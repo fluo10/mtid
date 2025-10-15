@@ -10,7 +10,7 @@ homepage.workspace = true
 keywords.workspace = true
 documentation = "https://docs.rs/mtid"
 readme = "README.md"
-exclude = ["/.github", "/.gitignore", "/.vscode"]
+exclude = ["/.github", "/.gitignore", "/.vscode", "/CHANGELOG.md", "/SPECS.md"]
 
 [package.metadata.docs.rs]
 all-features = true
