@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this workspace will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Document on docs.rs now contains all features with labels.
+- (`mtid-cli`) LICENCE
 
 ### Removed
 - Unnecessory files like `.gitignore`, `.vscode` and `.github` are removed from published package.
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Dependencies on `rand` crate is now optional.
 - `Error` type has been almost completely rewritten to support `no_std`.
 - The functions for conversion with strings has been almost completely rewitten to support `no_std`.
+- (`mtid-cli`) Bump `mtid` to `v0.2.0`.
 
 ### Removed
 - Dependency on `thiserror` crate
@@ -52,6 +54,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `rusqlite`: SQLite database integration
   - `sea-orm`: SeaORM ORM integration
   - `prost`: Protocol Buffers support
+- (`mitd-cli`) Initial release example cli tool with 3 subcommands
+  - `generate`: generate random id
+  - `encode`: encode integer to string
+  - `decode`: to decode string to integer
 
 [Unreleased]: https://github.com/fluo10/mtid/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/fluo10/mtid/compare/v0.1.0...v0.2.0
