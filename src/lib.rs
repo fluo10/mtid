@@ -116,6 +116,7 @@
 //!
 //! 
 #![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 #[cfg(all(not(feature ="std"), not(test)))]
 #[macro_use]

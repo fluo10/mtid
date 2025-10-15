@@ -10,10 +10,11 @@ homepage.workspace = true
 keywords.workspace = true
 documentation = "https://docs.rs/mtid"
 readme = "README.md"
+exclude = ["/.github", "/.gitignore", "/.vscode"]
 
 [features]
 default=["rand", "std"]
-std = ["rand?/thread_rng", "prost?/std", "serde?/std"]
+std = ["rand?/thread_rng",]
 rand = ["dep:rand",]
 prost = ["dep:prost", "dep:prost-build"]
 rusqlite = ["std", "dep:rusqlite"]
