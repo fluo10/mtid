@@ -48,10 +48,10 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mtid = "0.2.0"
+mtid = "0.2"
 
 # With optional features
-mtid = { version = "0.2.0", features = ["serde", "rusqlite", "sea-orm", "prost"] }
+mtid = { version = "0.2", features = ["serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
 ### For no_std Environments
@@ -61,7 +61,7 @@ For `no_std` environment, you'll need to disable default features.
 
 ```toml
 [dependencies]
-mtid = { version = "0.2.0", default-features = false }
+mtid = { version = "0.2", default-features = false }
 ``` 
 
 ## Features

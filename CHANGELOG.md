@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-10-16
+
 ### Added
 - Document on docs.rs now contains all features with labels.
+- (`mtid-cli`) Licenses.
 
 ### Removed
 - Unnecessory files like `.gitignore`, `.vscode` and `.github` are removed from published package.
@@ -53,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `sea-orm`: SeaORM ORM integration
   - `prost`: Protocol Buffers support
 
-[Unreleased]: https://github.com/fluo10/mtid/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/fluo10/mtid/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/fluo10/mtid/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/fluo10/mtid/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/fluo10/mtid/releases/tag/v0.1.0
