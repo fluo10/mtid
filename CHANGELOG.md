@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document on docs.rs now contains all features with labels.
 - (`mtid-cli`) Licenses.
 
+### Changed
+- (`mtid-cli`) Bump `mtid` to `v0.2.1`.
+
 ### Removed
 - Unnecessory files like `.gitignore`, `.vscode` and `.github` are removed from published package.
 
