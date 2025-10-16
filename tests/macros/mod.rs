@@ -3,11 +3,10 @@ macro_rules! impl_tests {
         Self = $SelfT:ident,
         Integer = $Integer:ident,
     ) => {
-
         fn validate_string_convertion(value: $SelfT) -> Result<bool, mtid::Error> {
             Ok(value == value.to_string().parse::<$SelfT>()?)
         }
-        
+
         fn validate_integer_conversion(value: $SelfT) -> Result<bool, mtid::Error> {
             Ok(value == $SelfT::try_from($Integer::from(value))?)
         }
@@ -29,16 +28,15 @@ macro_rules! impl_tests {
         fn max_integer_conversion() {
             assert!(validate_integer_conversion($SelfT::MAX).unwrap());
         }
-        
 
         #[test]
         fn boundary_value() {
-            let _ = $SelfT::try_from($SelfT::CAPACITY-1).unwrap();
+            let _ = $SelfT::try_from($SelfT::CAPACITY - 1).unwrap();
             let _ = $SelfT::try_from($SelfT::CAPACITY).unwrap_err();
         }
 
         #[test]
-        #[cfg(feature="rand")]
+        #[cfg(feature = "rand")]
         fn random() {
             for _ in 0..10 {
                 let id: $SelfT = rand::random();
@@ -48,7 +46,7 @@ macro_rules! impl_tests {
         }
 
         #[test]
-        #[cfg(feature="rand")]
+        #[cfg(feature = "rand")]
         fn random_int() {
             let mut rng = rand::rng();
             for _ in 0..10 {
@@ -58,7 +56,7 @@ macro_rules! impl_tests {
         }
 
         #[test]
-        #[cfg(feature="rand")]
+        #[cfg(feature = "rand")]
         fn oversized_random_int() {
             let mut rng = rand::rng();
             for _ in 0..10 {
@@ -79,5 +77,5 @@ macro_rules! impl_tests {
             assert_eq!(vec[0], $SelfT::NIL);
             assert_eq!(vec[1], $SelfT::MAX);
         }
-    }
+    };
 }

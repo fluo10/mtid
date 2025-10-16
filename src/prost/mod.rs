@@ -1,7 +1,7 @@
-mod stid;
 mod dtid;
-mod ttid;
 mod qtid;
+mod stid;
+mod ttid;
 
 const PACKAGE_NAME: &'static str = "mtid";
 

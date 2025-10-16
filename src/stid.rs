@@ -1,8 +1,8 @@
 use core::{fmt::Display, str::FromStr};
 
-use crate::{utils::*, error::Error, macros::mtid_impl};
+use crate::{error::Error, macros::mtid_impl, utils::*};
 
-mtid_impl!{
+mtid_impl! {
     Self = Stid,
     ActualT = u16,
     BITS = 15,
@@ -14,7 +14,6 @@ mtid_impl!{
     example_str = "123",
     example_int = 1091
 }
-
 
 impl Display for Stid {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -41,12 +40,19 @@ impl FromStr for Stid {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let len = s.len();
         if len != 3 {
-            return Err(Error::ParseLength { expected_without_delimiter: 3, expected_with_delimiter: None, found: len })
+            return Err(Error::ParseLength {
+                expected_without_delimiter: 3,
+                expected_with_delimiter: None,
+                found: len,
+            });
         }
         let mut chars = s.chars();
-        Ok(Self(u16::from(Triplet::parse_chars(&mut chars).map_err(|e| {
-            Error::ParseTriplet { source: e, index: 0 }
-        })?)))
+        Ok(Self(u16::from(Triplet::parse_chars(&mut chars).map_err(
+            |e| Error::ParseTriplet {
+                source: e,
+                index: 0,
+            },
+        )?)))
     }
 }
 
@@ -57,7 +63,10 @@ impl TryFrom<u16> for Stid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::ParseInteger { expected: Self::CAPACITY as u64, found: value as u64 })
+            Err(Error::ParseInteger {
+                expected: Self::CAPACITY as u64,
+                found: value as u64,
+            })
         }
     }
 }
@@ -73,13 +82,12 @@ impl PartialEq<u16> for Stid {
         &u16::from(*self) == other
     }
 }
-#[cfg(feature="std")]
+#[cfg(feature = "std")]
 impl PartialEq<String> for Stid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
-            Err(_) => false
+            Err(_) => false,
         }
     }
 }
-
