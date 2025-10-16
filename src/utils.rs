@@ -1,17 +1,16 @@
 use core::str::Chars;
 
-use crate::{error::TripletError};
+use crate::error::TripletError;
 
 /// Triplet Block.
-/// 
+///
 /// Internally, this is tuple struct of 3 chars.
 pub struct Triplet(char, char, char);
 
-
-const ENCODE_CHARACTERS: &[char;32] = &[
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
-        'g', 'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
-    ];
+const ENCODE_CHARACTERS: &[char; 32] = &[
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j',
+    'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
+];
 pub const BASE: u8 = ENCODE_CHARACTERS.len() as u8;
 pub const CUBED_BASE: u16 = (BASE as u16).pow(3);
 
@@ -23,7 +22,7 @@ pub fn u8_to_char(value: u8) -> char {
 }
 
 /// Check char is valid.
-/// If valid return Some(char) and else return None. 
+/// If valid return Some(char) and else return None.
 fn validate_char(c: char) -> Option<char> {
     char_to_u8(c).map(|_| c)
 }
@@ -93,7 +92,7 @@ fn char_to_u8(c: char) -> Option<u8> {
         'X' => 29,
         'Y' => 30,
         'Z' => 31,
-        _ => return None
+        _ => return None,
     })
 }
 impl core::fmt::Display for Triplet {
@@ -102,13 +101,10 @@ impl core::fmt::Display for Triplet {
     }
 }
 impl From<Triplet> for u16 {
-
     fn from(value: Triplet) -> Self {
-    
-        ((char_to_u8(value.0).unwrap() as u16) << 10) 
+        ((char_to_u8(value.0).unwrap() as u16) << 10)
             | ((char_to_u8(value.1).unwrap() as u16) << 5)
             | (char_to_u8(value.2).unwrap() as u16)
-    
     }
 }
 
@@ -116,9 +112,18 @@ impl TryFrom<(char, char, char)> for Triplet {
     type Error = TripletError;
     fn try_from(value: (char, char, char)) -> Result<Self, Self::Error> {
         Ok(Self(
-            validate_char(value.0).ok_or(TripletError::ParseCharacter { character: value.0, index: 0 })?,
-            validate_char(value.1).ok_or(TripletError::ParseCharacter { character: value.1, index: 1 })?,
-            validate_char(value.2).ok_or(TripletError::ParseCharacter { character: value.2, index: 2 })?,
+            validate_char(value.0).ok_or(TripletError::ParseCharacter {
+                character: value.0,
+                index: 0,
+            })?,
+            validate_char(value.1).ok_or(TripletError::ParseCharacter {
+                character: value.1,
+                index: 1,
+            })?,
+            validate_char(value.2).ok_or(TripletError::ParseCharacter {
+                character: value.2,
+                index: 2,
+            })?,
         ))
     }
 }
@@ -134,23 +139,22 @@ impl Triplet {
         Triplet::try_from((
             value.next().ok_or(TripletError::ParseLength(0))?,
             value.next().ok_or(TripletError::ParseLength(1))?,
-            value.next().ok_or(TripletError::ParseLength(2))?
+            value.next().ok_or(TripletError::ParseLength(2))?,
         ))
     }
     pub fn from_int_lossy(int: u16) -> Triplet {
         Self(
             u8_to_char((int >> 10) as u8),
             u8_to_char((int >> 5) as u8),
-            u8_to_char(int as u8)
+            u8_to_char(int as u8),
         )
     }
 }
 
 /// Test if the character is valid delimiter.
 pub fn is_delimiter(c: char) -> bool {
-    matches!(c, '-' | '_' )
+    matches!(c, '-' | '_')
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -164,7 +168,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature="std")]
+    #[cfg(feature = "std")]
     fn invalid_u8() {
         for _ in 0..BASE {
             let int = rand::random_range(BASE..=u8::MAX);
@@ -173,7 +177,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(feature="std")]
+    #[cfg(feature = "std")]
     fn valid_u16() {
         for _ in 0..BASE {
             let int = rand::random_range(0..CUBED_BASE);
@@ -181,7 +185,7 @@ mod tests {
         }
     }
     #[test]
-    #[cfg(feature="std")]
+    #[cfg(feature = "std")]
     fn invalid_u16() {
         for _ in 0..BASE {
             let int = rand::random_range(CUBED_BASE..=u16::MAX);

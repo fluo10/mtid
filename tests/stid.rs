@@ -5,7 +5,7 @@ use std::str::FromStr;
 use mtid::Stid;
 use rand::Rng;
 
-impl_tests!{
+impl_tests! {
     Self = Stid,
     Integer = u16,
 }
@@ -14,7 +14,8 @@ impl_tests!{
 fn random_str() {
     for _ in 0..10 {
         let mut rng = rand::rng();
-        let value = format!("{}{}{}",
+        let value = format!(
+            "{}{}{}",
             rng.sample(rand::distr::Alphanumeric) as char,
             rng.sample(rand::distr::Alphanumeric) as char,
             rng.sample(rand::distr::Alphanumeric) as char,
