@@ -14,9 +14,7 @@ pub struct GenerateArgs {
 impl GenerateArgs {
     pub fn run(self) {
         match LengthOption::from(self.length) {
-            LengthOption::Single | LengthOption::Unset => {
-                println!("{}", rand::random::<Stid>())
-            }
+            LengthOption::Single => println!("{}", rand::random::<Stid>()),
             LengthOption::Double => println!("{}", rand::random::<Dtid>()),
             LengthOption::Triple => println!("{}", rand::random::<Ttid>()),
             LengthOption::Quadruple => println!("{}", rand::random::<Qtid>()),

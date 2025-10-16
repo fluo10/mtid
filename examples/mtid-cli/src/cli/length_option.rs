@@ -5,7 +5,7 @@ use clap::Args;
 /// Specify what variant will be used.
 #[derive(Args, Debug)]
 #[command(next_help_heading = "Length options", about = None, long_about = None)]
-#[group(multiple = false)]
+#[group(multiple = false, required = true)]
 pub struct LengthOptions {
     /// Use STID (Single-length Triplet ID)
     #[arg(short, long, visible_alias = "stid")]
@@ -26,7 +26,6 @@ pub struct LengthOptions {
 
 /// Enum parsed from LengthOptions.
 pub enum LengthOption {
-    Unset,
     Single,
     Double,
     Triple,
@@ -40,7 +39,7 @@ impl From<LengthOptions> for LengthOption {
             (false, true, false, false) => Self::Double,
             (false, false, true, false) => Self::Triple,
             (false, false, false, true) => Self::Quadruple,
-            (_, _, _, _) => Self::Unset,
+            (_, _, _, _) => unreachable!("one of length options must specified!")
         }
     }
 }
