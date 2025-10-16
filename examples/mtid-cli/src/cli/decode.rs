@@ -20,20 +20,6 @@ pub struct DecodeArgs {
 impl DecodeArgs {
     pub fn run(self) {
         match LengthOption::from(self.length) {
-            LengthOption::Unset => match (
-                self.mtid.parse::<Stid>(),
-                self.mtid.parse::<Dtid>(),
-                self.mtid.parse::<Ttid>(),
-                self.mtid.parse::<Qtid>(),
-            ) {
-                (Ok(x), _, _, _) => println!("{}", u16::from(x)),
-                (Err(_), Ok(x), _, _) => println!("{}", u32::from(x)),
-                (Err(_), Err(_), Ok(x), _) => println!("{}", u64::from(x)),
-                (Err(_), Err(_), Err(_), Ok(x)) => println!("{}", u64::from(x)),
-                (Err(e1), Err(e2), Err(e3), Err(e4)) => {
-                    panic!("Failed to parse all format: {:?}", (e1, e2, e3, e4))
-                }
-            },
             LengthOption::Single => println!("{}", u16::from(self.mtid.parse::<Stid>().unwrap())),
             LengthOption::Double => println!("{}", u32::from(self.mtid.parse::<Dtid>().unwrap())),
             LengthOption::Triple => println!("{}", u64::from(self.mtid.parse::<Ttid>().unwrap())),

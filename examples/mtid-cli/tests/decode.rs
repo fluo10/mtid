@@ -19,65 +19,28 @@ macro_rules! assert_decode {
             .stdout;
         assert_eq!(output, format!("{}\n", $mtid_int).into_bytes());
     };
-    (
-        $mtid_str:expr,
-        $mtid_int:expr
-     ) => {
-        let path = PathBuf::from(std::env!("CARGO_BIN_EXE_mtid-cli"));
-        let output = Command::new(path)
-            .arg("decode")
-            .arg($mtid_str)
-            .output()
-            .unwrap()
-            .stdout;
-        assert_eq!(output, format!("{}\n", $mtid_int).into_bytes());
-    };
 }
 
 #[test]
-fn stid_with_length() {
+fn stid() {
     let stid: Stid = rand::random();
     assert_decode!("-s", &stid.to_string(), u16::from(stid));
 }
 
 #[test]
-fn stid_without_length() {
-    let stid: Stid = rand::random();
-    assert_decode!(&stid.to_string(), u16::from(stid));
-}
-
-#[test]
-fn dtid_with_length() {
+fn dtid() {
     let dtid: Dtid = rand::random();
     assert_decode!("-d", &dtid.to_string(), u32::from(dtid));
 }
 
 #[test]
-fn dtid_without_length() {
-    let dtid: Dtid = rand::random();
-    assert_decode!(&dtid.to_string(), u32::from(dtid));
-}
-
-#[test]
-fn ttid_with_length() {
+fn ttid() {
     let ttid: Ttid = rand::random();
     assert_decode!("-t", &ttid.to_string(), u64::from(ttid));
 }
 
 #[test]
-fn ttid_without_length() {
-    let ttid: Ttid = rand::random();
-    assert_decode!(&ttid.to_string(), u64::from(ttid));
-}
-
-#[test]
-fn qtid_with_length() {
+fn qtid() {
     let qtid: Qtid = rand::random();
     assert_decode!("-q", &qtid.to_string(), u64::from(qtid));
-}
-
-#[test]
-fn qtid_without_length() {
-    let qtid: Qtid = rand::random();
-    assert_decode!(&qtid.to_string(), u64::from(qtid));
 }
