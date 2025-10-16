@@ -1,10 +1,6 @@
 use core::{fmt::Display, str::FromStr};
 
-use crate::{
-    Error, Stid,
-    macros::mtid_impl,
-    utils::{Triplet, is_delimiter},
-};
+use crate::{Error, Stid, alphabet::is_delimiter, macros::mtid_impl, triplet::Triplet};
 
 mtid_impl! {
     Self = Dtid,

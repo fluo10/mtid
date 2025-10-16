@@ -1,3 +1,6 @@
+use crate::triplet::TripletError;
+
+/// A general error that can occur when working with MTIDs.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
     ParseInteger {
@@ -61,28 +64,13 @@ impl core::fmt::Display for Error {
         }
     }
 }
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
-pub enum TripletError {
-    ParseLength(usize),
-    ParseCharacter { character: char, index: usize },
-}
 
-impl core::fmt::Display for TripletError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+#[cfg(feature = "std")]
+impl std::error::Error for Error {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
         match self {
-            TripletError::ParseLength(length) => {
-                write!(f, "Invalid length: expected 3, found {}", length)
-            }
-            TripletError::ParseCharacter { character, index } => {
-                write!(
-                    f,
-                    "Invalid character: expected alphanumeric character, found {} at {}",
-                    character, index
-                )
-            }
+            Error::ParseTriplet { source, index: _ } => Some(source),
+            _ => None,
         }
     }
 }
-
-#[cfg(feature = "std")]
-impl std::error::Error for Error {}
