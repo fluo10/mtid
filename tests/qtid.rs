@@ -5,8 +5,7 @@ use mtid::Qtid;
 
 use rand::Rng;
 
-
-impl_tests!{
+impl_tests! {
     Self = Qtid,
     Integer = u64,
 }

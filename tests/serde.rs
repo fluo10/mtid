@@ -1,11 +1,11 @@
 //! Test for serde feature
 #![cfg(feature = "serde")]
 
-use mtid::{Stid, Dtid, Ttid, Qtid};
+use mtid::{Dtid, Qtid, Stid, Ttid};
 
-use serde::{Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 
-use serde_test::{assert_tokens, Token};
+use serde_test::{Token, assert_tokens};
 
 #[test]
 fn stid_nil() {
@@ -36,7 +36,7 @@ struct Mtids {
 }
 
 #[test]
-fn struct_nil () {
+fn struct_nil() {
     assert_tokens(
         &Mtids {
             stid: Stid::NIL,
@@ -45,7 +45,10 @@ fn struct_nil () {
             qtid: Qtid::NIL,
         },
         &[
-            Token::Struct { name: "Mtids", len: 4},
+            Token::Struct {
+                name: "Mtids",
+                len: 4,
+            },
             Token::Str("stid"),
             Token::Str("000"),
             Token::Str("dtid"),
@@ -55,6 +58,6 @@ fn struct_nil () {
             Token::Str("qtid"),
             Token::Str("000-000-000-000"),
             Token::StructEnd,
-        ]
+        ],
     )
 }

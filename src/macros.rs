@@ -16,23 +16,23 @@ macro_rules! mtid_impl {
 
 
         #[doc = concat!($description)]
-        /// 
+        ///
         /// # Examples
-        /// 
+        ///
         /// ```
         /// # use mtid::*;
         /// # fn main() -> Result<(), Error> {
         /// // Generate random value.
         #[doc = concat!("let random = ", stringify!($SelfT), "::random();")]
-        /// 
+        ///
         #[doc = concat!("assert_ne!(random, ", stringify!($SelfT), "::NIL);")]
-        /// 
+        ///
         /// // Parse from string.
         #[doc = concat!("let from_str: ", stringify!($SelfT), " = ", stringify!($example_str), ".parse()?;")]
-        /// 
+        ///
         /// // Parse from integer.
         #[doc = concat!("let from_int: ", stringify!($SelfT), " = ", $example_int, ".try_into()?;")]
-        /// 
+        ///
         /// assert_eq!(from_str, from_int);
         /// # Ok(())
         /// # }
@@ -44,11 +44,11 @@ macro_rules! mtid_impl {
             /// The size of the integer type in bits.
             /// This is not equal actually stored size.
             pub const BITS: u32 = $BITS;
-            
+
             /// The capacity value of this triplet id type
-            /// 
+            ///
             /// #Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
@@ -61,9 +61,9 @@ macro_rules! mtid_impl {
             const CAPACITY_MINUS_ONE: $ActualT = Self::CAPACITY - 1;
 
             /// The smallest value that can be represented by this triplet id type.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
@@ -72,13 +72,13 @@ macro_rules! mtid_impl {
             /// # Ok(())
             /// # }
             /// ```
-            /// 
+            ///
             pub const NIL: Self = Self(0);
 
             /// The largest value that can be represent by this triplet id type.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
@@ -90,12 +90,12 @@ macro_rules! mtid_impl {
             pub const MAX: Self = Self(Self::CAPACITY_MINUS_ONE);
 
             #[doc = concat!("Generate a new random ", stringify!($SelfT), ".")]
-            /// 
+            ///
             /// This method generate a cryptgraphicaly random ID.
             /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
@@ -105,11 +105,11 @@ macro_rules! mtid_impl {
             pub fn random() -> Self {
                 Self(rand::random_range(1..=Self::CAPACITY_MINUS_ONE))
             }
-            
+
             /// Test if the triplet id is nil.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
@@ -122,9 +122,9 @@ macro_rules! mtid_impl {
             }
 
             /// Test if the triplet id is max.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
@@ -138,9 +138,9 @@ macro_rules! mtid_impl {
 
             /// Convert from uint.
             /// If the value is equal Self::Capacity or more, the higher bits will be lost.
-            /// 
+            ///
             /// # Examples
-            /// 
+            ///
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {

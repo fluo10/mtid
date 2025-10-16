@@ -5,8 +5,7 @@ use mtid::Dtid;
 
 use rand::Rng;
 
-
-impl_tests!{
+impl_tests! {
     Self = Dtid,
     Integer = u32,
 }

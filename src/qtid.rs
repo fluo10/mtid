@@ -1,8 +1,13 @@
-use crate::{dtid::Dtid, macros::mtid_impl, utils::{is_delimiter, Triplet}, Error, Stid, Ttid};
+use crate::{
+    Error, Stid, Ttid,
+    dtid::Dtid,
+    macros::mtid_impl,
+    utils::{Triplet, is_delimiter},
+};
 
 use core::{fmt::Display, str::FromStr};
 
-mtid_impl!{
+mtid_impl! {
     Self = Qtid,
     ActualT = u64,
     BITS = 60,
@@ -15,10 +20,8 @@ mtid_impl!{
     example_int = 707829019477668798
 }
 
-
 impl Display for Qtid {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        
         let tuple: (Stid, Stid, Stid, Stid) = (*self).into();
         write!(f, "{}-{}-{}-{}", tuple.0, tuple.1, tuple.2, tuple.3)
     }
@@ -31,48 +34,68 @@ impl FromStr for Qtid {
         let mut chars = s.chars();
         let len = s.len();
         match len {
-            12| 15 => {
+            12 | 15 => {
                 let has_delimiter = len == 15;
-                let first_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
-                    Error::ParseTriplet { source: e, index: 0 }
-                })?;
+                let first_triplet =
+                    Triplet::parse_chars(&mut chars).map_err(|e| Error::ParseTriplet {
+                        source: e,
+                        index: 0,
+                    })?;
                 if has_delimiter {
                     let delimiter = chars.next().unwrap();
                     if !is_delimiter(delimiter) {
-                        return Err(Error::ParseDelimiter { character: delimiter, index: 0 })
+                        return Err(Error::ParseDelimiter {
+                            character: delimiter,
+                            index: 0,
+                        });
                     }
                 }
-                let second_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
-                    Error::ParseTriplet { source: e, index: 1 }
-                })?;
+                let second_triplet =
+                    Triplet::parse_chars(&mut chars).map_err(|e| Error::ParseTriplet {
+                        source: e,
+                        index: 1,
+                    })?;
                 if has_delimiter {
                     let delimiter = chars.next().unwrap();
                     if !is_delimiter(delimiter) {
-                        return Err(Error::ParseDelimiter { character: delimiter, index: 1 })
+                        return Err(Error::ParseDelimiter {
+                            character: delimiter,
+                            index: 1,
+                        });
                     }
                 }
-                let third_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
-                    Error::ParseTriplet { source: e, index: 2 }
-                })?;
+                let third_triplet =
+                    Triplet::parse_chars(&mut chars).map_err(|e| Error::ParseTriplet {
+                        source: e,
+                        index: 2,
+                    })?;
                 if has_delimiter {
                     let delimiter = chars.next().unwrap();
                     if !is_delimiter(delimiter) {
-                        return Err(Error::ParseDelimiter { character: delimiter, index:  2})
+                        return Err(Error::ParseDelimiter {
+                            character: delimiter,
+                            index: 2,
+                        });
                     }
                 }
-                let fourth_triplet = Triplet::parse_chars(&mut chars).map_err(|e| {
-                    Error::ParseTriplet { source: e, index: 3 }
-                })?;
+                let fourth_triplet =
+                    Triplet::parse_chars(&mut chars).map_err(|e| Error::ParseTriplet {
+                        source: e,
+                        index: 3,
+                    })?;
 
-                Ok(Self::from((first_triplet, second_triplet, third_triplet, fourth_triplet)))
+                Ok(Self::from((
+                    first_triplet,
+                    second_triplet,
+                    third_triplet,
+                    fourth_triplet,
+                )))
             }
-            x => {
-                Err(Error::ParseLength{
-                    expected_without_delimiter: 9,
-                    expected_with_delimiter: Some(11),
-                    found: x,
-                })
-            }
+            x => Err(Error::ParseLength {
+                expected_without_delimiter: 9,
+                expected_with_delimiter: Some(11),
+                found: x,
+            }),
         }
     }
 }
@@ -84,7 +107,10 @@ impl TryFrom<u64> for Qtid {
         if value < Self::CAPACITY {
             Ok(Self(value))
         } else {
-            Err(Error::ParseInteger { expected: Self::CAPACITY, found: value })
+            Err(Error::ParseInteger {
+                expected: Self::CAPACITY,
+                found: value,
+            })
         }
     }
 }
@@ -100,8 +126,8 @@ impl From<(Triplet, Triplet, Triplet, Triplet)> for Qtid {
         Self(
             ((u16::from(value.0) as u64) << Ttid::BITS)
                 | ((u16::from(value.1) as u64) << Dtid::BITS)
-                | ((u16::from(value.2) as u64) << Stid::BITS) 
-                | (u16::from(value.3) as u64)
+                | ((u16::from(value.2) as u64) << Stid::BITS)
+                | (u16::from(value.3) as u64),
         )
     }
 }
@@ -112,7 +138,7 @@ impl From<Qtid> for (Stid, Stid, Stid, Stid) {
             Stid::from_int_lossy((value.0 >> Ttid::BITS) as u16),
             Stid::from_int_lossy((value.0 >> Dtid::BITS) as u16),
             Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Stid::from_int_lossy(value.0 as u16)
+            Stid::from_int_lossy(value.0 as u16),
         )
     }
 }
@@ -122,12 +148,12 @@ impl PartialEq<u64> for Qtid {
         &u64::from(*self) == other
     }
 }
-#[cfg(feature="std")]
+#[cfg(feature = "std")]
 impl PartialEq<String> for Qtid {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
-            Err(_) => false
+            Err(_) => false,
         }
     }
 }

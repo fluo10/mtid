@@ -4,7 +4,7 @@ mod macros;
 use mtid::Ttid;
 use rand::Rng;
 
-impl_tests!{
+impl_tests! {
     Self = Ttid,
     Integer = u64,
 }

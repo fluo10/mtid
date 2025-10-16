@@ -1,5 +1,5 @@
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    #[cfg(feature="prost")]
+    #[cfg(feature = "prost")]
     prost_build::compile_protos(
         &[
             "proto/mtid/stid.proto",
@@ -7,7 +7,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             "proto/mtid/ttid.proto",
             "proto/mtid/qtid.proto",
         ],
-        &["proto/"]
+        &["proto/"],
     )?;
     Ok(())
 }
