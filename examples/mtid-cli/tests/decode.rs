@@ -44,4 +44,3 @@ fn qtid() {
     let qtid: Qtid = rand::random();
     assert_decode!("-q", &qtid.to_string(), u64::from(qtid));
 }
-

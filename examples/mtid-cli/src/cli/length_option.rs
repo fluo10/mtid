@@ -39,7 +39,7 @@ impl From<LengthOptions> for LengthOption {
             (false, true, false, false) => Self::Double,
             (false, false, true, false) => Self::Triple,
             (false, false, false, true) => Self::Quadruple,
-            (_, _, _, _) => unreachable!("one of length options must specified!")
+            (_, _, _, _) => unreachable!("one of length options must specified!"),
         }
     }
 }
