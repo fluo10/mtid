@@ -1,0 +1,45 @@
+[package]
+name = "mtid-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.mtid]
+path = ".."
+
+[[bin]]
+name = "stid_parse_str"
+path = "fuzz_targets/stid_parse_str.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "dtid_parse_str"
+path = "fuzz_targets/dtid_parse_str.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "ttid_parse_str"
+path = "fuzz_targets/ttid_parse_str.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "qtid_parse_str"
+path = "fuzz_targets/qtid_parse_str.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]
