@@ -122,7 +122,14 @@
 #[macro_use]
 extern crate core as std;
 
-/// Provides functions and constans for handling base32 alphabet and delimiter.
+/// Provide constants and private functions about encoding/decoding alphabet.
+///
+/// This module implements encodeing and decoding character based on [Crockford's Base32](https://www.crockford.com/base32.html) with following exceptions:
+///
+/// - The letter `u` (`U`) is decoded to 27, same as `v`.
+/// - Characters are separated by hyphens every three characters (triplet) furing encoding.
+///   During decoding, hyphens may be omitted or replaced with underscores.
+///
 pub mod alphabet;
 
 mod dtid;
