@@ -1,8 +1,5 @@
 use crate::{
-    Error, Stid, Ttid,
-    dtid::Dtid,
-    macros::mtid_impl,
-    utils::{Triplet, is_delimiter},
+    Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet,
 };
 
 use core::{fmt::Display, str::FromStr};

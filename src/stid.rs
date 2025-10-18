@@ -1,12 +1,12 @@
 use core::{fmt::Display, str::FromStr};
 
-use crate::{error::Error, macros::mtid_impl, utils::*};
+use crate::{error::Error, macros::mtid_impl, triplet::Triplet};
 
 mtid_impl! {
     Self = Stid,
     ActualT = u16,
     BITS = 15,
-    CAPACITY = CUBED_BASE,
+    CAPACITY = Triplet::CAPACITY,
     NIL_STR = "000",
     MAX_STR = "zzz",
     MAX_INT = 32767,
