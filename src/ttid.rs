@@ -1,9 +1,4 @@
-use crate::{
-    Error, Stid,
-    dtid::Dtid,
-    macros::mtid_impl,
-    utils::{Triplet, is_delimiter},
-};
+use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 
