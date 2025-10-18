@@ -44,10 +44,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = "0.2"
+//! mtid = "0.3"
 //!
 //! # With optional features
-//! mtid = { version = "0.2", features = ["serde", "rusqlite", "sea-orm", "prost"] }
+//! mtid = { version = "0.3", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -57,7 +57,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = { version = "0.2", default-features = false }
+//! mtid = { version = "0.3", default-features = false }
 //! ```
 //!
 //! # Features
@@ -70,6 +70,7 @@
 //!
 //! ## Optional Feature Flags
 //!
+//! - `arbitrary`: `arbitrary::Arbitrary` support for fuzzing tests.
 //! - `serde`: Serialization/deserialization support
 //! - `rusqlite`: SQLite database integration
 //! - `sea-orm`: SeaORM ORM integration  
