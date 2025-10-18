@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (`mtid-cli`) Bump `mtid` to `v0.2.1`.
 
 ### Removed
-- Unnecessory files like `.gitignore`, `.vscode` and `.github` are removed from published package.
+- Unnecessary files like `.gitignore`, `.vscode` and `.github` are removed from published package.
 
 ## [0.2.0] - 2025-10-15
 
