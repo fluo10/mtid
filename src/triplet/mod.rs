@@ -32,9 +32,9 @@ impl Triplet {
     }
     pub fn from_int_lossy(int: u16) -> Triplet {
         Self(
-            u8_to_char((int >> 10) as u8),
-            u8_to_char((int >> 5) as u8),
-            u8_to_char(int as u8),
+            u8_to_char_lossy((int >> 10) as u8),
+            u8_to_char_lossy((int >> 5) as u8),
+            u8_to_char_lossy(int as u8),
         )
     }
 }
@@ -85,7 +85,7 @@ mod tests {
     #[test]
     fn valid_u8() {
         for i in 0..BASE {
-            assert_eq!(i, char_to_u8(u8_to_char(i)).unwrap());
+            assert_eq!(i, char_to_u8(u8_to_char_lossy(i)).unwrap());
         }
     }
 
@@ -94,7 +94,7 @@ mod tests {
     fn invalid_u8() {
         for _ in 0..BASE {
             let int = rand::random_range(BASE..=u8::MAX);
-            assert_ne!(int, char_to_u8(u8_to_char(int)).unwrap());
+            assert_ne!(int, char_to_u8(u8_to_char_lossy(int)).unwrap());
         }
     }
 

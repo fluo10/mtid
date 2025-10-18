@@ -123,7 +123,7 @@
 extern crate core as std;
 
 /// Provides functions and constans for handling base32 alphabet and delimiter.
-mod alphabet;
+pub mod alphabet;
 
 mod dtid;
 mod error;
