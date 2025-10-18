@@ -1,0 +1,66 @@
+[package]
+name = "mtid-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[features]
+arbitrary = ["mtid/arbitrary"]
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.mtid]
+path = ".."
+
+[[bin]]
+name = "arbitrary_stid"
+path = "fuzz_targets/arbitrary_stid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_dtid"
+path = "fuzz_targets/arbitrary_dtid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_ttid"
+path = "fuzz_targets/arbitrary_ttid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_qtid"
+path = "fuzz_targets/arbitrary_qtid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "parse_int"
+path = "fuzz_targets/parse_int.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "parse_str"
+path = "fuzz_targets/parse_str.rs"
+test = false
+doc = false
+bench = false
+
+[workspace]
+members = ["."]

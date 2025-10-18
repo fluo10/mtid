@@ -19,12 +19,14 @@ all-features = true
 default=["rand", "std"]
 std = ["rand?/thread_rng",]
 rand = ["dep:rand",]
+arbitrary = ["std", "dep:arbitrary"]
 prost = ["dep:prost", "dep:prost-build"]
 rusqlite = ["std", "dep:rusqlite"]
 sea-orm = ["std", "dep:sea-orm"]
 serde = ["dep:serde"]
 
 [dependencies]
+arbitrary = { version = "1", optional = true}
 prost = { version = "0.14.1", default-features = false, optional = true, features = ["derive"] }
 rand = { workspace = true, default-features = false, optional = true }
 rusqlite = { version = "0.37.0", default-features = false, optional = true }

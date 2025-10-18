@@ -165,6 +165,13 @@ macro_rules! mtid_impl {
             }
         }
 
+        #[cfg(feature = "arbitrary")]
+        impl<'a> arbitrary::Arbitrary<'a> for $SelfT {
+            fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
+                Ok(Self(u.int_in_range(0..=Self::CAPACITY_MINUS_ONE)?))
+            }
+        }
+
         #[cfg(feature = "rand")]
         impl Distribution<$SelfT> for StandardUniform {
             fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
