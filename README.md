@@ -3,10 +3,10 @@
 <!-- cargo-rdme start -->
 
 A human-friendly identifier format based on 3-character blocks ("triplet").
-This crate provide multiple fixed-length variants:
+This crate provides multiple fixed-length variants:
 
 - `Stid`: Single triplet ID (e.g. `123`)
-- `Dtid`: Doulbe Triplet ID (e.g. `456-789`)
+- `Dtid`: Double Triplet ID (e.g. `456-789`)
 - `Ttid`: Triple Triplet ID (e.g. `abc-def-ghj`)
 - `Qtid`: Quadruple triplet ID (e.g. `kmn-pqr-stv-wxy`)
 
@@ -35,7 +35,7 @@ MTID bridges the gap between human readability and technical requirements.
 ## Which length should I use?
 
 - DTID(Double length triplet ID) is recommended for the personal data
-  because this is short enouph to satisfy the Magic Number 7±2 principle and have enough range of value
+  because this is short enough to satisfy the Magic Number 7±2 principle and have enough range of value
   (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
 - STID(Single length triplet ID) is recommended if the data is expected to be so few that they can be counted.
 - TTID(Triple length triplet ID) is recommended if it is expected that one or more data will be added every second.
@@ -48,10 +48,10 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mtid = "0.2"
+mtid = "0.3"
 
 # With optional features
-mtid = { version = "0.2", features = ["serde", "rusqlite", "sea-orm", "prost"] }
+mtid = { version = "0.3", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
 ### For no_std Environments
@@ -61,8 +61,8 @@ For `no_std` environment, you'll need to disable default features.
 
 ```toml
 [dependencies]
-mtid = { version = "0.2", default-features = false }
-``` 
+mtid = { version = "0.3", default-features = false }
+```
 
 ## Features
 
@@ -74,6 +74,7 @@ mtid = { version = "0.2", default-features = false }
 
 ### Optional Feature Flags
 
+- `arbitrary`: `arbitrary::Arbitrary` support for fuzzing tests.
 - `serde`: Serialization/deserialization support
 - `rusqlite`: SQLite database integration
 - `sea-orm`: SeaORM ORM integration  
@@ -84,19 +85,19 @@ mtid = { version = "0.2", default-features = false }
 ```rust
 use mtid::{Stid, Dtid, Ttid, Qtid};
 // Generate random MTID
-let stid = Stid::random(); 
+let stid = Stid::random();
 let dtid = Dtid::random();
 let ttid = Ttid::random();
 let qtid = Qtid::random();
 
 // '123', '456-789', 'abc-def-ghj', 'kmn-pqr-stv-wxy'
-println!("'{}', '{}', '{}'. '{}'", stid, dtid, ttid, qtid); 
+println!("'{}', '{}', '{}'. '{}'", stid, dtid, ttid, qtid);
 
 // Parse from string
 let valid_id: Dtid = "012-tvw".parse()?;
 
 // The code without delimiter is valid.
-let valid_id_without_delimiter: Dtid = "012-tvw".parse()?;
+let valid_id_without_delimiter: Dtid = "012tvw".parse()?;
 assert_eq!(valid_id, valid_id_without_delimiter);
 
 // When decoding from BASE32, ambiguous characters (1/l/I, 0/o, v/u, -/_) are treated as 1, 0, v, and - respectively, so they do not cause errors.
@@ -108,7 +109,7 @@ let num: u32 = valid_id.into();
 let id_from_int: Dtid = num.try_into()?;
 assert_eq!(valid_id, id_from_int);
 
-// Lossy comversion from oversized int is allowed.
+// Lossy conversion from oversized int is allowed.
 let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
 assert_eq!(valid_id, id_from_overflowed_int);
 

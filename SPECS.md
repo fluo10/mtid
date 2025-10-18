@@ -2,14 +2,14 @@
 
 ## Overview
 
-MTID is a human-friendly unique identifier format designed for readability, memorability, and compactness. It encodes integer values into a string representation using 3-character blocks, with multiple fixed-length variants available. MTID is suitable for use in distributred system, logging, URLs, and other contexts where short, unique identifiers are beneficial.
+MTID is a human-friendly unique identifier format designed for readability, memorability, and compactness. It encodes integer values into a string representation using 3-character blocks, with multiple fixed-length variants available. MTID is suitable for use in distributed system, logging, URLs, and other contexts where short, unique identifiers are beneficial.
 
 ### Motivation
 When I considering implementing IDs for users(not for internal system) to specify items, such as GitHub commit hashes or issue numbers in the distributed system using P2P, the following issues arose.
 
 - Sequential numbers like Git issues are difficult to implement in distributed systems because collitions are unavoidable.
 - Exists random number like UUID is too long for users
-- Short random number like 7-digit commit hash seems good but is is not standardized specification.
+- Short random number like 7-digit commit hash seems good but it is not standardized specification.
 
 So I decided to make my own ID specifications.
 
@@ -21,7 +21,7 @@ Each MTID consists of one or more 3-character blocks separated by hyphens(`-`). 
 
 - Each block contains exactly 3 characters.
 - Characters are selected from a custom base alphabet (see Encoding section).
-- Blocks are orderd from most significant to least significant.
+- Blocks are ordered from most significant to least significant.
 
 ### Examples
 
