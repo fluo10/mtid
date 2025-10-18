@@ -7,6 +7,9 @@ edition = "2024"
 [package.metadata]
 cargo-fuzz = true
 
+[features]
+arbitrary = ["mtid/arbitrary"]
+
 [dependencies]
 libfuzzer-sys = "0.4"
 
@@ -14,29 +17,47 @@ libfuzzer-sys = "0.4"
 path = ".."
 
 [[bin]]
-name = "stid_parse_str"
-path = "fuzz_targets/stid_parse_str.rs"
+name = "arbitrary_stid"
+path = "fuzz_targets/arbitrary_stid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_dtid"
+path = "fuzz_targets/arbitrary_dtid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_ttid"
+path = "fuzz_targets/arbitrary_ttid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "arbitrary_qtid"
+path = "fuzz_targets/arbitrary_qtid.rs"
+test = false
+doc = false
+bench = false
+required-features = ["arbitrary"]
+
+[[bin]]
+name = "parse_int"
+path = "fuzz_targets/parse_int.rs"
 test = false
 doc = false
 bench = false
 
 [[bin]]
-name = "dtid_parse_str"
-path = "fuzz_targets/dtid_parse_str.rs"
-test = false
-doc = false
-bench = false
-
-[[bin]]
-name = "ttid_parse_str"
-path = "fuzz_targets/ttid_parse_str.rs"
-test = false
-doc = false
-bench = false
-
-[[bin]]
-name = "qtid_parse_str"
-path = "fuzz_targets/qtid_parse_str.rs"
+name = "parse_str"
+path = "fuzz_targets/parse_str.rs"
 test = false
 doc = false
 bench = false
