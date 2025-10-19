@@ -1,0 +1,14 @@
+syntax = "proto3";
+package mtid_example;
+
+import "mtid/stid.proto";
+import "mtid/dtid.proto";
+import "mtid/ttid.proto";
+import "mtid/qtid.proto";
+
+message Example {
+    mtid.Stid stid = 1;
+    mtid.Dtid dtid = 2;
+    mtid.Ttid ttid = 3;
+    mtid.Qtid qtid = 4;
+}
