@@ -1,3 +1,9 @@
+#[cfg(feature = "rusqlite")]
+mod rusqlite;
+
+#[cfg(feature = "sea-orm")]
+mod sea_orm;
+
 use core::{fmt::Display, str::FromStr};
 
 use crate::{Error, Stid, alphabet::is_delimiter, macros::mtid_impl, triplet::Triplet};

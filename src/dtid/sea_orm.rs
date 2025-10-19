@@ -1,4 +1,4 @@
-use crate::Dtid;
+use super::Dtid;
 
 impl From<Dtid> for sea_orm::Value {
     fn from(value: Dtid) -> Self {

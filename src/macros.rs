@@ -11,9 +11,6 @@ macro_rules! mtid_impl {
         example_str = $example_str:literal,
         example_int = $example_int:literal
     ) => {
-        #[cfg(feature = "rand")]
-        use rand::{distr::{Distribution, StandardUniform}, Rng};
-
 
         #[doc = concat!($description)]
         ///
@@ -89,22 +86,7 @@ macro_rules! mtid_impl {
             /// ```
             pub const MAX: Self = Self(Self::CAPACITY_MINUS_ONE);
 
-            #[doc = concat!("Generate a new random ", stringify!($SelfT), ".")]
-            ///
-            /// This method generate a cryptgraphicaly random ID.
-            /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
-            ///
-            /// # Examples
-            ///
-            /// ```
-            /// # use mtid::*;
-            #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
-            #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
-            /// ```
-            #[cfg(feature = "rand")]
-            pub fn random() -> Self {
-                Self(rand::random_range(1..=Self::CAPACITY_MINUS_ONE))
-            }
+
 
             /// Test if the triplet id is nil.
             ///
@@ -166,16 +148,66 @@ macro_rules! mtid_impl {
         }
 
         #[cfg(feature = "arbitrary")]
-        impl<'a> arbitrary::Arbitrary<'a> for $SelfT {
-            fn arbitrary(u: &mut arbitrary::Unstructured<'a>) -> arbitrary::Result<Self> {
-                Ok(Self(u.int_in_range(0..=Self::CAPACITY_MINUS_ONE)?))
+        mod arbitrary {
+            use ::arbitrary::{Arbitrary, Unstructured, Result};
+            use super::*;
+            impl<'a> Arbitrary<'a> for $SelfT {
+                fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
+                    Ok(Self(u.int_in_range(0..=Self::CAPACITY_MINUS_ONE)?))
+                }
             }
         }
 
         #[cfg(feature = "rand")]
-        impl Distribution<$SelfT> for StandardUniform {
-            fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
-                $SelfT(rng.random_range(1..=$SelfT::CAPACITY_MINUS_ONE))
+        mod rand {
+            use super::*;
+            use ::rand::{distr::{Distribution, StandardUniform}, Rng, random_range};
+
+            impl Distribution<$SelfT> for StandardUniform {
+                fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
+                    $SelfT(rng.random_range(1..=$SelfT::CAPACITY_MINUS_ONE))
+                }
+            }
+            impl $SelfT {
+                #[doc = concat!("Generate a new random ", stringify!($SelfT), ".")]
+                ///
+                /// This method generate a cryptgraphicaly random ID.
+                /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
+                ///
+                /// # Examples
+                ///
+                /// ```
+                /// # use mtid::*;
+                #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
+                #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
+                /// ```
+                pub fn random() -> Self {
+                    Self(random_range(1..=Self::CAPACITY_MINUS_ONE))
+                }
+            }
+        }
+        #[cfg(feature = "serde")]
+        mod serde {
+            use super::$SelfT;
+            use serde::{Deserialize, Serialize, de::Error};
+
+            impl Serialize for $SelfT {
+                fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+                where
+                    S: serde::Serializer,
+                {
+                    serializer.serialize_str(&self.to_string())
+                }
+            }
+
+            impl<'de> Deserialize<'de> for $SelfT {
+                fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+                where
+                    D: serde::Deserializer<'de>,
+                {
+                    let s = String::deserialize(deserializer)?;
+                    (&s).parse::<$SelfT>().map_err(|e| D::Error::custom(e))
+                }
             }
         }
     };

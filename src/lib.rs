@@ -143,13 +143,6 @@ mod ttid;
 /// Provides [`Triplet`](triplet::Triplet) and [`TripletError`](triplet::TripletError).
 pub mod triplet;
 
-#[cfg(feature = "rusqlite")]
-mod rusqlite;
-#[cfg(feature = "sea-orm")]
-mod sea_orm;
-#[cfg(feature = "serde")]
-mod serde;
-
 pub use dtid::Dtid;
 pub use error::Error;
 pub use qtid::Qtid;
