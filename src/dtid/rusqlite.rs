@@ -1,5 +1,5 @@
 use super::Dtid;
-use rusqlite::{Error, ToSql, types::FromSql};
+use rusqlite::{ToSql, types::FromSql};
 
 impl FromSql for Dtid {
     fn column_result(value: rusqlite::types::ValueRef<'_>) -> rusqlite::types::FromSqlResult<Self> {
