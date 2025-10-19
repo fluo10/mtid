@@ -1,6 +1,6 @@
 use prost::Name;
 
-use crate::{Error, prost::Ttid};
+use crate::{Error, proto::Ttid};
 
 impl Name for Ttid {
     const NAME: &'static str = "Ttid";

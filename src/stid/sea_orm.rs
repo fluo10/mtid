@@ -1,4 +1,4 @@
-use crate::Stid;
+use super::Stid;
 
 impl From<Stid> for sea_orm::Value {
     fn from(value: Stid) -> Self {

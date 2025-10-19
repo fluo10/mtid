@@ -1,3 +1,9 @@
+#[cfg(feature = "rusqlite")]
+mod rusqlite;
+
+#[cfg(feature = "sea-orm")]
+mod sea_orm;
+
 use core::{fmt::Display, str::FromStr};
 
 use crate::{error::Error, macros::mtid_impl, triplet::Triplet};
@@ -82,6 +88,7 @@ impl PartialEq<u16> for Stid {
         &u16::from(*self) == other
     }
 }
+
 #[cfg(feature = "std")]
 impl PartialEq<String> for Stid {
     fn eq(&self, other: &String) -> bool {
