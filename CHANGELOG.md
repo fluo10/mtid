@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2025-10-20
+
+### Changed
+
+- Split protobuf definitions to [submodule](https://github.com/fluo10/mtid-proto).
+- Fix field name of protobuf difinitions from `id` to `value`
+
 ## [0.4.0] - 2025-10-19
 
 ### Changed
@@ -84,7 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `encode`: encode integer to string
   - `decode`: to decode string to integer
 
-[Unreleased]: https://github.com/fluo10/mtid/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/fluo10/mtid/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/fluo10/mtid/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/fluo10/mtid/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/fluo10/mtid/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/fluo10/mtid/compare/v0.2.0...v0.2.1

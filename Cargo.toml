@@ -10,7 +10,7 @@ homepage.workspace = true
 keywords.workspace = true
 documentation = "https://docs.rs/mtid"
 readme = "README.md"
-exclude = ["/.github", "/.gitignore", "/.vscode", "/CHANGELOG.md", "/SPECS.md"]
+exclude = ["/.github", "/.gitignore", "/.vscode", "/CHANGELOG.md", "/SPECS.md", "/.gitmodules", "/.rustfmt.toml"]
 
 [package.metadata.docs.rs]
 all-features = true
@@ -52,7 +52,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/fluo10/mtid"
 homepage = "https://github.com/fluo10/mtid"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.4.0"
+version = "0.5.0"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }
