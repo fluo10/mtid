@@ -1,17 +1,67 @@
 use core::u8;
 
-/// Alphabet table used in encoding.
+/// Lookup table for encoding integer to BASE32 characters.
 ///
-pub const ENCODE_ALPHABET_TABLE: &[char; 32] = &[
+/// # Examples
+///
+/// ```
+/// # use mtid::alphabet::ENCODE_TABLE;
+/// assert_eq!(
+///     ENCODE_TABLE,
+///     &[
+///         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
+///         'h', 'j', 'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
+///     ]
+/// );
+/// ```
+pub const ENCODE_TABLE: &[char; 32] = &[
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j',
     'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
 ];
 
+/// A delimiter used in encoding.
+///
+/// # Examples
+///
+/// ```
+/// # use mtid::alphabet::ENCODE_DELIMITER;
+/// assert_eq!(ENCODE_DELIMITER, '-');
+/// ```
 pub const ENCODE_DELIMITER: char = '-';
 
-pub(crate) const BASE: u8 = ENCODE_ALPHABET_TABLE.len() as u8;
+pub(crate) const BASE: u8 = ENCODE_TABLE.len() as u8;
 
-pub const DECODE_ALPHABET_TABLE: &[u8; 256] = &{
+/// Lookup table for decoding BASE32 characters to values
+///
+/// Maps ASCII character codes(0-255) to their corresponding BASE32 value (0-31).
+/// Invalid characters map to 0xFF.
+///
+/// # Examples
+///
+/// ```
+/// # use mtid::alphabet::DECODE_TABLE;
+/// assert_eq!(
+///     DECODE_TABLE,
+///     &[
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 1, 2, 3, 4, 5,
+///         6, 7, 8, 9, 255, 255, 255, 255, 255, 255, 255, 10, 11, 12, 13, 14, 15, 16, 17, 1, 18,
+///         19, 1, 20, 21, 0, 22, 23, 24, 25, 26, 27, 27, 28, 29, 30, 31, 255, 255, 255, 255, 255,
+///         255, 10, 11, 12, 13, 14, 15, 16, 17, 1, 18, 19, 1, 20, 21, 0, 22, 23, 24, 25, 26, 27,
+///         27, 28, 29, 30, 31, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+///         255
+///     ]
+/// );
+/// ```
+pub const DECODE_TABLE: &[u8; 256] = &{
     let mut buf = [0; 256];
     let mut i: u8 = 0;
 
@@ -88,7 +138,42 @@ pub const DECODE_ALPHABET_TABLE: &[u8; 256] = &{
     }
 };
 
-pub const DELIMITER_TABLE: &[bool; 256] = &{
+/// Lookup table for decoding delimiter characters to boolean.
+///
+/// Valid characters ('-' and '_') map to true and others map to false.
+///
+/// ```
+/// # use mtid::alphabet::DECODE_DELIMITER_TABLE;
+/// assert_eq!(
+///     DECODE_DELIMITER_TABLE,
+///     &[
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, true, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, true,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false, false, false, false, false, false, false, false, false,
+///         false, false, false, false
+///     ]
+/// );
+/// ```
+///
+pub const DECODE_DELIMITER_TABLE: &[bool; 256] = &{
     let mut buf = [false; 256];
     let mut i: u8 = 0;
 
@@ -109,7 +194,7 @@ pub const DELIMITER_TABLE: &[bool; 256] = &{
 // First 3 bits are ignored.
 pub(crate) const fn u8_to_char_lossy(value: u8) -> char {
     let value = value & 0b00011111;
-    ENCODE_ALPHABET_TABLE[value as usize]
+    ENCODE_TABLE[value as usize]
 }
 
 /// Check char is valid.
@@ -125,7 +210,7 @@ pub(crate) fn validate_char(c: char) -> Option<char> {
 /// Decode char to u8
 pub(crate) fn char_to_u8(c: char) -> Option<u8> {
     match TryInto::<u8>::try_into(c) {
-        Ok(i) => match DECODE_ALPHABET_TABLE[i as usize] {
+        Ok(i) => match DECODE_TABLE[i as usize] {
             u8::MAX => None,
             j => Some(j),
         },
@@ -136,7 +221,7 @@ pub(crate) fn char_to_u8(c: char) -> Option<u8> {
 /// Test if the character is valid delimiter.
 pub(crate) fn is_delimiter(c: char) -> bool {
     match TryInto::<u8>::try_into(c) {
-        Ok(x) => DELIMITER_TABLE[x as usize],
+        Ok(x) => DECODE_DELIMITER_TABLE[x as usize],
         Err(_) => false,
     }
 }

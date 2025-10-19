@@ -4,7 +4,6 @@ use mtid::{Dtid, Qtid, Stid, Ttid};
 use crate::cli::length_option::{LengthOption, LengthOptions};
 
 /// Decode MTID string to integer.
-///
 #[derive(Args, Debug)]
 #[command(override_usage("mtid-cli decode [<-s|-d|-t|-q>] <MTID>"))]
 pub struct DecodeArgs {

@@ -15,7 +15,6 @@
 //!
 //! let id = Dtid::random();
 //! println!("{}", id); // e.g. "1a2-b3c"
-//!
 //! ```
 //!
 //! # Why MTID?
@@ -115,7 +114,6 @@
 //! ```
 //!
 //!
-//!
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
@@ -130,7 +128,6 @@ extern crate core as std;
 /// - The letter `u` (`U`) is decoded to 27, same as `v`.
 /// - Characters are separated by hyphens every three characters (triplet) during encoding.
 ///   During decoding, hyphens may be omitted or replaced with underscores.
-///
 pub mod alphabet;
 
 mod dtid;
