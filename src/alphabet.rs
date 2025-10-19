@@ -1,5 +1,3 @@
-use core::u8;
-
 /// Lookup table for encoding integer to BASE32 characters.
 ///
 /// # Examples
@@ -172,17 +170,12 @@ pub const DECODE_TABLE: &[u8; 256] = &{
 ///     ]
 /// );
 /// ```
-///
 pub const DECODE_DELIMITER_TABLE: &[bool; 256] = &{
     let mut buf = [false; 256];
     let mut i: u8 = 0;
 
     loop {
-        buf[i as usize] = match i {
-            b'-' => true,
-            b'_' => true,
-            _ => false,
-        };
+        buf[i as usize] = matches!(i, b'-' | b'_');
         if i == 255 {
             break buf;
         }
@@ -200,7 +193,7 @@ pub(crate) const fn u8_to_char_lossy(value: u8) -> char {
 /// Check char is valid.
 /// If valid return Some(char) and else return None.
 pub(crate) fn validate_char(c: char) -> Option<char> {
-    if let Some(_) = char_to_u8(c) {
+    if char_to_u8(c).is_some() {
         Some(c)
     } else {
         None
