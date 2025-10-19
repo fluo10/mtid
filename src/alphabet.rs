@@ -1,9 +1,13 @@
 use core::u8;
 
+/// Alphabet table used in encoding.
+///
 pub const ENCODE_ALPHABET_TABLE: &[char; 32] = &[
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j',
     'k', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z',
 ];
+
+pub const ENCODE_DELIMITER: char = '-';
 
 pub(crate) const BASE: u8 = ENCODE_ALPHABET_TABLE.len() as u8;
 
