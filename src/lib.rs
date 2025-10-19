@@ -43,10 +43,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = "0.4"
+//! mtid = "0.5"
 //!
 //! # With optional features
-//! mtid = { version = "0.4", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
+//! mtid = { version = "0.5", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -56,7 +56,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = { version = "0.4", default-features = false }
+//! mtid = { version = "0.5", default-features = false }
 //! ```
 //!
 //! # Features
@@ -112,8 +112,6 @@
 //! # Ok(())
 //! # }
 //! ```
-//!
-//!
 #![cfg_attr(not(feature = "std"), no_std)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 

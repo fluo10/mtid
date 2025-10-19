@@ -1,0 +1,3 @@
+[submodule "mtid-proto"]
+	path = mtid-proto
+	url = https://github.com/fluo10/mtid-proto

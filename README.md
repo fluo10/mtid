@@ -19,7 +19,6 @@ use mtid::Dtid;
 
 let id = Dtid::random();
 println!("{}", id); // e.g. "1a2-b3c"
-
 ```
 
 ## Why MTID?
@@ -48,10 +47,10 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mtid = "0.4"
+mtid = "0.5"
 
 # With optional features
-mtid = { version = "0.4", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
+mtid = { version = "0.5", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
 ### For no_std Environments
@@ -61,7 +60,7 @@ For `no_std` environment, you'll need to disable default features.
 
 ```toml
 [dependencies]
-mtid = { version = "0.4", default-features = false }
+mtid = { version = "0.5", default-features = false }
 ```
 
 ## Features
@@ -114,8 +113,6 @@ let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
 assert_eq!(valid_id, id_from_overflowed_int);
 
 ```
-
-
 
 <!-- cargo-rdme end -->
 

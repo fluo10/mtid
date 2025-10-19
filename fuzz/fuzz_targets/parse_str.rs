@@ -40,6 +40,5 @@ fuzz_target!(|data: &[u8]| {
                 Int = u64
             };
         }
-
     }
 });

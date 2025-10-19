@@ -1,4 +1,4 @@
-name: Rust Testing
+name: Testing
 
 on:
   push:
@@ -12,16 +12,22 @@ env:
 
 jobs:
   format: 
-    name: Rust Format
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: 'true'
+      - name: Install nightly rustfmt
+        run: rustup component add --toolchain nightly rustfmt
       - name: Run rustfmt
-        run: cargo fmt --check --all
+        run: cargo +nightly fmt --check --all
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
       - name: Run clippy
         run: cargo clippy --workspace
   test:
-    name: Rust Test
+    name: Test
     strategy:
       matrix:
         os:
@@ -32,6 +38,10 @@ jobs:
     runs-on: ${{matrix.os}}
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: 'true'
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v3
     - name: Build
       run: cargo build --workspace --verbose
     - name: Run tests
