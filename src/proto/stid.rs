@@ -10,7 +10,7 @@ impl Name for Stid {
 impl From<crate::Stid> for Stid {
     fn from(value: crate::Stid) -> Self {
         Self {
-            id: u32::from(u16::from(value)),
+            value: u32::from(u16::from(value)),
         }
     }
 }
@@ -18,9 +18,9 @@ impl TryFrom<Stid> for crate::Stid {
     type Error = Error;
 
     fn try_from(value: Stid) -> Result<Self, Self::Error> {
-        Self::try_from(u16::try_from(value.id).or(Err(Error::ParseInteger {
+        Self::try_from(u16::try_from(value.value).or(Err(Error::ParseInteger {
             expected: u64::from(crate::Stid::CAPACITY),
-            found: value.id as u64,
+            found: value.value as u64,
         }))?)
     }
 }
@@ -31,14 +31,14 @@ mod tests {
 
     #[test]
     fn nil() {
-        let nil = StidMessage { id: 0 };
+        let nil = StidMessage { value: 0 };
         assert_eq!(Stid::NIL, Stid::try_from(nil).unwrap());
     }
 
     #[test]
     fn max() {
         let max = StidMessage {
-            id: u32::from(Stid::CAPACITY) - 1,
+            value: u32::from(Stid::CAPACITY) - 1,
         };
         assert_eq!(Stid::MAX, Stid::try_from(max).unwrap());
     }
@@ -47,7 +47,7 @@ mod tests {
     #[should_panic]
     fn oversized() {
         let oversized = StidMessage {
-            id: u32::from(Stid::CAPACITY),
+            value: u32::from(Stid::CAPACITY),
         };
         let _ = Stid::try_from(oversized).unwrap();
     }

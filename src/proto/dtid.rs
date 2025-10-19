@@ -10,7 +10,7 @@ impl Name for Dtid {
 impl From<crate::Dtid> for Dtid {
     fn from(value: crate::Dtid) -> Self {
         Self {
-            id: u32::from(value),
+            value: u32::from(value),
         }
     }
 }
@@ -18,7 +18,7 @@ impl TryFrom<Dtid> for crate::Dtid {
     type Error = Error;
 
     fn try_from(value: Dtid) -> Result<Self, Self::Error> {
-        Self::try_from(value.id)
+        Self::try_from(value.value)
     }
 }
 
@@ -28,14 +28,14 @@ mod tests {
 
     #[test]
     fn nil() {
-        let nil = DtidMessage { id: 0 };
+        let nil = DtidMessage { value: 0 };
         assert_eq!(Dtid::NIL, Dtid::try_from(nil).unwrap());
     }
 
     #[test]
     fn max() {
         let max = DtidMessage {
-            id: u32::from(Dtid::CAPACITY) - 1,
+            value: u32::from(Dtid::CAPACITY) - 1,
         };
         assert_eq!(Dtid::MAX, Dtid::try_from(max).unwrap());
     }
@@ -44,7 +44,7 @@ mod tests {
     #[should_panic]
     fn oversized() {
         let oversized = DtidMessage {
-            id: u32::from(Dtid::CAPACITY),
+            value: u32::from(Dtid::CAPACITY),
         };
         let _ = Dtid::try_from(oversized).unwrap();
     }
