@@ -1,7 +1,0 @@
-syntax = "proto3";
-package mtid;
-
-// Single size Triplet ID message
-message Stid {
-    uint32 id = 1;
-}

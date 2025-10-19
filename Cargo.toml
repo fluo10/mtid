@@ -44,7 +44,7 @@ tokio = { version = "1.47.1", default-features = false, features = ["macros", "r
 rand = { workspace = true, default-features = false, features = ["thread_rng"]}
 
 [workspace]
-members = [".", "examples/mtid-cli"]
+members = [".", "examples/mtid-cli", "examples/mtid-prost-example"]
 
 [workspace.package]
 edition = "2024"
