@@ -123,7 +123,7 @@
 #[macro_use]
 extern crate core as std;
 
-/// Provide constants and private functions about encoding/decoding alphabet.
+/// Provides constants and private functions about encoding/decoding alphabet.
 ///
 /// This module implements encoding and decoding character based on [Crockford's Base32](https://www.crockford.com/base32.html) with following exceptions:
 ///
@@ -153,18 +153,18 @@ pub use ttid::Ttid;
 #[cfg(feature = "prost")]
 pub mod proto;
 
-/// Alias of [`prost::Stid`]
+/// Alias of [`proto::Stid`]
 #[cfg(feature = "prost")]
 pub type StidMessage = proto::Stid;
 
-/// Alias of [`prost::Dtid`]
+/// Alias of [`proto::Dtid`]
 #[cfg(feature = "prost")]
 pub type DtidMessage = proto::Dtid;
 
-/// Alias of [`prost::Ttid`]
+/// Alias of [`proto::Ttid`]
 #[cfg(feature = "prost")]
 pub type TtidMessage = proto::Ttid;
 
-/// Alias of [`prost::Qtid`]
+/// Alias of [`proto::Qtid`]
 #[cfg(feature = "prost")]
 pub type QtidMessage = proto::Qtid;
