@@ -1,25 +1,10 @@
 use prost::Name;
 
-use crate::{Error, proto::Dtid};
+use crate::proto::Dtid;
 
 impl Name for Dtid {
     const NAME: &'static str = "Dtid";
     const PACKAGE: &'static str = super::PACKAGE_NAME;
-}
-
-impl From<crate::Dtid> for Dtid {
-    fn from(value: crate::Dtid) -> Self {
-        Self {
-            value: u32::from(value),
-        }
-    }
-}
-impl TryFrom<Dtid> for crate::Dtid {
-    type Error = Error;
-
-    fn try_from(value: Dtid) -> Result<Self, Self::Error> {
-        Self::try_from(value.value)
-    }
 }
 
 #[cfg(test)]

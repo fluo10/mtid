@@ -6,6 +6,8 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
+#[cfg(feature = "prost")]
+use crate::macros;
 use crate::{error::Error, macros::mtid_impl, triplet::Triplet};
 
 mtid_impl! {
@@ -18,7 +20,9 @@ mtid_impl! {
     MAX_INT = 32767,
     description = "Single length Triplet ID.",
     example_str = "123",
-    example_int = 1091
+    example_int = 1091,
+    EXAMPLE_VALID_INT = 0b0010_0111_0001_0000,
+    EXAMPLE_OVERSIZED_INT = 0b1010_0111_0001_0000
 }
 
 impl Display for Stid {
@@ -30,13 +34,13 @@ impl Display for Stid {
 
 impl From<Stid> for Triplet {
     fn from(value: Stid) -> Self {
-        Triplet::from_int_lossy(value.0)
+        Triplet::from_uint_lossy(value.0)
     }
 }
 
 impl From<Triplet> for Stid {
     fn from(value: Triplet) -> Self {
-        Self::from_int_lossy(u16::from(value))
+        Self::from_uint_lossy(u16::from(value))
     }
 }
 
@@ -62,33 +66,6 @@ impl FromStr for Stid {
     }
 }
 
-impl TryFrom<u16> for Stid {
-    type Error = Error;
-
-    fn try_from(value: u16) -> Result<Self, Self::Error> {
-        if value < Self::CAPACITY {
-            Ok(Self(value))
-        } else {
-            Err(Error::ParseInteger {
-                expected: Self::CAPACITY as u64,
-                found: value as u64,
-            })
-        }
-    }
-}
-
-impl From<Stid> for u16 {
-    fn from(value: Stid) -> Self {
-        value.0
-    }
-}
-
-impl PartialEq<u16> for Stid {
-    fn eq(&self, other: &u16) -> bool {
-        &u16::from(*self) == other
-    }
-}
-
 #[cfg(feature = "std")]
 impl PartialEq<String> for Stid {
     fn eq(&self, other: &String) -> bool {
@@ -97,4 +74,14 @@ impl PartialEq<String> for Stid {
             Err(_) => false,
         }
     }
+}
+
+#[cfg(feature = "prost")]
+macros::mtid_prost_impl! {
+    Self = Stid,
+    ActualT = u16,
+    ProtoT = proto::Stid,
+    BITS = 15,
+    VALID_VALUE = 0b0010_0111_0001_0000,
+    OVERSIZED_VALUE = 0b1010_0111_0001_0000,
 }

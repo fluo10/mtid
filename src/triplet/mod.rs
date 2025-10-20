@@ -30,7 +30,7 @@ impl Triplet {
             value.next().ok_or(TripletError::ParseLength(2))?,
         ))
     }
-    pub fn from_int_lossy(int: u16) -> Triplet {
+    pub fn from_uint_lossy(int: u16) -> Triplet {
         Self(
             u8_to_char_lossy((int >> 10) as u8),
             u8_to_char_lossy((int >> 5) as u8),
@@ -103,7 +103,7 @@ mod tests {
     fn valid_u16() {
         for _ in 0..BASE {
             let int = rand::random_range(0..Triplet::CAPACITY);
-            assert_eq!(int, u16::try_from(Triplet::from_int_lossy(int)).unwrap())
+            assert_eq!(int, u16::try_from(Triplet::from_uint_lossy(int)).unwrap())
         }
     }
     #[test]
@@ -111,7 +111,7 @@ mod tests {
     fn invalid_u16() {
         for _ in 0..BASE {
             let int = rand::random_range(Triplet::CAPACITY..=u16::MAX);
-            assert_ne!(int, u16::try_from(Triplet::from_int_lossy(int)).unwrap())
+            assert_ne!(int, u16::try_from(Triplet::from_uint_lossy(int)).unwrap())
         }
     }
 }

@@ -43,10 +43,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = "0.5"
+//! mtid = "0.6"
 //!
 //! # With optional features
-//! mtid = { version = "0.5", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
+//! mtid = { version = "0.6", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -56,7 +56,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = { version = "0.5", default-features = false }
+//! mtid = { version = "0.6", default-features = false }
 //! ```
 //!
 //! # Features
@@ -106,7 +106,7 @@
 //! assert_eq!(valid_id, id_from_int);
 //!
 //! // Lossy conversion from oversized int is allowed.
-//! let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
+//! let id_from_overflowed_int = Dtid::from_uint_lossy(Dtid::CAPACITY + num);
 //! assert_eq!(valid_id, id_from_overflowed_int);
 //!
 //! # Ok(())
@@ -148,18 +148,34 @@ pub use ttid::Ttid;
 #[cfg(feature = "prost")]
 pub mod proto;
 
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `StidProto` instead")]
+pub type StidMessage = proto::Stid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `DtidProto` instead")]
+pub type DtidMessage = proto::Dtid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `TtidProto` instead")]
+pub type TtidMessage = proto::Ttid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `QtidProto` instead")]
+pub type QtidMessage = proto::Qtid;
+
 /// Alias of [`proto::Stid`]
 #[cfg(feature = "prost")]
-pub type StidMessage = proto::Stid;
+pub type StidProto = proto::Stid;
 
 /// Alias of [`proto::Dtid`]
 #[cfg(feature = "prost")]
-pub type DtidMessage = proto::Dtid;
+pub type DtidProto = proto::Dtid;
 
 /// Alias of [`proto::Ttid`]
 #[cfg(feature = "prost")]
-pub type TtidMessage = proto::Ttid;
+pub type TtidProto = proto::Ttid;
 
 /// Alias of [`proto::Qtid`]
 #[cfg(feature = "prost")]
-pub type QtidMessage = proto::Qtid;
+pub type QtidProto = proto::Qtid;

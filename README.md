@@ -47,10 +47,10 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-mtid = "0.5"
+mtid = "0.6"
 
 # With optional features
-mtid = { version = "0.5", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
+mtid = { version = "0.6", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
 ```
 
 ### For no_std Environments
@@ -60,7 +60,7 @@ For `no_std` environment, you'll need to disable default features.
 
 ```toml
 [dependencies]
-mtid = { version = "0.5", default-features = false }
+mtid = { version = "0.6", default-features = false }
 ```
 
 ## Features
@@ -109,7 +109,7 @@ let id_from_int: Dtid = num.try_into()?;
 assert_eq!(valid_id, id_from_int);
 
 // Lossy conversion from oversized int is allowed.
-let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
+let id_from_overflowed_int = Dtid::from_uint_lossy(Dtid::CAPACITY + num);
 assert_eq!(valid_id, id_from_overflowed_int);
 
 ```

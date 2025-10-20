@@ -54,7 +54,6 @@ $ mtid-cli decode --quadruple 000-000-000-000
 0
 ```
 
-
 ## License
 
 Licensed under either of:
