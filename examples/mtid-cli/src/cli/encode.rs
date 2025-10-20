@@ -17,10 +17,10 @@ pub struct EncodeArgs {
 impl EncodeArgs {
     pub fn run(self) {
         match LengthOption::from(self.length) {
-            LengthOption::Single => println!("{}", Stid::from_int_lossy(self.value as u16)),
-            LengthOption::Double => println!("{}", Dtid::from_int_lossy(self.value as u32)),
-            LengthOption::Triple => println!("{}", Ttid::from_int_lossy(self.value)),
-            LengthOption::Quadruple => println!("{}", Qtid::from_int_lossy(self.value)),
+            LengthOption::Single => println!("{}", Stid::from_uint_lossy(self.value as u16)),
+            LengthOption::Double => println!("{}", Dtid::from_uint_lossy(self.value as u32)),
+            LengthOption::Triple => println!("{}", Ttid::from_uint_lossy(self.value)),
+            LengthOption::Quadruple => println!("{}", Qtid::from_uint_lossy(self.value)),
         }
     }
 }

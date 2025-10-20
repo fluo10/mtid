@@ -39,8 +39,8 @@ impl From<(Triplet, Triplet)> for Dtid {
 impl From<Dtid> for (Triplet, Triplet) {
     fn from(value: Dtid) -> Self {
         (
-            Triplet::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Triplet::from_int_lossy(value.0 as u16),
+            Triplet::from_uint_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_uint_lossy(value.0 as u16),
         )
     }
 }

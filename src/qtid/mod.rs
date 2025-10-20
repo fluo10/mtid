@@ -121,10 +121,10 @@ impl From<(Triplet, Triplet, Triplet, Triplet)> for Qtid {
 impl From<Qtid> for (Stid, Stid, Stid, Stid) {
     fn from(value: Qtid) -> Self {
         (
-            Stid::from_int_lossy((value.0 >> Ttid::BITS) as u16),
-            Stid::from_int_lossy((value.0 >> Dtid::BITS) as u16),
-            Stid::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Stid::from_int_lossy(value.0 as u16),
+            Stid::from_uint_lossy((value.0 >> Ttid::BITS) as u16),
+            Stid::from_uint_lossy((value.0 >> Dtid::BITS) as u16),
+            Stid::from_uint_lossy((value.0 >> Stid::BITS) as u16),
+            Stid::from_uint_lossy(value.0 as u16),
         )
     }
 }

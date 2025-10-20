@@ -98,9 +98,9 @@ impl From<(Triplet, Triplet, Triplet)> for Ttid {
 impl From<Ttid> for (Triplet, Triplet, Triplet) {
     fn from(value: Ttid) -> Self {
         (
-            Triplet::from_int_lossy((value.0 >> Dtid::BITS) as u16),
-            Triplet::from_int_lossy((value.0 >> Stid::BITS) as u16),
-            Triplet::from_int_lossy(value.0 as u16),
+            Triplet::from_uint_lossy((value.0 >> Dtid::BITS) as u16),
+            Triplet::from_uint_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_uint_lossy(value.0 as u16),
         )
     }
 }

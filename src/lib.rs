@@ -106,7 +106,7 @@
 //! assert_eq!(valid_id, id_from_int);
 //!
 //! // Lossy conversion from oversized int is allowed.
-//! let id_from_overflowed_int = Dtid::from_int_lossy(Dtid::CAPACITY + num);
+//! let id_from_overflowed_int = Dtid::from_uint_lossy(Dtid::CAPACITY + num);
 //! assert_eq!(valid_id, id_from_overflowed_int);
 //!
 //! # Ok(())

@@ -34,13 +34,13 @@ impl Display for Stid {
 
 impl From<Stid> for Triplet {
     fn from(value: Stid) -> Self {
-        Triplet::from_int_lossy(value.0)
+        Triplet::from_uint_lossy(value.0)
     }
 }
 
 impl From<Triplet> for Stid {
     fn from(value: Triplet) -> Self {
-        Self::from_int_lossy(u16::from(value))
+        Self::from_uint_lossy(u16::from(value))
     }
 }
 
