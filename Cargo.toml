@@ -52,11 +52,9 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/fluo10/mtid"
 homepage = "https://github.com/fluo10/mtid"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.5.0"
+version = "0.6.0"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }
 prost-build = "0.14.1"
 rand = {version = "0.9.2", default-features = false}
-
-
