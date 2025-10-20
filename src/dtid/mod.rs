@@ -18,7 +18,9 @@ mtid_impl! {
     MAX_INT = 1073741823,
     description = "Double length Triplet ID",
     example_str = "456-789",
-    example_int = 139664649
+    example_int = 139664649,
+    EXAMPLE_VALID_INT = 0b0011_1011_1001_1010_1100_1010_0000_0000,
+    EXAMPLE_OVERSIZED_INT = 0b1111_1011_1001_1010_1100_1010_0000_0000
 }
 
 impl Display for Dtid {
@@ -83,33 +85,6 @@ impl FromStr for Dtid {
     }
 }
 
-impl TryFrom<u32> for Dtid {
-    type Error = Error;
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        if value < Self::CAPACITY {
-            Ok(Self(value))
-        } else {
-            Err(Error::ParseInteger {
-                expected: Self::CAPACITY as u64,
-                found: value as u64,
-            })
-        }
-    }
-}
-
-impl From<Dtid> for u32 {
-    fn from(value: Dtid) -> Self {
-        value.0
-    }
-}
-
-impl PartialEq<u32> for Dtid {
-    fn eq(&self, other: &u32) -> bool {
-        &u32::from(*self) == other
-    }
-}
-
 #[cfg(feature = "std")]
 impl PartialEq<String> for Dtid {
     fn eq(&self, other: &String) -> bool {
@@ -118,4 +93,14 @@ impl PartialEq<String> for Dtid {
             Err(_) => false,
         }
     }
+}
+
+#[cfg(feature = "prost")]
+crate::macros::mtid_prost_impl! {
+    Self = Dtid,
+    ActualT = u32,
+    ProtoT = proto::Dtid,
+    BITS = 30,
+    VALID_VALUE = 0b0011_1011_1001_1010_1100_1010_0000_0000,
+    OVERSIZED_VALUE = 0b1111_1011_1001_1010_1100_1010_0000_0000,
 }

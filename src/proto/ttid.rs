@@ -7,21 +7,6 @@ impl Name for Ttid {
     const PACKAGE: &'static str = super::PACKAGE_NAME;
 }
 
-impl From<crate::Ttid> for Ttid {
-    fn from(value: crate::Ttid) -> Self {
-        Self {
-            value: u64::from(value),
-        }
-    }
-}
-impl TryFrom<Ttid> for crate::Ttid {
-    type Error = Error;
-
-    fn try_from(value: Ttid) -> Result<Self, Self::Error> {
-        Self::try_from(value.value)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use crate::{Ttid, TtidMessage};

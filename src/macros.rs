@@ -1,7 +1,7 @@
 macro_rules! mtid_impl {
     (
         Self = $SelfT:ident,
-        ActualT = $ActualT:ident,
+        ActualT = $ActualT:ty,
         BITS = $BITS:literal,
         CAPACITY = $CAPACITY:expr,
         NIL_STR = $NIL_STR:literal,
@@ -9,7 +9,9 @@ macro_rules! mtid_impl {
         MAX_INT = $MAX_INT:literal,
         description = $description:literal,
         example_str = $example_str:literal,
-        example_int = $example_int:literal
+        example_int = $example_int:literal,
+        EXAMPLE_VALID_INT = $EXAMPLE_VALID_INT:literal,
+        EXAMPLE_OVERSIZED_INT = $EXAMPLE_OVERSIZED_INT:literal
     ) => {
 
         #[doc = concat!($description)]
@@ -118,32 +120,69 @@ macro_rules! mtid_impl {
                 self.0 == Self::CAPACITY_MINUS_ONE
             }
 
-            /// Convert from uint.
-            /// If the value is equal Self::Capacity or more, the higher bits will be lost.
+            #[deprecated(since="6.0.0", note="please use `from_uint_lossy` instead")]
+            pub fn from_int_lossy(int: $ActualT) -> Self {
+                Self(int & Self::CAPACITY_MINUS_ONE)
+            }
+
+            #[doc = concat!("Converts an unsigned integer to `", stringify!($SelfT), "` by truncating bits that exceed the valid range.")]
+            ///
+            /// This is a lossy conversion that masks the input value to fit within the ID's bit limit.
+            /// If you need to detect out-of-range values, use [`TryFrom`] instead.
             ///
             /// # Examples
             ///
             /// ```
             /// # use mtid::*;
-            /// # fn main() -> Result<(), Error> {
-            #[doc = concat!(
-                "assert!(",
-                stringify!($SelfT),
-                "::from_int_lossy(",
-                stringify!($SelfT),
-                "::CAPACITY - 1).is_max());"
-            )]
-            #[doc = concat!(
-                "assert!(",
-                stringify!($SelfT),
-                "::from_int_lossy(",
-                stringify!($SelfT),
-                "::CAPACITY).is_nil());")]
-            /// # Ok(())
-            /// # }
+            /// // Values within range are preserved
+            #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_VALID_INT, "); // ", stringify!($EXAMPLE_VALID_INT))]
+            #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $EXAMPLE_VALID_INT, ");")]
+            ///
+            #[doc = concat!("// values exceeding ", $BITS, "bits are truncated (MSB(s) dropped")]
+            #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_OVERSIZED_INT, "); // ", stringify!($EXAMPLE_OVERSIZED_INT))]
+            #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $EXAMPLE_VALID_INT, "); // Only lower ", $BITS, " bits retained")]
             /// ```
-            pub fn from_int_lossy(int: $ActualT) -> Self {
+            pub fn from_uint_lossy(int: $ActualT) -> Self {
                 Self(int & Self::CAPACITY_MINUS_ONE)
+            }
+        }
+
+        impl TryFrom<$ActualT> for $SelfT {
+            type Error = Error;
+            #[doc = concat!("Attempts to convert a [`", stringify!($ActualT), "`]  to [`", stringify!($SelfT), "`].")]
+            ///
+            /// Return error if the value is equal [`CAPACITY`](Self::CAPACITY) or more.
+            /// If you don't need to detect out-of-range values, use [`from_uint_lossy`](Self::from_uint_lossy).
+            ///
+            /// # Examples
+            ///
+            /// ```
+            /// # use mtid::*;
+            #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $EXAMPLE_VALID_INT, ").is_ok());")]
+            #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $EXAMPLE_OVERSIZED_INT, ").is_err());")]
+            /// ```
+            ///
+            fn try_from(value: $ActualT) -> Result<Self, Self::Error> {
+                if value < Self::CAPACITY {
+                    Ok(Self(value))
+                } else {
+                    Err(Error::ParseInteger {
+                        expected: Self::CAPACITY as u64,
+                        found: value as u64,
+                    })
+                }
+            }
+        }
+
+        impl From<$SelfT> for $ActualT {
+            fn from(value: $SelfT) -> Self {
+                value.0
+            }
+        }
+
+        impl PartialEq<$ActualT> for $SelfT {
+            fn eq(&self, other: &$ActualT) -> bool {
+                &self.0 == other
             }
         }
 
@@ -171,7 +210,7 @@ macro_rules! mtid_impl {
             impl $SelfT {
                 #[doc = concat!("Generate a new random ", stringify!($SelfT), ".")]
                 ///
-                /// This method generate a cryptgraphicaly random ID.
+                /// This method generate a random ID.
                 /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
                 ///
                 /// # Examples
@@ -212,4 +251,79 @@ macro_rules! mtid_impl {
         }
     };
 }
+macro_rules! mtid_prost_impl {
+    {
+        Self = $SelfT:ty,
+        ActualT = $ActualT:ty,
+        ProtoT = $ProtoT:ty,
+        BITS = $BITS:literal,
+        VALID_VALUE = $VALID_VALUE:literal,
+        OVERSIZED_VALUE = $OVERSIZED_VALUE:literal,
+    } => {
+        mod prost {
+            use crate::*;
+            impl $SelfT {
+                #[doc = concat!("Converts a [`", stringify!($ProtoT), "`]  to [`", stringify!($SelfT), "`] by truncating bits that exceed the valid range.")]
+                ///
+                /// This is a lossy conversion that masks the proto value to fit within the ID's bit limit.
+                #[doc = concat!( "Since [`", stringify!($ProtoT), "`] is exposed via web APIs and cannot enforce range validation,")]
+                /// this method safely handles any value by truncating excess bits.
+                /// If you need to detect out-of-range values, use [`TryFrom`] instead.
+                ///
+                /// For details on the truncation behavior, see [`from_uint_lossy`](Self::from_uint_lossy).
+                ///
+                /// # Examples
+                ///
+                /// ```
+                /// # use mtid::*;
+                /// // Valid proto values are preserved
+                #[doc = concat!("let proto = ", stringify!($ProtoT), "{ value: ", $VALID_VALUE, " }; //", stringify!($VALID_VALUE))]
+                #[doc = concat!("let id = ", stringify!($SelfT), "::from_proto_lossy(proto);")]
+                #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $VALID_VALUE, ");")]
+                ///
+                /// // Out-of-range proto values are truncated
+                #[doc = concat!("let proto = ", stringify!($ProtoT), "{ value: ", $OVERSIZED_VALUE, " }; //", stringify!($OVERSIZED_VALUE))]
+                #[doc = concat!("let id = ", stringify!($SelfT), "::from_proto_lossy(proto);")]
+                #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $VALID_VALUE, "); // Only lower ", $BITS, " bits retained")]
+                /// ```
+                pub fn from_proto_lossy(proto: $ProtoT) -> Self {
+                    Self::from_uint_lossy(proto.value as $ActualT)
+                }
+            }
+
+
+            impl From<$SelfT> for $ProtoT {
+                fn from(value: $SelfT) -> Self {
+                    Self {
+                        value: <$ActualT>::from(value).into(),
+                    }
+                }
+            }
+
+            impl TryFrom<$ProtoT> for $SelfT {
+                type Error = crate::Error;
+                #[doc = concat!("Attempts to convert a [`", stringify!($ProtoT), "`]  to [`", stringify!($SelfT), "`].")]
+                ///
+                /// Return error if its value is equal [`CAPACITY`](Self::CAPACITY) or more.
+                /// If you don't need to detect out-of-range values, use [`from_proto_lossy`](Self::from_proto_lossy).
+                ///
+                /// # Examples
+                ///
+                /// ```
+                /// # use mtid::*;
+                #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $VALID_VALUE, ").is_ok());")]
+                #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $OVERSIZED_VALUE, ").is_err());")]
+                /// ```
+                ///
+                fn try_from(value: $ProtoT) -> Result<Self, Self::Error> {
+                    Self::try_from(<$ActualT>::try_from(value.value).or(Err(Error::ParseInteger {
+                        expected: u64::from(<$SelfT>::CAPACITY),
+                        found: value.value as u64,
+                    }))?)
+                }
+            }
+        }
+    };
+}
 pub(crate) use mtid_impl;
+pub(crate) use mtid_prost_impl;

@@ -148,18 +148,34 @@ pub use ttid::Ttid;
 #[cfg(feature = "prost")]
 pub mod proto;
 
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `StidProto` instead")]
+pub type StidMessage = proto::Stid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `DtidProto` instead")]
+pub type DtidMessage = proto::Dtid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `TtidProto` instead")]
+pub type TtidMessage = proto::Ttid;
+
+#[cfg(feature = "prost")]
+#[deprecated(since = "6.0.0", note = "please use `QtidProto` instead")]
+pub type QtidMessage = proto::Qtid;
+
 /// Alias of [`proto::Stid`]
 #[cfg(feature = "prost")]
-pub type StidMessage = proto::Stid;
+pub type StidProto = proto::Stid;
 
 /// Alias of [`proto::Dtid`]
 #[cfg(feature = "prost")]
-pub type DtidMessage = proto::Dtid;
+pub type DtidProto = proto::Dtid;
 
 /// Alias of [`proto::Ttid`]
 #[cfg(feature = "prost")]
-pub type TtidMessage = proto::Ttid;
+pub type TtidProto = proto::Ttid;
 
 /// Alias of [`proto::Qtid`]
 #[cfg(feature = "prost")]
-pub type QtidMessage = proto::Qtid;
+pub type QtidProto = proto::Qtid;

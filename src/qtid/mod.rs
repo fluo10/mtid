@@ -4,6 +4,8 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
+#[cfg(feature = "prost")]
+use crate::macros;
 use crate::{
     Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet,
 };
@@ -20,7 +22,9 @@ mtid_impl! {
     MAX_INT = 1152921504606846975,
     description = "Quadruple length Triplet ID.",
     example_str = "kmn-pqr-stv-wxy",
-    example_int = 707829019477668798
+    example_int = 707829019477668798,
+    EXAMPLE_VALID_INT = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
+    EXAMPLE_OVERSIZED_INT = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000
 }
 
 impl Display for Qtid {
@@ -103,27 +107,6 @@ impl FromStr for Qtid {
     }
 }
 
-impl TryFrom<u64> for Qtid {
-    type Error = Error;
-
-    fn try_from(value: u64) -> Result<Self, Self::Error> {
-        if value < Self::CAPACITY {
-            Ok(Self(value))
-        } else {
-            Err(Error::ParseInteger {
-                expected: Self::CAPACITY,
-                found: value,
-            })
-        }
-    }
-}
-
-impl From<Qtid> for u64 {
-    fn from(value: Qtid) -> Self {
-        value.0
-    }
-}
-
 impl From<(Triplet, Triplet, Triplet, Triplet)> for Qtid {
     fn from(value: (Triplet, Triplet, Triplet, Triplet)) -> Self {
         Self(
@@ -146,12 +129,6 @@ impl From<Qtid> for (Stid, Stid, Stid, Stid) {
     }
 }
 
-impl PartialEq<u64> for Qtid {
-    fn eq(&self, other: &u64) -> bool {
-        &u64::from(*self) == other
-    }
-}
-
 #[cfg(feature = "std")]
 impl PartialEq<String> for Qtid {
     fn eq(&self, other: &String) -> bool {
@@ -160,4 +137,14 @@ impl PartialEq<String> for Qtid {
             Err(_) => false,
         }
     }
+}
+
+#[cfg(feature = "prost")]
+macros::mtid_prost_impl! {
+    Self = Qtid,
+    ActualT = u64,
+    ProtoT = proto::Qtid,
+    BITS = 45,
+    VALID_VALUE = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
+    OVERSIZED_VALUE = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
 }
