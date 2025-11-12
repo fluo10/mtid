@@ -6,21 +6,32 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
-use crate::{Error, Stid, alphabet::is_delimiter, macros::mtid_impl, triplet::Triplet};
+use crate::{Error, Stid, alphabet::is_delimiter, macros, triplet::Triplet};
 
-mtid_impl! {
+macros::mtid_struct! {
     Self = Dtid,
     ActualT = u32,
+    description = "Double length Triplet ID",
+    example_str = "456-789",
+    example_int = 139664649,
+}
+
+macros::mtid_impl! {
+    Self = Dtid,
+    Uint = u32,
     BITS = 30,
     CAPACITY = (Stid::CAPACITY as u32).pow(2),
     NIL_STR = "000-000",
     MAX_STR = "zzz-zzz",
     MAX_INT = 1073741823,
-    description = "Double length Triplet ID",
-    example_str = "456-789",
-    example_int = 139664649,
     EXAMPLE_VALID_INT = 0b0011_1011_1001_1010_1100_1010_0000_0000,
     EXAMPLE_OVERSIZED_INT = 0b1111_1011_1001_1010_1100_1010_0000_0000
+}
+
+macros::mtid_bytes_impl! {
+    Self = Dtid,
+    Uint = u32,
+    LEN = 4,
 }
 
 impl Display for Dtid {

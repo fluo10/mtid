@@ -1,17 +1,10 @@
-macro_rules! mtid_impl {
+macro_rules! mtid_struct {
     (
         Self = $SelfT:ident,
         ActualT = $ActualT:ty,
-        BITS = $BITS:literal,
-        CAPACITY = $CAPACITY:expr,
-        NIL_STR = $NIL_STR:literal,
-        MAX_STR = $MAX_STR:literal,
-        MAX_INT = $MAX_INT:literal,
         description = $description:literal,
         example_str = $example_str:literal,
         example_int = $example_int:literal,
-        EXAMPLE_VALID_INT = $EXAMPLE_VALID_INT:literal,
-        EXAMPLE_OVERSIZED_INT = $EXAMPLE_OVERSIZED_INT:literal
     ) => {
 
         #[doc = concat!($description)]
@@ -38,6 +31,20 @@ macro_rules! mtid_impl {
         /// ```
         #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct $SelfT($ActualT);
+    };
+}
+macro_rules! mtid_impl {
+    (
+        Self = $SelfT:ty,
+        Uint = $Uint:ty,
+        BITS = $BITS:literal,
+        CAPACITY = $CAPACITY:expr,
+        NIL_STR = $NIL_STR:literal,
+        MAX_STR = $MAX_STR:literal,
+        MAX_INT = $MAX_INT:literal,
+        EXAMPLE_VALID_INT = $EXAMPLE_VALID_INT:literal,
+        EXAMPLE_OVERSIZED_INT = $EXAMPLE_OVERSIZED_INT:literal
+    ) => {
 
         impl $SelfT {
             /// The size of the integer type in bits.
@@ -51,13 +58,13 @@ macro_rules! mtid_impl {
             /// ```
             /// # use mtid::*;
             /// # fn main() -> Result<(), Error> {
-            #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::CAPACITY -1);")]
+            #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::try_from(", stringify!($SelfT), "::CAPACITY -1)?);")]
             /// # Ok(())
             /// # }
             /// ```
-            pub const CAPACITY: $ActualT = $CAPACITY;
+            pub const CAPACITY: $Uint = $CAPACITY;
 
-            const CAPACITY_MINUS_ONE: $ActualT = Self::CAPACITY - 1;
+            pub(crate) const CAPACITY_MINUS_ONE: $Uint = Self::CAPACITY - 1;
 
             /// The smallest value that can be represented by this triplet id type.
             ///
@@ -72,7 +79,7 @@ macro_rules! mtid_impl {
             /// # }
             /// ```
             ///
-            pub const NIL: Self = Self(0);
+            pub const NIL: Self = Self::from_uint_unchecked(0);
 
             /// The largest value that can be represent by this triplet id type.
             ///
@@ -86,7 +93,7 @@ macro_rules! mtid_impl {
             /// # Ok(())
             /// # }
             /// ```
-            pub const MAX: Self = Self(Self::CAPACITY_MINUS_ONE);
+            pub const MAX: Self = Self::from_uint_unchecked(Self::CAPACITY_MINUS_ONE);
 
 
 
@@ -102,7 +109,7 @@ macro_rules! mtid_impl {
             /// # }
             /// ```
             pub fn is_nil(self) -> bool {
-                self.0 == 0
+                self == Self::NIL
             }
 
             /// Test if the triplet id is max.
@@ -117,12 +124,7 @@ macro_rules! mtid_impl {
             /// # }
             /// ```
             pub fn is_max(self) -> bool {
-                self.0 == Self::CAPACITY_MINUS_ONE
-            }
-
-            #[deprecated(since="6.0.0", note="please use `from_uint_lossy` instead")]
-            pub fn from_int_lossy(int: $ActualT) -> Self {
-                Self(int & Self::CAPACITY_MINUS_ONE)
+                self == Self::MAX
             }
 
             #[doc = concat!("Converts an unsigned integer to `", stringify!($SelfT), "` by truncating bits that exceed the valid range.")]
@@ -136,20 +138,24 @@ macro_rules! mtid_impl {
             /// # use mtid::*;
             /// // Values within range are preserved
             #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_VALID_INT, "); // ", stringify!($EXAMPLE_VALID_INT))]
-            #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $EXAMPLE_VALID_INT, ");")]
+            #[doc = concat!("assert_eq!(", stringify!($Uint), "::from(id), ", $EXAMPLE_VALID_INT, ");")]
             ///
             #[doc = concat!("// values exceeding ", $BITS, "bits are truncated (MSB(s) dropped")]
             #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_OVERSIZED_INT, "); // ", stringify!($EXAMPLE_OVERSIZED_INT))]
-            #[doc = concat!("assert_eq!(", stringify!($ActualT), "::from(id), ", $EXAMPLE_VALID_INT, "); // Only lower ", $BITS, " bits retained")]
+            #[doc = concat!("assert_eq!(", stringify!($Uint), "::from(id), ", $EXAMPLE_VALID_INT, "); // Only lower ", $BITS, " bits retained")]
             /// ```
-            pub fn from_uint_lossy(int: $ActualT) -> Self {
-                Self(int & Self::CAPACITY_MINUS_ONE)
+            pub fn from_uint_lossy(int: $Uint) -> Self {
+                Self::from_uint_unchecked(int & Self::CAPACITY_MINUS_ONE)
+            }
+
+            pub(crate) const fn from_uint_unchecked(value: $Uint) -> Self {
+                Self(value)
             }
         }
 
-        impl TryFrom<$ActualT> for $SelfT {
+        impl TryFrom<$Uint> for $SelfT {
             type Error = Error;
-            #[doc = concat!("Attempts to convert a [`", stringify!($ActualT), "`]  to [`", stringify!($SelfT), "`].")]
+            #[doc = concat!("Attempts to convert a [`", stringify!($Uint), "`]  to [`", stringify!($SelfT), "`].")]
             ///
             /// Return error if the value is equal [`CAPACITY`](Self::CAPACITY) or more.
             /// If you don't need to detect out-of-range values, use [`from_uint_lossy`](Self::from_uint_lossy).
@@ -162,9 +168,9 @@ macro_rules! mtid_impl {
             #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $EXAMPLE_OVERSIZED_INT, ").is_err());")]
             /// ```
             ///
-            fn try_from(value: $ActualT) -> Result<Self, Self::Error> {
+            fn try_from(value: $Uint) -> Result<Self, Self::Error> {
                 if value < Self::CAPACITY {
-                    Ok(Self(value))
+                    Ok(Self::from_uint_unchecked(value))
                 } else {
                     Err(Error::ParseInteger {
                         expected: Self::CAPACITY as u64,
@@ -174,15 +180,9 @@ macro_rules! mtid_impl {
             }
         }
 
-        impl From<$SelfT> for $ActualT {
+        impl From<$SelfT> for $Uint {
             fn from(value: $SelfT) -> Self {
                 value.0
-            }
-        }
-
-        impl PartialEq<$ActualT> for $SelfT {
-            fn eq(&self, other: &$ActualT) -> bool {
-                &self.0 == other
             }
         }
 
@@ -192,7 +192,7 @@ macro_rules! mtid_impl {
             use super::*;
             impl<'a> Arbitrary<'a> for $SelfT {
                 fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
-                    Ok(Self(u.int_in_range(0..=Self::CAPACITY_MINUS_ONE)?))
+                    Ok(Self::from_uint_unchecked(u.int_in_range(0..=Self::CAPACITY_MINUS_ONE)?))
                 }
             }
         }
@@ -200,11 +200,11 @@ macro_rules! mtid_impl {
         #[cfg(feature = "rand")]
         mod rand {
             use super::*;
-            use ::rand::{distr::{Distribution, StandardUniform}, Rng, random_range};
+            use ::rand::{distr::{Distribution, StandardUniform}, Rng};
 
             impl Distribution<$SelfT> for StandardUniform {
                 fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> $SelfT {
-                    $SelfT(rng.random_range(1..=$SelfT::CAPACITY_MINUS_ONE))
+                    <$SelfT>::from_uint_lossy(rng.random())
                 }
             }
             impl $SelfT {
@@ -221,19 +221,19 @@ macro_rules! mtid_impl {
                 #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
                 /// ```
                 pub fn random() -> Self {
-                    Self(random_range(1..=Self::CAPACITY_MINUS_ONE))
+                    <$SelfT>::from_uint_lossy(::rand::random())
                 }
             }
         }
         #[cfg(feature = "serde")]
         mod serde {
-            use super::$SelfT;
-            use serde::{Deserialize, Serialize, de::Error};
+            use super::*;
+            use ::serde::{Deserialize, Serialize, de::Error};
 
             impl Serialize for $SelfT {
                 fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                 where
-                    S: serde::Serializer,
+                    S: ::serde::Serializer,
                 {
                     serializer.serialize_str(&self.to_string())
                 }
@@ -242,7 +242,7 @@ macro_rules! mtid_impl {
             impl<'de> Deserialize<'de> for $SelfT {
                 fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
                 where
-                    D: serde::Deserializer<'de>,
+                    D: ::serde::Deserializer<'de>,
                 {
                     let s = String::deserialize(deserializer)?;
                     (&s).parse::<$SelfT>().map_err(|e| D::Error::custom(e))
@@ -251,6 +251,36 @@ macro_rules! mtid_impl {
         }
     };
 }
+
+macro_rules! mtid_bytes_impl {
+    {
+        Self = $SelfT:ty,
+        Uint = $Uint:ty,
+        LEN = $LEN:literal,
+    } => {
+        impl $SelfT {
+            #[doc = concat!("Returns a byte array from ", stringify!($SelfT), ".")]
+            pub fn to_bytes(self) -> [u8;$LEN] {
+                let bytes = self.0.to_be_bytes();
+                let start = bytes.len() - $LEN;
+                self.0.to_be_bytes()[start..start+$LEN].try_into().unwrap()
+            }
+            fn bytes_to_uint(bytes: &[u8;$LEN]) -> $Uint {
+                const LEN: usize = std::mem::size_of::<$Uint>();
+                let mut buf = [0;LEN];
+                let start = LEN - $LEN;
+                buf[start..start+$LEN].copy_from_slice(bytes);
+                <$Uint>::from_be_bytes(buf)
+            }
+            #[doc = concat!("Create new ", stringify!($SelfT), " from a byte array.")]
+            pub fn from_bytes_lossy(bytes: &[u8;$LEN]) -> Self {
+                Self::from_uint_lossy(Self::bytes_to_uint(bytes))
+            }
+        }
+    };
+}
+
+
 macro_rules! mtid_prost_impl {
     {
         Self = $SelfT:ty,
@@ -325,5 +355,7 @@ macro_rules! mtid_prost_impl {
         }
     };
 }
-pub(crate) use mtid_impl;
 pub(crate) use mtid_prost_impl;
+pub(crate) use mtid_struct;
+pub(crate) use mtid_impl;
+pub(crate) use mtid_bytes_impl;

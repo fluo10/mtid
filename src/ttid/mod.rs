@@ -9,19 +9,29 @@ use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, 
 
 use core::{fmt::Display, str::FromStr};
 
-mtid_impl! {
+crate::macros::mtid_struct! {
     Self = Ttid,
     ActualT = u64,
+    description = "Triple length Triplet ID",
+    example_str = "abc-def-ghj",
+    example_int = 11386409697842,
+}
+crate::macros::mtid_impl! {
+    Self = Ttid,
+    Uint = u64,
     BITS = 45,
     CAPACITY = (Stid::CAPACITY as u64).pow(3),
     NIL_STR = "000-000-000",
     MAX_STR = "zzz-zzz-zzz",
     MAX_INT = 35184372088831,
-    description = "Triple length Triplet ID",
-    example_str = "abc-def-ghj",
-    example_int = 11386409697842,
     EXAMPLE_VALID_INT = 0b0000_0000_0000_0000_0000_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
     EXAMPLE_OVERSIZED_INT = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000
+}
+
+crate::macros::mtid_bytes_impl! {
+    Self = Ttid,
+    Uint = u64,
+    LEN = 6,
 }
 
 impl Display for Ttid {
