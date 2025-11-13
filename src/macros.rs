@@ -259,7 +259,6 @@ macro_rules! mtid_impl {
     };
 }
 
-
 macro_rules! mtid_bytes_impl {
     {
         Self = $SelfT:ty,
@@ -305,7 +304,6 @@ macro_rules! mtid_bytes_impl {
         }
     };
 }
-
 
 macro_rules! mtid_prost_impl {
     {
@@ -384,7 +382,7 @@ macro_rules! mtid_prost_impl {
 
 }
 
-macro_rules! mtid_redb  {
+macro_rules! mtid_redb {
     ($SelfT:ty) => {
         #[cfg(feature = "redb")]
         mod redb {
@@ -392,18 +390,19 @@ macro_rules! mtid_redb  {
             use ::redb::*;
             impl Value for $SelfT {
                 type SelfType<'a> = Self;
-                type AsBytes<'a> = [u8;Self::BYTES];
+                type AsBytes<'a> = [u8; Self::BYTES];
                 fn fixed_width() -> Option<usize> {
                     Some(Self::BYTES)
                 }
-                fn from_bytes<'a>(data: &'a [u8]) -> Self::SelfType<'a> 
+                fn from_bytes<'a>(data: &'a [u8]) -> Self::SelfType<'a>
                 where
-                Self: 'a
+                    Self: 'a,
                 {
                     Self::from_bytes_lossy(data.try_into().unwrap())
                 }
                 fn as_bytes<'a, 'b: 'a>(value: &'a Self::SelfType<'b>) -> Self::AsBytes<'a>
-                where Self: 'b
+                where
+                    Self: 'b,
                 {
                     value.to_bytes()
                 }
@@ -419,8 +418,8 @@ macro_rules! mtid_redb  {
         }
     };
 }
-pub(crate) use mtid_prost_impl;
-pub(crate) use mtid_struct;
-pub(crate) use mtid_impl;
 pub(crate) use mtid_bytes_impl;
+pub(crate) use mtid_impl;
+pub(crate) use mtid_prost_impl;
 pub(crate) use mtid_redb;
+pub(crate) use mtid_struct;

@@ -39,7 +39,6 @@ macro_rules! impl_tests {
         fn max_bytes_convertion() {
             assert!(validate_bytes_conversion(<$SelfT>::MAX));
         }
-        
 
         #[test]
         fn boundary_value() {

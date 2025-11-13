@@ -6,7 +6,6 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
-
 use crate::{error::Error, macros, triplet::Triplet};
 
 crate::macros::mtid_struct! {
