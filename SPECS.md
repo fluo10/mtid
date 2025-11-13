@@ -1,8 +1,8 @@
-# MTID Specification (Multi-length Triplet ID)
+# caretta-id Specification (Multi-length Triplet ID)
 
 ## Overview
 
-MTID is a human-friendly unique identifier format designed for readability, memorability, and compactness. It encodes integer values into a string representation using 3-character blocks, with multiple fixed-length variants available. MTID is suitable for use in distributed system, logging, URLs, and other contexts where short, unique identifiers are beneficial.
+caretta-id is a human-friendly unique identifier format designed for readability, memorability, and compactness. It encodes integer values into a string representation using 3-character blocks, with multiple fixed-length variants available. caretta-id is suitable for use in distributed system, logging, URLs, and other contexts where short, unique identifiers are beneficial.
 
 ### Motivation
 When I considering implementing IDs for users(not for internal system) to specify items, such as GitHub commit hashes or issue numbers in the distributed system using P2P, the following issues arose.
@@ -15,7 +15,7 @@ So I decided to make my own ID specifications.
 
 ## Structure
 
-Each MTID consists of one or more 3-character blocks separated by hyphens(`-`). Each block encode a portion of the underlying integer value using a custom base encoding.
+Each caretta-id consists of one or more 3-character blocks separated by hyphens(`-`). Each block encode a portion of the underlying integer value using a custom base encoding.
 
 ### Block Format
 
@@ -32,7 +32,7 @@ Each MTID consists of one or more 3-character blocks separated by hyphens(`-`). 
 
 ## Encoding/Decoding
 
-MTID uses a custom base encoding/decoding to convert integer value into/from character blocks.
+caretta-id uses a custom base encoding/decoding to convert integer value into/from character blocks.
 
 ### Alphabet
 - Based on BASE32.
@@ -78,7 +78,7 @@ MTID uses a custom base encoding/decoding to convert integer value into/from cha
 ### Bit Width
 - Each character encode approximately 5 bits(BASE32).
 - Each 3-character block encodes 15 bits.
-- Triple block MTID encodes 45 bits of entropy
+- Double block caretta-id encodes 45 bits of entropy
 
 ### Encoding Process
 1. Split integer value by 15 bits.
@@ -87,32 +87,32 @@ MTID uses a custom base encoding/decoding to convert integer value into/from cha
 
 ## Variants
 
-MTID supports multiple fixed-length variants:
+caretta-id supports multiple fixed-length variants:
 
-| Name                          | Format            | Bit Width |
-|:------------------------------|:------------------|----------:|
-| `STID` (Single Triplet ID)    | `abc`             | 15 bits
-| `DTID` (Double Triplet ID)    | `abc-def`         | 30 bits
-| `TTID` (Triple Triplet ID)    | `abc-def-ghj`     | 45 bits
-| `QTID` (Quadruple Triplet ID) | `abc-def-ghj-kmn` | 60 bits
+| Name                                       | Format            | Bit Width |
+|:-------------------------------------------|:------------------|----------:|
+| `CarettaIdS` (Single length Caretta ID)    | `abc`             | 15 bits
+| `CarettaIdD` (Double length Caretta ID)    | `abc-def`         | 30 bits
+| `CarettaIdT` (Triple length Caretta ID)    | `abc-def-ghj`     | 45 bits
+| `CarettaIdQ` (Quadruple length Caretta ID) | `abc-def-ghj-kmn` | 60 bits
 
 ## Examples
 
-|Integer                      | STID  | DTID      | TTID          | QTID              |
-|----------------------------:|:-----:|:---------:|:-------------:|:-----------------:|
-|                         `0` | `000` | `000-000` | `000-000-000` | `000-000-000-000` |
-|                    `32_767` | `zzz` | `000-zzz` | `000-000-zzz` | `000-000-000-zzz` |
-|             `1_073_741_823` | `-`   | `zzz-zzz` | `000-zzz-zzz` | `000-000-zzz-zzz` |
-|        `35_184_372_088_831` | `-`   | `-`       | `zzz-zzz-zzz` | `000-zzz-zzz-zzz` |
-| `1_152_921_504_606_846_975` | `-`   | `-`       | `-`           | `zzz-zzz-zzz-zzz` |
+|Integer                      | CarettaIdS | CarettaIdD | CarettaIdT    | CarettaIdQ        |
+|----------------------------:|:----------:|:----------:|:-------------:|:-----------------:|
+|                         `0` | `000`      | `000-000`  | `000-000-000` | `000-000-000-000` |
+|                    `32_767` | `zzz`      | `000-zzz`  | `000-000-zzz` | `000-000-000-zzz` |
+|             `1_073_741_823` | `-`        | `zzz-zzz`  | `000-zzz-zzz` | `000-000-zzz-zzz` |
+|        `35_184_372_088_831` | `-`        | `-`        | `zzz-zzz-zzz` | `000-zzz-zzz-zzz` |
+| `1_152_921_504_606_846_975` | `-`        | `-`        | `-`           | `zzz-zzz-zzz-zzz` |
 
 ## Implementation Notes
 
-- MTID is language-agnostic and can be implemented in any language with integer and string manipulation capabilities.
-- Rust implemention provides `Stid`, `Dtid` and `Ttid` structs with common conversion trait.
+- caretta-id is language-agnostic and can be implemented in any language with integer and string manipulation capabilities.
+- Rust implemention provides `CarettaIdS`, `CarettaIdD`, `CarettaIdT` and `CarettaIdQ` structs with common conversion trait.
 - Parsing and formatting functions should validate character sets and block length.
 - Lossy conversion from oversized interger is allowed. In this case, higher bits should be lost.
 
 ## License
 
-This specification is open and free to use under the same license as the MTID reference implementation.
+This specification is open and free to use under the same license as the caretta-id reference implementation.
