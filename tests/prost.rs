@@ -25,7 +25,27 @@ macro_rules! impl_mod {
     };
 }
 
-impl_mod!(caretta_id_s, caretta_id::CarettaIdS, caretta_id::proto::CarettaIdS, u32);
-impl_mod!(caretta_id_d, caretta_id::CarettaIdD, caretta_id::proto::CarettaIdD, u32);
-impl_mod!(caretta_id_t, caretta_id::CarettaIdT, caretta_id::proto::CarettaIdT, u64);
-impl_mod!(caretta_id_q, caretta_id::CarettaIdQ, caretta_id::proto::CarettaIdQ, u64);
+impl_mod!(
+    caretta_id_s,
+    caretta_id::CarettaIdS,
+    caretta_id::proto::CarettaIdS,
+    u32
+);
+impl_mod!(
+    caretta_id_d,
+    caretta_id::CarettaIdD,
+    caretta_id::proto::CarettaIdD,
+    u32
+);
+impl_mod!(
+    caretta_id_t,
+    caretta_id::CarettaIdT,
+    caretta_id::proto::CarettaIdT,
+    u64
+);
+impl_mod!(
+    caretta_id_q,
+    caretta_id::CarettaIdQ,
+    caretta_id::proto::CarettaIdQ,
+    u64
+);

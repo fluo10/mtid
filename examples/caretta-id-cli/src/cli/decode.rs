@@ -1,5 +1,5 @@
-use clap::Args;
 use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use clap::Args;
 
 use crate::cli::length_option::{LengthOption, LengthOptions};
 
@@ -18,11 +18,23 @@ pub struct DecodeArgs {
 impl DecodeArgs {
     pub fn run(self) {
         match LengthOption::from(self.length) {
-            LengthOption::Single => println!("{}", u16::from(self.caretta_id.parse::<CarettaIdS>().unwrap())),
-            LengthOption::Double => println!("{}", u32::from(self.caretta_id.parse::<CarettaIdD>().unwrap())),
-            LengthOption::Triple => println!("{}", u64::from(self.caretta_id.parse::<CarettaIdT>().unwrap())),
+            LengthOption::Single => println!(
+                "{}",
+                u16::from(self.caretta_id.parse::<CarettaIdS>().unwrap())
+            ),
+            LengthOption::Double => println!(
+                "{}",
+                u32::from(self.caretta_id.parse::<CarettaIdD>().unwrap())
+            ),
+            LengthOption::Triple => println!(
+                "{}",
+                u64::from(self.caretta_id.parse::<CarettaIdT>().unwrap())
+            ),
             LengthOption::Quadruple => {
-                println!("{}", u64::from(self.caretta_id.parse::<CarettaIdQ>().unwrap()))
+                println!(
+                    "{}",
+                    u64::from(self.caretta_id.parse::<CarettaIdQ>().unwrap())
+                )
             }
         }
     }

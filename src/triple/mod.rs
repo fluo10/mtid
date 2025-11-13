@@ -3,7 +3,7 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-use crate::{Error, CarettaIdS, alphabet::is_delimiter, CarettaIdD, macros, triplet::Triplet};
+use crate::{CarettaIdD, CarettaIdS, Error, alphabet::is_delimiter, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 
@@ -25,8 +25,6 @@ crate::macros::caretta_id_impl! {
     EXAMPLE_VALID_INT = 0b0000_0000_0000_0000_0000_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
     EXAMPLE_OVERSIZED_INT = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000
 }
-
-
 
 impl Display for CarettaIdT {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {

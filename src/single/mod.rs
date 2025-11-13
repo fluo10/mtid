@@ -28,8 +28,6 @@ crate::macros::caretta_id_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1010_0111_0001_0000
 }
 
-
-
 impl Display for CarettaIdS {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let triplet = Triplet::from(*self);

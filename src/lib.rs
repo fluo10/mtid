@@ -129,12 +129,12 @@ extern crate core as std;
 ///   During decoding, hyphens may be omitted or replaced with underscores.
 pub mod alphabet;
 
-mod single;
+mod double;
 mod error;
 mod macros;
-mod double;
-mod triple;
 mod quadruple;
+mod single;
+mod triple;
 
 /// Provides [`Triplet`](triplet::Triplet) and [`TripletError`](triplet::TripletError).
 pub mod triplet;

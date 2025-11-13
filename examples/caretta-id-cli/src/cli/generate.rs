@@ -1,5 +1,5 @@
-use clap::Args;
 use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use clap::Args;
 
 use crate::cli::length_option::{LengthOption, LengthOptions};
 
