@@ -7,7 +7,7 @@ use rand::Rng;
 
 impl_tests! {
     Self = Stid,
-    Integer = u16,
+    Uint = u16,
 }
 
 #[test]

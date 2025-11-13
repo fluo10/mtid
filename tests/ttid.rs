@@ -6,5 +6,5 @@ use rand::Rng;
 
 impl_tests! {
     Self = Ttid,
-    Integer = u64,
+    Uint = u64,
 }

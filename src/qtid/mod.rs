@@ -4,27 +4,32 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-#[cfg(feature = "prost")]
-use crate::macros;
-use crate::{
-    Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet,
-};
+use crate::{Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
-
-mtid_impl! {
+macros::mtid_struct! {
     Self = Qtid,
     ActualT = u64,
+    description = "Quadruple length Triplet ID.",
+    example_str = "kmn-pqr-stv-wxy",
+    example_int = 707829019477668798,
+}
+macros::mtid_impl! {
+    Self = Qtid,
+    Uint = u64,
     BITS = 60,
     CAPACITY = (Stid::CAPACITY as u64).pow(4),
     NIL_STR = "000-000-000-000",
     MAX_STR = "zzz-zzz-zzz-zzz",
     MAX_INT = 1152921504606846975,
-    description = "Quadruple length Triplet ID.",
-    example_str = "kmn-pqr-stv-wxy",
-    example_int = 707829019477668798,
     EXAMPLE_VALID_INT = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
     EXAMPLE_OVERSIZED_INT = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000
+}
+
+macros::mtid_bytes_impl! {
+    Self = Qtid,
+    Uint = u64,
+    BYTES = 8,
 }
 
 impl Display for Qtid {
@@ -148,3 +153,5 @@ macros::mtid_prost_impl! {
     VALID_VALUE = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
     OVERSIZED_VALUE = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
 }
+
+macros::mtid_redb!(Qtid);

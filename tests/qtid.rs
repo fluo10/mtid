@@ -7,5 +7,5 @@ use rand::Rng;
 
 impl_tests! {
     Self = Qtid,
-    Integer = u64,
+    Uint = u64,
 }

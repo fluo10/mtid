@@ -6,23 +6,32 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
-#[cfg(feature = "prost")]
-use crate::macros;
-use crate::{error::Error, macros::mtid_impl, triplet::Triplet};
+use crate::{error::Error, macros, triplet::Triplet};
 
-mtid_impl! {
+crate::macros::mtid_struct! {
     Self = Stid,
     ActualT = u16,
+    description = "Single length Triplet ID.",
+    example_str = "123",
+    example_int = 1091,
+}
+
+crate::macros::mtid_impl! {
+    Self = Stid,
+    Uint = u16,
     BITS = 15,
     CAPACITY = Triplet::CAPACITY,
     NIL_STR = "000",
     MAX_STR = "zzz",
     MAX_INT = 32767,
-    description = "Single length Triplet ID.",
-    example_str = "123",
-    example_int = 1091,
     EXAMPLE_VALID_INT = 0b0010_0111_0001_0000,
     EXAMPLE_OVERSIZED_INT = 0b1010_0111_0001_0000
+}
+
+crate::macros::mtid_bytes_impl! {
+    Self = Stid,
+    Uint = u16,
+    BYTES = 2,
 }
 
 impl Display for Stid {
@@ -85,3 +94,5 @@ macros::mtid_prost_impl! {
     VALID_VALUE = 0b0010_0111_0001_0000,
     OVERSIZED_VALUE = 0b1010_0111_0001_0000,
 }
+
+macros::mtid_redb!(Stid);
