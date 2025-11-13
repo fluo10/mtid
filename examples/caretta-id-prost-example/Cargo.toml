@@ -1,5 +1,5 @@
 [package]
-name = "mtid-prost-example"
+name = "caretta-id-prost-example"
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -9,7 +9,7 @@ version.workspace = true
 publish = false
 
 [dependencies]
-mtid = {path = "../..", features = ["prost"]}
+caretta-id = {path = "../..", features = ["prost"]}
 prost.workspace = true
 
 [build-dependencies]
