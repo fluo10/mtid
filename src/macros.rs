@@ -259,52 +259,6 @@ macro_rules! caretta_id_impl {
     };
 }
 
-macro_rules! caretta_id_bytes_impl {
-    {
-        Self = $SelfT:ty,
-        Uint = $Uint:ty,
-        BYTES = $BYTES:literal,
-    } => {
-        crate::macros::caretta_id_bytes_impl! {
-            Self = $SelfT,
-            Uint = $Uint,
-            BYTES = $BYTES,
-            uint_to_bytes = const fn uint_to_bytes(uint : $Uint) -> [u8;$BYTES] { uint.to_be_bytes()},
-            bytes_to_uint = const fn bytes_to_uint(bytes : &[u8;$BYTES]) -> $Uint { <$Uint>::from_be_bytes(*bytes) },
-        }
-    };
-    {
-        Self = $SelfT:ty,
-        Uint = $Uint:ty,
-        BYTES = $BYTES:literal,
-        uint_to_bytes = $uint_to_bytes:item,
-        bytes_to_uint = $bytes_to_uint:item,
-    } => {
-
-        $uint_to_bytes
-
-        $bytes_to_uint
-
-        impl $SelfT {
-            pub const BYTES: usize = $BYTES;
-
-            #[doc = concat!("Returns a byte array from ", stringify!($SelfT), ".")]
-            pub const fn to_bytes(self) -> [u8;Self::BYTES] {
-                uint_to_bytes(self.0)
-            }
-
-            #[doc = concat!("Create new ", stringify!($SelfT), " from a byte array.")]
-            pub const fn from_bytes_lossy(bytes: &[u8;Self::BYTES]) -> Self {
-                Self::from_uint_lossy(bytes_to_uint(bytes))
-            }
-
-            pub const fn from_bytes(bytes: &[u8;Self::BYTES]) -> Result<Self, crate::Error> {
-                Self::from_uint(bytes_to_uint(bytes))
-            }
-        }
-    };
-}
-
 macro_rules! caretta_id_prost_impl {
     {
         Self = $SelfT:ty,
@@ -383,28 +337,51 @@ macro_rules! caretta_id_prost_impl {
 }
 
 macro_rules! caretta_id_redb {
-    ($SelfT:ty) => {
+    {
+        Self = $SelfT:ty,
+        Uint = $Uint:ty,
+        BYTES = $BYTES:literal,
+    } => {
+        crate::macros::caretta_id_redb!{
+            Self = $SelfT,
+            Uint = $Uint,
+            BYTES = $BYTES,
+            uint_to_bytes = const fn uint_to_bytes(uint : $Uint) -> [u8;$BYTES] { uint.to_le_bytes()},
+            bytes_to_uint = const fn bytes_to_uint(bytes : &[u8;$BYTES]) -> $Uint { <$Uint>::from_le_bytes(*bytes) },
+        }
+    };
+    {
+        Self = $SelfT:ty,
+        Uint = $Uint:ty,
+        BYTES = $BYTES:literal,
+        uint_to_bytes = $uint_to_bytes:item,
+        bytes_to_uint = $bytes_to_uint:item,
+    } => {
         #[cfg(feature = "redb")]
         mod redb {
             use super::*;
             use ::redb::*;
+
+            $uint_to_bytes
+            $bytes_to_uint
+
             impl Value for $SelfT {
                 type SelfType<'a> = Self;
-                type AsBytes<'a> = [u8; Self::BYTES];
+                type AsBytes<'a> = [u8; $BYTES];
                 fn fixed_width() -> Option<usize> {
-                    Some(Self::BYTES)
+                    Some($BYTES)
                 }
                 fn from_bytes<'a>(data: &'a [u8]) -> Self::SelfType<'a>
                 where
                     Self: 'a,
                 {
-                    Self::from_bytes_lossy(data.try_into().unwrap())
+                    Self::from_uint_lossy(bytes_to_uint(data.try_into().unwrap()))
                 }
                 fn as_bytes<'a, 'b: 'a>(value: &'a Self::SelfType<'b>) -> Self::AsBytes<'a>
                 where
                     Self: 'b,
                 {
-                    value.to_bytes()
+                    uint_to_bytes(value.0)
                 }
                 fn type_name() -> TypeName {
                     TypeName::new(stringify!($SelfT))
@@ -418,7 +395,6 @@ macro_rules! caretta_id_redb {
         }
     };
 }
-pub(crate) use caretta_id_bytes_impl;
 pub(crate) use caretta_id_impl;
 pub(crate) use caretta_id_prost_impl;
 pub(crate) use caretta_id_redb;

@@ -26,18 +26,7 @@ crate::macros::caretta_id_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000
 }
 
-crate::macros::caretta_id_bytes_impl! {
-    Self = CarettaIdT,
-    Uint = u64,
-    BYTES = 6,
-    uint_to_bytes = const fn uint_to_bytes(uint: u64) -> [u8;6] {
-        let bytes = uint.to_be_bytes();
-        [bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]]
-    },
-    bytes_to_uint = const fn bytes_to_uint(bytes: &[u8;6]) -> u64 {
-        u64::from_be_bytes([0, 0, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]])
-    },
-}
+
 
 impl Display for CarettaIdT {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -140,4 +129,15 @@ macros::caretta_id_prost_impl! {
     OVERSIZED_VALUE = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
 }
 
-macros::caretta_id_redb!(CarettaIdT);
+crate::macros::caretta_id_redb! {
+    Self = CarettaIdT,
+    Uint = u64,
+    BYTES = 6,
+    uint_to_bytes = const fn uint_to_bytes(uint: u64) -> [u8;6] {
+        let bytes = uint.to_le_bytes();
+        [bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]]
+    },
+    bytes_to_uint = const fn bytes_to_uint(bytes: &[u8;6]) -> u64 {
+        u64::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], 0, 0])
+    },
+}

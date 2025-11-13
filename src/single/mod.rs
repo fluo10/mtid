@@ -28,11 +28,7 @@ crate::macros::caretta_id_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1010_0111_0001_0000
 }
 
-crate::macros::caretta_id_bytes_impl! {
-    Self = CarettaIdS,
-    Uint = u16,
-    BYTES = 2,
-}
+
 
 impl Display for CarettaIdS {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -95,4 +91,8 @@ macros::caretta_id_prost_impl! {
     OVERSIZED_VALUE = 0b1010_0111_0001_0000,
 }
 
-macros::caretta_id_redb!(CarettaIdS);
+crate::macros::caretta_id_redb! {
+    Self = CarettaIdS,
+    Uint = u16,
+    BYTES = 2,
+}

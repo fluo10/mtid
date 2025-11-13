@@ -10,9 +10,6 @@ macro_rules! impl_tests {
         fn validate_integer_conversion(value: $SelfT) -> Result<bool, caretta_id::Error> {
             Ok(value == <$SelfT>::try_from(<$Uint>::from(value))?)
         }
-        fn validate_bytes_conversion(value: $SelfT) -> bool {
-            value == <$SelfT>::from_bytes_lossy(&value.to_bytes())
-        }
 
         #[test]
         fn nil_string_convertion() {
@@ -30,14 +27,6 @@ macro_rules! impl_tests {
         #[test]
         fn max_integer_conversion() {
             assert!(validate_integer_conversion(<$SelfT>::MAX).unwrap());
-        }
-        #[test]
-        fn nil_bytes_convertion() {
-            assert!(validate_bytes_conversion(<$SelfT>::NIL));
-        }
-        #[test]
-        fn max_bytes_convertion() {
-            assert!(validate_bytes_conversion(<$SelfT>::MAX));
         }
 
         #[test]
