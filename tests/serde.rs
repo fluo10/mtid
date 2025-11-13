@@ -8,22 +8,22 @@ use serde::{Deserialize, Serialize};
 use serde_test::{Token, assert_tokens};
 
 #[test]
-fn CarettaIdS_nil() {
+fn single_nil() {
     assert_tokens(&CarettaIdS::NIL, &[Token::Str("000")]);
 }
 
 #[test]
-fn CarettaIdD_nil() {
+fn double_nil() {
     assert_tokens(&CarettaIdD::NIL, &[Token::Str("000-000")]);
 }
 
 #[test]
-fn CarettaIdT_nil() {
+fn triple_nil() {
     assert_tokens(&CarettaIdT::NIL, &[Token::Str("000-000-000")]);
 }
 
 #[test]
-fn CarettaIdQ_nil() {
+fn quadruple_nil() {
     assert_tokens(&CarettaIdQ::NIL, &[Token::Str("000-000-000-000")]);
 }
 
