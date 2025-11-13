@@ -4,21 +4,21 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-use crate::{Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet};
+use crate::{Error, CarettaIdS, CarettaIdT, alphabet::is_delimiter, CarettaIdD, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
-macros::mtid_struct! {
-    Self = Qtid,
+macros::caretta_id_struct! {
+    Self = CarettaIdQ,
     ActualT = u64,
-    description = "Quadruple length Triplet ID.",
+    description = "Quadruple length Caretta ID.",
     example_str = "kmn-pqr-stv-wxy",
     example_int = 707829019477668798,
 }
-macros::mtid_impl! {
-    Self = Qtid,
+macros::caretta_id_impl! {
+    Self = CarettaIdQ,
     Uint = u64,
     BITS = 60,
-    CAPACITY = (Stid::CAPACITY as u64).pow(4),
+    CAPACITY = (CarettaIdS::CAPACITY as u64).pow(4),
     NIL_STR = "000-000-000-000",
     MAX_STR = "zzz-zzz-zzz-zzz",
     MAX_INT = 1152921504606846975,
@@ -26,20 +26,20 @@ macros::mtid_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000
 }
 
-macros::mtid_bytes_impl! {
-    Self = Qtid,
+macros::caretta_id_bytes_impl! {
+    Self = CarettaIdQ,
     Uint = u64,
     BYTES = 8,
 }
 
-impl Display for Qtid {
+impl Display for CarettaIdQ {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        let tuple: (Stid, Stid, Stid, Stid) = (*self).into();
+        let tuple: (CarettaIdS, CarettaIdS, CarettaIdS, CarettaIdS) = (*self).into();
         write!(f, "{}-{}-{}-{}", tuple.0, tuple.1, tuple.2, tuple.3)
     }
 }
 
-impl FromStr for Qtid {
+impl FromStr for CarettaIdQ {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -112,30 +112,30 @@ impl FromStr for Qtid {
     }
 }
 
-impl From<(Triplet, Triplet, Triplet, Triplet)> for Qtid {
+impl From<(Triplet, Triplet, Triplet, Triplet)> for CarettaIdQ {
     fn from(value: (Triplet, Triplet, Triplet, Triplet)) -> Self {
         Self(
-            ((u16::from(value.0) as u64) << Ttid::BITS)
-                | ((u16::from(value.1) as u64) << Dtid::BITS)
-                | ((u16::from(value.2) as u64) << Stid::BITS)
+            ((u16::from(value.0) as u64) << CarettaIdT::BITS)
+                | ((u16::from(value.1) as u64) << CarettaIdD::BITS)
+                | ((u16::from(value.2) as u64) << CarettaIdS::BITS)
                 | (u16::from(value.3) as u64),
         )
     }
 }
 
-impl From<Qtid> for (Stid, Stid, Stid, Stid) {
-    fn from(value: Qtid) -> Self {
+impl From<CarettaIdQ> for (CarettaIdS, CarettaIdS, CarettaIdS, CarettaIdS) {
+    fn from(value: CarettaIdQ) -> Self {
         (
-            Stid::from_uint_lossy((value.0 >> Ttid::BITS) as u16),
-            Stid::from_uint_lossy((value.0 >> Dtid::BITS) as u16),
-            Stid::from_uint_lossy((value.0 >> Stid::BITS) as u16),
-            Stid::from_uint_lossy(value.0 as u16),
+            CarettaIdS::from_uint_lossy((value.0 >> CarettaIdT::BITS) as u16),
+            CarettaIdS::from_uint_lossy((value.0 >> CarettaIdD::BITS) as u16),
+            CarettaIdS::from_uint_lossy((value.0 >> CarettaIdS::BITS) as u16),
+            CarettaIdS::from_uint_lossy(value.0 as u16),
         )
     }
 }
 
 #[cfg(feature = "std")]
-impl PartialEq<String> for Qtid {
+impl PartialEq<String> for CarettaIdQ {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
@@ -145,13 +145,13 @@ impl PartialEq<String> for Qtid {
 }
 
 #[cfg(feature = "prost")]
-macros::mtid_prost_impl! {
-    Self = Qtid,
+macros::caretta_id_prost_impl! {
+    Self = CarettaIdQ,
     ActualT = u64,
-    ProtoT = proto::Qtid,
+    ProtoT = proto::CarettaIdQ,
     BITS = 45,
     VALID_VALUE = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
     OVERSIZED_VALUE = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
 }
 
-macros::mtid_redb!(Qtid);
+macros::caretta_id_redb!(CarettaIdQ);

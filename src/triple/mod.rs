@@ -3,22 +3,22 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet};
+use crate::{Error, CarettaIdS, alphabet::is_delimiter, CarettaIdD, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 
-crate::macros::mtid_struct! {
-    Self = Ttid,
+crate::macros::caretta_id_struct! {
+    Self = CarettaIdT,
     ActualT = u64,
-    description = "Triple length Triplet ID",
+    description = "Triple length Caretta ID",
     example_str = "abc-def-ghj",
     example_int = 11386409697842,
 }
-crate::macros::mtid_impl! {
-    Self = Ttid,
+crate::macros::caretta_id_impl! {
+    Self = CarettaIdT,
     Uint = u64,
     BITS = 45,
-    CAPACITY = (Stid::CAPACITY as u64).pow(3),
+    CAPACITY = (CarettaIdS::CAPACITY as u64).pow(3),
     NIL_STR = "000-000-000",
     MAX_STR = "zzz-zzz-zzz",
     MAX_INT = 35184372088831,
@@ -26,8 +26,8 @@ crate::macros::mtid_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000
 }
 
-crate::macros::mtid_bytes_impl! {
-    Self = Ttid,
+crate::macros::caretta_id_bytes_impl! {
+    Self = CarettaIdT,
     Uint = u64,
     BYTES = 6,
     uint_to_bytes = const fn uint_to_bytes(uint: u64) -> [u8;6] {
@@ -39,14 +39,14 @@ crate::macros::mtid_bytes_impl! {
     },
 }
 
-impl Display for Ttid {
+impl Display for CarettaIdT {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let tuple: (Triplet, Triplet, Triplet) = (*self).into();
         write!(f, "{}-{}-{}", tuple.0, tuple.1, tuple.2)
     }
 }
 
-impl FromStr for Ttid {
+impl FromStr for CarettaIdT {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -100,28 +100,28 @@ impl FromStr for Ttid {
     }
 }
 
-impl From<(Triplet, Triplet, Triplet)> for Ttid {
+impl From<(Triplet, Triplet, Triplet)> for CarettaIdT {
     fn from(value: (Triplet, Triplet, Triplet)) -> Self {
         Self(
-            ((u16::from(value.0) as u64) << Dtid::BITS)
-                | ((u16::from(value.1) as u64) << Stid::BITS)
+            ((u16::from(value.0) as u64) << CarettaIdD::BITS)
+                | ((u16::from(value.1) as u64) << CarettaIdS::BITS)
                 | (u16::from(value.2) as u64),
         )
     }
 }
 
-impl From<Ttid> for (Triplet, Triplet, Triplet) {
-    fn from(value: Ttid) -> Self {
+impl From<CarettaIdT> for (Triplet, Triplet, Triplet) {
+    fn from(value: CarettaIdT) -> Self {
         (
-            Triplet::from_uint_lossy((value.0 >> Dtid::BITS) as u16),
-            Triplet::from_uint_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_uint_lossy((value.0 >> CarettaIdD::BITS) as u16),
+            Triplet::from_uint_lossy((value.0 >> CarettaIdS::BITS) as u16),
             Triplet::from_uint_lossy(value.0 as u16),
         )
     }
 }
 
 #[cfg(feature = "std")]
-impl PartialEq<String> for Ttid {
+impl PartialEq<String> for CarettaIdT {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
@@ -131,13 +131,13 @@ impl PartialEq<String> for Ttid {
 }
 
 #[cfg(feature = "prost")]
-macros::mtid_prost_impl! {
-    Self = Ttid,
+macros::caretta_id_prost_impl! {
+    Self = CarettaIdT,
     ActualT = u64,
-    ProtoT = proto::Ttid,
+    ProtoT = proto::CarettaIdT,
     BITS = 45,
     VALID_VALUE = 0b0000_0000_0000_0000_0000_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
     OVERSIZED_VALUE = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
 }
 
-macros::mtid_redb!(Ttid);
+macros::caretta_id_redb!(CarettaIdT);

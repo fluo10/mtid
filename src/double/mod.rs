@@ -6,21 +6,21 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
-use crate::{Error, Stid, alphabet::is_delimiter, macros, triplet::Triplet};
+use crate::{Error, CarettaIdS, alphabet::is_delimiter, macros, triplet::Triplet};
 
-macros::mtid_struct! {
-    Self = Dtid,
+macros::caretta_id_struct! {
+    Self = CarettaIdD,
     ActualT = u32,
-    description = "Double length Triplet ID",
+    description = "Double length Caretta ID",
     example_str = "456-789",
     example_int = 139664649,
 }
 
-macros::mtid_impl! {
-    Self = Dtid,
+macros::caretta_id_impl! {
+    Self = CarettaIdD,
     Uint = u32,
     BITS = 30,
-    CAPACITY = (Stid::CAPACITY as u32).pow(2),
+    CAPACITY = (CarettaIdS::CAPACITY as u32).pow(2),
     NIL_STR = "000-000",
     MAX_STR = "zzz-zzz",
     MAX_INT = 1073741823,
@@ -28,35 +28,35 @@ macros::mtid_impl! {
     EXAMPLE_OVERSIZED_INT = 0b1111_1011_1001_1010_1100_1010_0000_0000
 }
 
-macros::mtid_bytes_impl! {
-    Self = Dtid,
+macros::caretta_id_bytes_impl! {
+    Self = CarettaIdD,
     Uint = u32,
     BYTES = 4,
 }
 
-impl Display for Dtid {
+impl Display for CarettaIdD {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         let tuple: (Triplet, Triplet) = (*self).into();
         write!(f, "{}-{}", tuple.0, tuple.1)
     }
 }
 
-impl From<(Triplet, Triplet)> for Dtid {
+impl From<(Triplet, Triplet)> for CarettaIdD {
     fn from(value: (Triplet, Triplet)) -> Self {
-        Self((u32::from(u16::from(value.0)) << Stid::BITS) + u32::from(u16::from(value.1)))
+        Self((u32::from(u16::from(value.0)) << CarettaIdS::BITS) + u32::from(u16::from(value.1)))
     }
 }
 
-impl From<Dtid> for (Triplet, Triplet) {
-    fn from(value: Dtid) -> Self {
+impl From<CarettaIdD> for (Triplet, Triplet) {
+    fn from(value: CarettaIdD) -> Self {
         (
-            Triplet::from_uint_lossy((value.0 >> Stid::BITS) as u16),
+            Triplet::from_uint_lossy((value.0 >> CarettaIdS::BITS) as u16),
             Triplet::from_uint_lossy(value.0 as u16),
         )
     }
 }
 
-impl FromStr for Dtid {
+impl FromStr for CarettaIdD {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -97,7 +97,7 @@ impl FromStr for Dtid {
 }
 
 #[cfg(feature = "std")]
-impl PartialEq<String> for Dtid {
+impl PartialEq<String> for CarettaIdD {
     fn eq(&self, other: &String) -> bool {
         match Self::from_str(other) {
             Ok(x) => *self == x,
@@ -107,13 +107,13 @@ impl PartialEq<String> for Dtid {
 }
 
 #[cfg(feature = "prost")]
-crate::macros::mtid_prost_impl! {
-    Self = Dtid,
+crate::macros::caretta_id_prost_impl! {
+    Self = CarettaIdD,
     ActualT = u32,
-    ProtoT = proto::Dtid,
+    ProtoT = proto::CarettaIdD,
     BITS = 30,
     VALID_VALUE = 0b0011_1011_1001_1010_1100_1010_0000_0000,
     OVERSIZED_VALUE = 0b1111_1011_1001_1010_1100_1010_0000_0000,
 }
 
-macros::mtid_redb!(Dtid);
+macros::caretta_id_redb!(CarettaIdD);

@@ -1,14 +1,14 @@
 use rusqlite::{Error, ToSql, types::FromSql};
 
-use super::Qtid;
-impl FromSql for Qtid {
+use super::CarettaIdQ;
+impl FromSql for CarettaIdQ {
     fn column_result(value: rusqlite::types::ValueRef<'_>) -> rusqlite::types::FromSqlResult<Self> {
         let int = u64::column_result(value)?;
         Self::try_from(int).or_else(|e| Err(rusqlite::types::FromSqlError::Other(Box::new(e))))
     }
 }
 
-impl ToSql for Qtid {
+impl ToSql for CarettaIdQ {
     fn to_sql(&self) -> rusqlite::Result<rusqlite::types::ToSqlOutput<'_>> {
         Ok(rusqlite::types::ToSqlOutput::Owned(
             rusqlite::types::Value::Integer(

@@ -1,21 +1,21 @@
-use super::Stid;
+use super::CarettaIdS;
 
-impl From<Stid> for sea_orm::Value {
-    fn from(value: Stid) -> Self {
+impl From<CarettaIdS> for sea_orm::Value {
+    fn from(value: CarettaIdS) -> Self {
         sea_orm::sea_query::Value::SmallUnsigned(Some(value.into()))
     }
 }
 
-impl sea_orm::TryGetable for Stid {
+impl sea_orm::TryGetable for CarettaIdS {
     fn try_get_by<I: sea_orm::ColIdx>(
         res: &sea_orm::QueryResult,
         index: I,
     ) -> Result<Self, sea_orm::TryGetError> {
         match <u16 as sea_orm::TryGetable>::try_get_by(res, index) {
-            Ok(x) => Stid::try_from(x).map_err(|e| {
+            Ok(x) => CarettaIdS::try_from(x).map_err(|e| {
                 sea_orm::TryGetError::DbErr(sea_orm::DbErr::TryIntoErr {
                     from: "u16",
-                    into: "mtid::Stid",
+                    into: "CarettaIdS",
                     source: Box::new(e),
                 })
             }),
@@ -24,14 +24,14 @@ impl sea_orm::TryGetable for Stid {
     }
 }
 
-impl sea_orm::sea_query::ValueType for Stid {
+impl sea_orm::sea_query::ValueType for CarettaIdS {
     fn try_from(v: sea_orm::Value) -> Result<Self, sea_orm::sea_query::ValueTypeErr> {
         <u16 as sea_orm::sea_query::ValueType>::try_from(v).map(|x| {
-            <Stid as TryFrom<u16>>::try_from(x).map_err(|_| sea_orm::sea_query::ValueTypeErr)
+            <CarettaIdS as TryFrom<u16>>::try_from(x).map_err(|_| sea_orm::sea_query::ValueTypeErr)
         })?
     }
     fn type_name() -> String {
-        stringify!(Stid).to_owned()
+        stringify!(CarettaIdS).to_owned()
     }
     fn array_type() -> sea_orm::sea_query::ArrayType {
         sea_orm::sea_query::ArrayType::SmallUnsigned
@@ -41,7 +41,7 @@ impl sea_orm::sea_query::ValueType for Stid {
     }
 }
 
-impl sea_orm::sea_query::Nullable for Stid {
+impl sea_orm::sea_query::Nullable for CarettaIdS {
     fn null() -> sea_orm::Value {
         <u16 as sea_orm::sea_query::Nullable>::null()
     }

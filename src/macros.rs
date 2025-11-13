@@ -1,4 +1,4 @@
-macro_rules! mtid_struct {
+macro_rules! caretta_id_struct {
     (
         Self = $SelfT:ident,
         ActualT = $ActualT:ty,
@@ -12,7 +12,7 @@ macro_rules! mtid_struct {
         /// # Examples
         ///
         /// ```
-        /// # use mtid::*;
+        /// # use caretta_id::*;
         /// # fn main() -> Result<(), Error> {
         /// // Generate random value.
         #[doc = concat!("let random = ", stringify!($SelfT), "::random();")]
@@ -33,7 +33,7 @@ macro_rules! mtid_struct {
         pub struct $SelfT($ActualT);
     };
 }
-macro_rules! mtid_impl {
+macro_rules! caretta_id_impl {
     (
         Self = $SelfT:ty,
         Uint = $Uint:ty,
@@ -56,7 +56,7 @@ macro_rules! mtid_impl {
             /// #Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// # fn main() -> Result<(), Error> {
             #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::try_from(", stringify!($SelfT), "::CAPACITY -1)?);")]
             /// # Ok(())
@@ -71,7 +71,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// # fn main() -> Result<(), Error> {
             #[doc = concat!("assert_eq!(", stringify!($SelfT), "::NIL, ", stringify!($NIL_STR), ".parse::<", stringify!($SelfT), ">()?);")]
             #[doc = concat!("assert_eq!(", stringify!($SelfT), "::NIL, ", stringify!($SelfT), "::try_from(0)?);")]
@@ -86,7 +86,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// # fn main() -> Result<(), Error> {
             #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($MAX_STR), ".parse::<",stringify!($SelfT),">()?);")]
             #[doc = concat!("assert_eq!(", stringify!($SelfT), "::MAX, ", stringify!($SelfT), "::try_from(", stringify!($MAX_INT), ")?);")]
@@ -102,7 +102,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// # fn main() -> Result<(), Error> {
             #[doc = concat!("assert!(", stringify!($NIL_STR), ".parse::<",stringify!($SelfT),">()?.is_nil());")]
             /// # Ok(())
@@ -117,7 +117,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// # fn main() -> Result<(), Error> {
             #[doc = concat!("assert!(", stringify!($MAX_STR), ".parse::<",stringify!($SelfT),">()?.is_max());")]
             /// # Ok(())
@@ -135,7 +135,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             /// // Values within range are preserved
             #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_VALID_INT, "); // ", stringify!($EXAMPLE_VALID_INT))]
             #[doc = concat!("assert_eq!(", stringify!($Uint), "::from(id), ", $EXAMPLE_VALID_INT, ");")]
@@ -177,7 +177,7 @@ macro_rules! mtid_impl {
             /// # Examples
             ///
             /// ```
-            /// # use mtid::*;
+            /// # use caretta_id::*;
             #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $EXAMPLE_VALID_INT, ").is_ok());")]
             #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $EXAMPLE_OVERSIZED_INT, ").is_err());")]
             /// ```
@@ -223,7 +223,7 @@ macro_rules! mtid_impl {
                 /// # Examples
                 ///
                 /// ```
-                /// # use mtid::*;
+                /// # use caretta_id::*;
                 #[doc = concat!("let id = ", stringify!($SelfT), "::random();")]
                 #[doc = concat!("assert_ne!(id, ", stringify!($SelfT), "::NIL);")]
                 /// ```
@@ -259,13 +259,13 @@ macro_rules! mtid_impl {
     };
 }
 
-macro_rules! mtid_bytes_impl {
+macro_rules! caretta_id_bytes_impl {
     {
         Self = $SelfT:ty,
         Uint = $Uint:ty,
         BYTES = $BYTES:literal,
     } => {
-        crate::macros::mtid_bytes_impl! {
+        crate::macros::caretta_id_bytes_impl! {
             Self = $SelfT,
             Uint = $Uint,
             BYTES = $BYTES,
@@ -305,7 +305,7 @@ macro_rules! mtid_bytes_impl {
     };
 }
 
-macro_rules! mtid_prost_impl {
+macro_rules! caretta_id_prost_impl {
     {
         Self = $SelfT:ty,
         ActualT = $ActualT:ty,
@@ -329,7 +329,7 @@ macro_rules! mtid_prost_impl {
                 /// # Examples
                 ///
                 /// ```
-                /// # use mtid::*;
+                /// # use caretta_id::*;
                 /// // Valid proto values are preserved
                 #[doc = concat!("let proto = ", stringify!($ProtoT), "{ value: ", $VALID_VALUE, " }; //", stringify!($VALID_VALUE))]
                 #[doc = concat!("let id = ", stringify!($SelfT), "::from_proto_lossy(proto);")]
@@ -364,7 +364,7 @@ macro_rules! mtid_prost_impl {
                 /// # Examples
                 ///
                 /// ```
-                /// # use mtid::*;
+                /// # use caretta_id::*;
                 #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $VALID_VALUE, ").is_ok());")]
                 #[doc = concat!("assert!(", stringify!($SelfT), "::try_from(", $OVERSIZED_VALUE, ").is_err());")]
                 /// ```
@@ -382,7 +382,7 @@ macro_rules! mtid_prost_impl {
 
 }
 
-macro_rules! mtid_redb {
+macro_rules! caretta_id_redb {
     ($SelfT:ty) => {
         #[cfg(feature = "redb")]
         mod redb {
@@ -418,8 +418,8 @@ macro_rules! mtid_redb {
         }
     };
 }
-pub(crate) use mtid_bytes_impl;
-pub(crate) use mtid_impl;
-pub(crate) use mtid_prost_impl;
-pub(crate) use mtid_redb;
-pub(crate) use mtid_struct;
+pub(crate) use caretta_id_bytes_impl;
+pub(crate) use caretta_id_impl;
+pub(crate) use caretta_id_prost_impl;
+pub(crate) use caretta_id_redb;
+pub(crate) use caretta_id_struct;

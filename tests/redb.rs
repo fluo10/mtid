@@ -53,7 +53,7 @@ macro_rules! redb_test_mod {
     };
 }
 
-redb_test_mod!(stid, mtid::Stid);
-redb_test_mod!(dtid, mtid::Dtid);
-redb_test_mod!(ttid, mtid::Ttid);
-redb_test_mod!(qtid, mtid::Qtid);
+redb_test_mod!(caratta_id_s, caretta_id::CarettaIdS);
+redb_test_mod!(caretta_id_d, caretta_id::CarettaIdD);
+redb_test_mod!(caretta_id_t, caretta_id::CarettaIdT);
+redb_test_mod!(caretta_id_q, caretta_id::CarettaIdQ);

@@ -3,11 +3,11 @@ macro_rules! impl_tests {
         Self = $SelfT:ty,
         Uint = $Uint:ty,
     ) => {
-        fn validate_string_convertion(value: $SelfT) -> Result<bool, mtid::Error> {
+        fn validate_string_convertion(value: $SelfT) -> Result<bool, caretta_id::Error> {
             Ok(value == value.to_string().parse::<$SelfT>()?)
         }
 
-        fn validate_integer_conversion(value: $SelfT) -> Result<bool, mtid::Error> {
+        fn validate_integer_conversion(value: $SelfT) -> Result<bool, caretta_id::Error> {
             Ok(value == <$SelfT>::try_from(<$Uint>::from(value))?)
         }
         fn validate_bytes_conversion(value: $SelfT) -> bool {

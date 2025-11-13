@@ -2,12 +2,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     #[cfg(feature = "prost")]
     prost_build::compile_protos(
         &[
-            "mtid-proto/mtid/stid.proto",
-            "mtid-proto/mtid/dtid.proto",
-            "mtid-proto/mtid/ttid.proto",
-            "mtid-proto/mtid/qtid.proto",
+            "caretta-id-proto/caretta_id/caretta_id_s.proto",
+            "caretta-id-proto/caretta_id/caretta_id_d.proto",
+            "caretta-id-proto/caretta_id/caretta_id_t.proto",
+            "caretta-id-proto/caretta_id/caretta_id_q.proto",
         ],
-        &["mtid-proto/"],
+        &["caretta-id-proto/"],
     )?;
     Ok(())
 }
