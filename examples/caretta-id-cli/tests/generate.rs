@@ -1,12 +1,12 @@
-use mtid::{Dtid, Qtid, Stid, Ttid};
+use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 use std::{path::PathBuf, process::Command};
 
 macro_rules! assert_generate {
     (
         $length_option:literal,
-        $Mtid:ty
+        $caretta_id:ty
     ) => {
-        let path = PathBuf::from(std::env!("CARGO_BIN_EXE_mtid-cli"));
+        let path = PathBuf::from(std::env!("CARGO_BIN_EXE_caretta-id-cli"));
         let output = String::from_utf8_lossy(
             &Command::new(path)
                 .arg("generate")
@@ -17,24 +17,24 @@ macro_rules! assert_generate {
         )
         .trim()
         .to_owned();
-        let _ = output.parse::<$Mtid>().unwrap();
+        let _ = output.parse::<$caretta_id>().unwrap();
     };
 }
 
 #[test]
-fn stid() {
-    assert_generate!("-s", Stid);
+fn single() {
+    assert_generate!("-s", CarettaIdS);
 }
 
 #[test]
-fn dtid() {
-    assert_generate!("-d", Dtid);
+fn double() {
+    assert_generate!("-d", CarettaIdD);
 }
 #[test]
-fn ttid() {
-    assert_generate!("-t", Ttid);
+fn triple() {
+    assert_generate!("-t", CarettaIdT);
 }
 #[test]
-fn qtid() {
-    assert_generate!("-q", Qtid);
+fn quadruple() {
+    assert_generate!("-q", CarettaIdQ);
 }

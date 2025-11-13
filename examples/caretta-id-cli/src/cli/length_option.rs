@@ -7,20 +7,20 @@ use clap::Args;
 #[command(next_help_heading = "Length options", about = None, long_about = None)]
 #[group(multiple = false, required = true)]
 pub struct LengthOptions {
-    /// Use STID (Single-length Triplet ID)
-    #[arg(short, long, visible_alias = "stid")]
+    /// Use CarettaIdS (Single-length Caretta ID)
+    #[arg(short, long)]
     pub single: bool,
 
-    /// Use DTID (Double-length Triplet ID)
-    #[arg(short, long, visible_alias = "dtid")]
+    /// Use CarettaIdD (Double-length Caretta ID)
+    #[arg(short, long)]
     pub double: bool,
 
-    /// Use TTID (Triple-length Triplet ID)
-    #[arg(short, long, visible_alias = "ttid")]
+    /// Use CarettaIdT (Triple-length Caretta ID)
+    #[arg(short, long)]
     pub triple: bool,
 
-    /// Use QTID (Quadruple-length Triplet ID)
-    #[arg(short, long, visible_alias = "qtid")]
+    /// Use CarettaIdQ (Quadruple-length Caretta ID)
+    #[arg(short, long)]
     pub quadruple: bool,
 }
 
