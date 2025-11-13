@@ -31,7 +31,7 @@ macros::mtid_impl! {
 macros::mtid_bytes_impl! {
     Self = Qtid,
     Uint = u64,
-    LEN = 8,
+    BYTES = 8,
 }
 
 impl Display for Qtid {
@@ -155,3 +155,5 @@ macros::mtid_prost_impl! {
     VALID_VALUE = 0b0000_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
     OVERSIZED_VALUE = 0b1111_1101_1110_0000_1011_0110_1011_0011_1010_0111_0110_0100_0000_0000_0000_0000,
 }
+
+macros::mtid_redb!(Qtid);

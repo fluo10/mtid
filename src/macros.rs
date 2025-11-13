@@ -144,12 +144,26 @@ macro_rules! mtid_impl {
             #[doc = concat!("let id = ", stringify!($SelfT), "::from_uint_lossy(", $EXAMPLE_OVERSIZED_INT, "); // ", stringify!($EXAMPLE_OVERSIZED_INT))]
             #[doc = concat!("assert_eq!(", stringify!($Uint), "::from(id), ", $EXAMPLE_VALID_INT, "); // Only lower ", $BITS, " bits retained")]
             /// ```
-            pub fn from_uint_lossy(int: $Uint) -> Self {
+            pub const fn from_uint_lossy(int: $Uint) -> Self {
                 Self::from_uint_unchecked(int & Self::CAPACITY_MINUS_ONE)
             }
 
             pub(crate) const fn from_uint_unchecked(value: $Uint) -> Self {
                 Self(value)
+            }
+
+            pub const fn from_uint(uint: $Uint) -> Result<Self, crate::Error> {
+                if uint < Self::CAPACITY {
+                    Ok(Self::from_uint_unchecked(uint))
+                } else {
+                    Err(Error::ParseInteger {
+                        expected: Self::CAPACITY as u64,
+                        found: uint as u64,
+                    })
+                }
+            }
+            pub const fn to_uint(self) -> $Uint {
+                self.0
             }
         }
 
@@ -169,14 +183,7 @@ macro_rules! mtid_impl {
             /// ```
             ///
             fn try_from(value: $Uint) -> Result<Self, Self::Error> {
-                if value < Self::CAPACITY {
-                    Ok(Self::from_uint_unchecked(value))
-                } else {
-                    Err(Error::ParseInteger {
-                        expected: Self::CAPACITY as u64,
-                        found: value as u64,
-                    })
-                }
+                Self::from_uint(value)
             }
         }
 
@@ -252,29 +259,48 @@ macro_rules! mtid_impl {
     };
 }
 
+
 macro_rules! mtid_bytes_impl {
     {
         Self = $SelfT:ty,
         Uint = $Uint:ty,
-        LEN = $LEN:literal,
+        BYTES = $BYTES:literal,
     } => {
+        crate::macros::mtid_bytes_impl! {
+            Self = $SelfT,
+            Uint = $Uint,
+            BYTES = $BYTES,
+            uint_to_bytes = const fn uint_to_bytes(uint : $Uint) -> [u8;$BYTES] { uint.to_be_bytes()},
+            bytes_to_uint = const fn bytes_to_uint(bytes : &[u8;$BYTES]) -> $Uint { <$Uint>::from_be_bytes(*bytes) },
+        }
+    };
+    {
+        Self = $SelfT:ty,
+        Uint = $Uint:ty,
+        BYTES = $BYTES:literal,
+        uint_to_bytes = $uint_to_bytes:item,
+        bytes_to_uint = $bytes_to_uint:item,
+    } => {
+
+        $uint_to_bytes
+
+        $bytes_to_uint
+
         impl $SelfT {
+            pub const BYTES: usize = $BYTES;
+
             #[doc = concat!("Returns a byte array from ", stringify!($SelfT), ".")]
-            pub fn to_bytes(self) -> [u8;$LEN] {
-                let bytes = self.0.to_be_bytes();
-                let start = bytes.len() - $LEN;
-                self.0.to_be_bytes()[start..start+$LEN].try_into().unwrap()
+            pub const fn to_bytes(self) -> [u8;Self::BYTES] {
+                uint_to_bytes(self.0)
             }
-            fn bytes_to_uint(bytes: &[u8;$LEN]) -> $Uint {
-                const LEN: usize = std::mem::size_of::<$Uint>();
-                let mut buf = [0;LEN];
-                let start = LEN - $LEN;
-                buf[start..start+$LEN].copy_from_slice(bytes);
-                <$Uint>::from_be_bytes(buf)
-            }
+
             #[doc = concat!("Create new ", stringify!($SelfT), " from a byte array.")]
-            pub fn from_bytes_lossy(bytes: &[u8;$LEN]) -> Self {
-                Self::from_uint_lossy(Self::bytes_to_uint(bytes))
+            pub const fn from_bytes_lossy(bytes: &[u8;Self::BYTES]) -> Self {
+                Self::from_uint_lossy(bytes_to_uint(bytes))
+            }
+
+            pub const fn from_bytes(bytes: &[u8;Self::BYTES]) -> Result<Self, crate::Error> {
+                Self::from_uint(bytes_to_uint(bytes))
             }
         }
     };
@@ -354,8 +380,47 @@ macro_rules! mtid_prost_impl {
             }
         }
     };
+
+
+}
+
+macro_rules! mtid_redb  {
+    ($SelfT:ty) => {
+        #[cfg(feature = "redb")]
+        mod redb {
+            use super::*;
+            use ::redb::*;
+            impl Value for $SelfT {
+                type SelfType<'a> = Self;
+                type AsBytes<'a> = [u8;Self::BYTES];
+                fn fixed_width() -> Option<usize> {
+                    Some(Self::BYTES)
+                }
+                fn from_bytes<'a>(data: &'a [u8]) -> Self::SelfType<'a> 
+                where
+                Self: 'a
+                {
+                    Self::from_bytes_lossy(data.try_into().unwrap())
+                }
+                fn as_bytes<'a, 'b: 'a>(value: &'a Self::SelfType<'b>) -> Self::AsBytes<'a>
+                where Self: 'b
+                {
+                    value.to_bytes()
+                }
+                fn type_name() -> TypeName {
+                    TypeName::new(stringify!($SelfT))
+                }
+            }
+            impl Key for $SelfT {
+                fn compare(data1: &[u8], data2: &[u8]) -> std::cmp::Ordering {
+                    <Self as Value>::from_bytes(data1).cmp(&<Self as Value>::from_bytes(data2))
+                }
+            }
+        }
+    };
 }
 pub(crate) use mtid_prost_impl;
 pub(crate) use mtid_struct;
 pub(crate) use mtid_impl;
 pub(crate) use mtid_bytes_impl;
+pub(crate) use mtid_redb;

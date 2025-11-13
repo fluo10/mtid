@@ -3,9 +3,8 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-#[cfg(feature = "prost")]
-use crate::macros;
-use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet};
+
+use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 
@@ -31,7 +30,14 @@ crate::macros::mtid_impl! {
 crate::macros::mtid_bytes_impl! {
     Self = Ttid,
     Uint = u64,
-    LEN = 6,
+    BYTES = 6,
+    uint_to_bytes = const fn uint_to_bytes(uint: u64) -> [u8;6] {
+        let bytes = uint.to_be_bytes();
+        [bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]]
+    },
+    bytes_to_uint = const fn bytes_to_uint(bytes: &[u8;6]) -> u64 {
+        u64::from_be_bytes([0, 0, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]])
+    },
 }
 
 impl Display for Ttid {
@@ -134,3 +140,5 @@ macros::mtid_prost_impl! {
     VALID_VALUE = 0b0000_0000_0000_0000_0000_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
     OVERSIZED_VALUE = 0b1111_1111_1111_1111_1110_1001_0001_1000_0100_1110_0111_0010_1010_0000_0000_0000,
 }
+
+macros::mtid_redb!(Ttid);

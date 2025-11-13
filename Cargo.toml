@@ -24,11 +24,13 @@ prost = ["dep:prost"]
 rusqlite = ["std", "dep:rusqlite"]
 sea-orm = ["std", "dep:sea-orm"]
 serde = ["dep:serde"]
+redb = ["std", "dep:redb"]
 
 [dependencies]
 arbitrary = { version = "1", optional = true }
 prost = { workspace = true, optional = true }
 rand = { workspace = true, default-features = false, optional = true }
+redb = { version = "3.1.0", optional = true }
 rusqlite = { version = "0.37.0", default-features = false, optional = true }
 sea-orm = { version = "1.1.16", default-features = false, optional = true }
 serde = { version = "1.0.219", default-features = false, optional = true }

@@ -6,9 +6,8 @@ mod sea_orm;
 
 use core::{fmt::Display, str::FromStr};
 
-#[cfg(feature = "prost")]
-use crate::macros;
-use crate::{error::Error, triplet::Triplet};
+
+use crate::{error::Error, macros, triplet::Triplet};
 
 crate::macros::mtid_struct! {
     Self = Stid,
@@ -33,7 +32,7 @@ crate::macros::mtid_impl! {
 crate::macros::mtid_bytes_impl! {
     Self = Stid,
     Uint = u16,
-    LEN = 2,
+    BYTES = 2,
 }
 
 impl Display for Stid {
@@ -96,3 +95,5 @@ macros::mtid_prost_impl! {
     VALID_VALUE = 0b0010_0111_0001_0000,
     OVERSIZED_VALUE = 0b1010_0111_0001_0000,
 }
+
+macros::mtid_redb!(Stid);

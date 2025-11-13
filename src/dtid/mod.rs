@@ -31,7 +31,7 @@ macros::mtid_impl! {
 macros::mtid_bytes_impl! {
     Self = Dtid,
     Uint = u32,
-    LEN = 4,
+    BYTES = 4,
 }
 
 impl Display for Dtid {
@@ -115,3 +115,5 @@ crate::macros::mtid_prost_impl! {
     VALID_VALUE = 0b0011_1011_1001_1010_1100_1010_0000_0000,
     OVERSIZED_VALUE = 0b1111_1011_1001_1010_1100_1010_0000_0000,
 }
+
+macros::mtid_redb!(Dtid);
