@@ -1,61 +1,61 @@
 //! Test for serde feature
 #![cfg(feature = "serde")]
 
-use mtid::{Dtid, Qtid, Stid, Ttid};
+use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 
 use serde::{Deserialize, Serialize};
 
 use serde_test::{Token, assert_tokens};
 
 #[test]
-fn stid_nil() {
-    assert_tokens(&Stid::NIL, &[Token::Str("000")]);
+fn single_nil() {
+    assert_tokens(&CarettaIdS::NIL, &[Token::Str("000")]);
 }
 
 #[test]
-fn dtid_nil() {
-    assert_tokens(&Dtid::NIL, &[Token::Str("000-000")]);
+fn double_nil() {
+    assert_tokens(&CarettaIdD::NIL, &[Token::Str("000-000")]);
 }
 
 #[test]
-fn ttid_nil() {
-    assert_tokens(&Ttid::NIL, &[Token::Str("000-000-000")]);
+fn triple_nil() {
+    assert_tokens(&CarettaIdT::NIL, &[Token::Str("000-000-000")]);
 }
 
 #[test]
-fn qtid_nil() {
-    assert_tokens(&Qtid::NIL, &[Token::Str("000-000-000-000")]);
+fn quadruple_nil() {
+    assert_tokens(&CarettaIdQ::NIL, &[Token::Str("000-000-000-000")]);
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
-struct Mtids {
-    stid: Stid,
-    dtid: Dtid,
-    ttid: Ttid,
-    qtid: Qtid,
+struct CarettaIdList {
+    s: CarettaIdS,
+    d: CarettaIdD,
+    t: CarettaIdT,
+    q: CarettaIdQ,
 }
 
 #[test]
 fn struct_nil() {
     assert_tokens(
-        &Mtids {
-            stid: Stid::NIL,
-            dtid: Dtid::NIL,
-            ttid: Ttid::NIL,
-            qtid: Qtid::NIL,
+        &CarettaIdList {
+            s: CarettaIdS::NIL,
+            d: CarettaIdD::NIL,
+            t: CarettaIdT::NIL,
+            q: CarettaIdQ::NIL,
         },
         &[
             Token::Struct {
-                name: "Mtids",
+                name: "CarettaIdList",
                 len: 4,
             },
-            Token::Str("stid"),
+            Token::Str("s"),
             Token::Str("000"),
-            Token::Str("dtid"),
+            Token::Str("d"),
             Token::Str("000-000"),
-            Token::Str("ttid"),
+            Token::Str("t"),
             Token::Str("000-000-000"),
-            Token::Str("qtid"),
+            Token::Str("q"),
             Token::Str("000-000-000-000"),
             Token::StructEnd,
         ],

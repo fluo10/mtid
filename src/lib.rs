@@ -1,23 +1,23 @@
-//! A human-friendly identifier format based on 3-character blocks ("triplet").
+//! A human-friendly identifier format based on 3-character blocks.
 //! This crate provides multiple fixed-length variants:
 //!
-//! - `Stid`: Single triplet ID (e.g. `123`)
-//! - `Dtid`: Double Triplet ID (e.g. `456-789`)
-//! - `Ttid`: Triple Triplet ID (e.g. `abc-def-ghj`)
-//! - `Qtid`: Quadruple triplet ID (e.g. `kmn-pqr-stv-wxy`)
+//! - `CarettaIdS`: Single length caretta ID (e.g. `123`)
+//! - `CarettaIdD`: Double length caretta ID (e.g. `456-789`)
+//! - `CarettaIdT`: Triple length caretta ID (e.g. `abc-def-ghj`)
+//! - `CarettaIdQ`: Quadruple length caretta ID (e.g. `kmn-pqr-stv-wxy`)
 //!
-//! For a language agnostic specification of the MTID format, see [SPECS.md](https://github.com/fluo10/mtid/blob/main/SPECS.md)
+//! For a language agnostic specification of the caretta-id format, see [SPECS.md](https://github.com/fluo10/caretta-id/blob/main/SPECS.md)
 //!
 //! # Quick Start
 //!
 //! ```
-//! use mtid::Dtid;
+//! use caretta_id::CarettaIdD;
 //!
-//! let id = Dtid::random();
+//! let id = CarettaIdD::random();
 //! println!("{}", id); // e.g. "1a2-b3c"
 //! ```
 //!
-//! # Why MTID?
+//! # Why caretta-id?
 //!
 //! Traditional identifier systems face challenges in distributed environments:
 //!
@@ -25,16 +25,16 @@
 //! - **UUIDs** are too long and not human-friendly
 //! - **Short hashes** (like Git commit hashes) lack standardization
 //!
-//! MTID bridges the gap between human readability and technical requirements.
+//! caretta-id bridges the gap between human readability and technical requirements.
 //!
 //! # Which length should I use?
 //!
-//! - DTID(Double length triplet ID) is recommended for the personal data
+//! - CarettaIdD(Double length) is recommended for the personal data
 //!   because this is short enough to satisfy the Magic Number 7±2 principle and have enough range of value
 //!   (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
-//! - STID(Single length triplet ID) is recommended if the data is expected to be so few that they can be counted.
-//! - TTID(Triple length triplet ID) is recommended if it is expected that one or more data will be added every second.
-//! - QTID(Quadruple length Triplet ID) is recommended if, the number of data could potentially become so large that it's impossible to predict
+//! - CarettaIdS(Single length) is recommended if the data is expected to be so few that they can be counted.
+//! - CarettaIdT(Triple length) is recommended if it is expected that one or more data will be added every second.
+//! - CarettaIdQ(Quadruple length) is recommended if, the number of data could potentially become so large that it's impossible to predict
 //!   (for example, in a multi-user application where the IDs must be unique across users).
 //!
 //! # Installation
@@ -43,10 +43,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = "0.6"
+//! caretta-id = "0.7"
 //!
 //! # With optional features
-//! mtid = { version = "0.6", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost"] }
+//! caretta-id = { version = "0.7", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost", "redb"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -56,13 +56,13 @@
 //!
 //! ```toml
 //! [dependencies]
-//! mtid = { version = "0.6", default-features = false }
+//! caretta-id = { version = "0.7", default-features = false }
 //! ```
 //!
 //! # Features
 //!
 //! - **Human-friendly**: Easy to read, type, and communicate
-//! - **Collision-resistant**: Sufficient entropy for distributed systems
+//! - **Collision-resistant**: Sufficient entropy for personal distributed systems
 //! - **Compact**: Shorter than UUIDs while maintaining uniqueness
 //! - **Type-safe**: Rust implementation with strong typing
 //! - **Multiple integrations**: Support for serde, rusqlite, sea-orm, and protobuf
@@ -74,39 +74,40 @@
 //! - `rusqlite`: SQLite database integration
 //! - `sea-orm`: SeaORM ORM integration  
 //! - `prost`: Protocol Buffers support
+//! - `redb`: `redb` integration
 //!
 //! # Examples
 //!
 //! ```rust
-//! use mtid::{Stid, Dtid, Ttid, Qtid};
-//! # fn main() -> Result<(), mtid::Error> {
-//! // Generate random MTID
-//! let stid = Stid::random();
-//! let dtid = Dtid::random();
-//! let ttid = Ttid::random();
-//! let qtid = Qtid::random();
+//! use caretta_id::{CarettaIdS, CarettaIdD, CarettaIdT, CarettaIdQ};
+//! # fn main() -> Result<(), caretta_id::Error> {
+//! // Generate random caretta-id
+//! let caretta_id_s = CarettaIdS::random();
+//! let caretta_id_d = CarettaIdD::random();
+//! let caretta_id_t = CarettaIdT::random();
+//! let caretta_id_q = CarettaIdQ::random();
 //!
 //! // '123', '456-789', 'abc-def-ghj', 'kmn-pqr-stv-wxy'
-//! println!("'{}', '{}', '{}'. '{}'", stid, dtid, ttid, qtid);
+//! println!("'{}', '{}', '{}'. '{}'", caretta_id_s, caretta_id_d, caretta_id_t, caretta_id_q);
 //!
 //! // Parse from string
-//! let valid_id: Dtid = "012-tvw".parse()?;
+//! let valid_id: CarettaIdD = "012-tvw".parse()?;
 //!
 //! // The code without delimiter is valid.
-//! let valid_id_without_delimiter: Dtid = "012tvw".parse()?;
+//! let valid_id_without_delimiter: CarettaIdD = "012tvw".parse()?;
 //! assert_eq!(valid_id, valid_id_without_delimiter);
 //!
 //! // When decoding from BASE32, ambiguous characters (1/l/I, 0/o, v/u, -/_) are treated as 1, 0, v, and - respectively, so they do not cause errors.
-//! let also_valid_id: Dtid = "ol2_tuw".parse()?;
+//! let also_valid_id: CarettaIdD = "ol2_tuw".parse()?;
 //! assert_eq!(valid_id, also_valid_id);
 //!
 //! // Convert to/from integer
 //! let num: u32 = valid_id.into();
-//! let id_from_int: Dtid = num.try_into()?;
+//! let id_from_int: CarettaIdD = num.try_into()?;
 //! assert_eq!(valid_id, id_from_int);
 //!
 //! // Lossy conversion from oversized int is allowed.
-//! let id_from_overflowed_int = Dtid::from_uint_lossy(Dtid::CAPACITY + num);
+//! let id_from_overflowed_int = CarettaIdD::from_uint_lossy(CarettaIdD::CAPACITY + num);
 //! assert_eq!(valid_id, id_from_overflowed_int);
 //!
 //! # Ok(())
@@ -128,54 +129,38 @@ extern crate core as std;
 ///   During decoding, hyphens may be omitted or replaced with underscores.
 pub mod alphabet;
 
-mod dtid;
+mod double;
 mod error;
 mod macros;
-mod qtid;
-mod stid;
-mod ttid;
+mod quadruple;
+mod single;
+mod triple;
 
 /// Provides [`Triplet`](triplet::Triplet) and [`TripletError`](triplet::TripletError).
 pub mod triplet;
 
-pub use dtid::Dtid;
+pub use double::CarettaIdD;
 pub use error::Error;
-pub use qtid::Qtid;
-pub use stid::Stid;
-pub use ttid::Ttid;
+pub use quadruple::CarettaIdQ;
+pub use single::CarettaIdS;
+pub use triple::CarettaIdT;
 
 /// Provides message types generated by prost-build.
 #[cfg(feature = "prost")]
 pub mod proto;
 
+/// Alias of [`proto::CarettaIdS`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "6.0.0", note = "please use `StidProto` instead")]
-pub type StidMessage = proto::Stid;
+pub type CarettaIdSProto = proto::CarettaIdS;
 
+/// Alias of [`proto::CarettaIdD`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "6.0.0", note = "please use `DtidProto` instead")]
-pub type DtidMessage = proto::Dtid;
+pub type CarettaIdDProto = proto::CarettaIdD;
 
+/// Alias of [`proto::CarettaIdT`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "6.0.0", note = "please use `TtidProto` instead")]
-pub type TtidMessage = proto::Ttid;
+pub type CarettaIdTProto = proto::CarettaIdT;
 
+/// Alias of [`proto::CarettaIdQ`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "6.0.0", note = "please use `QtidProto` instead")]
-pub type QtidMessage = proto::Qtid;
-
-/// Alias of [`proto::Stid`]
-#[cfg(feature = "prost")]
-pub type StidProto = proto::Stid;
-
-/// Alias of [`proto::Dtid`]
-#[cfg(feature = "prost")]
-pub type DtidProto = proto::Dtid;
-
-/// Alias of [`proto::Ttid`]
-#[cfg(feature = "prost")]
-pub type TtidProto = proto::Ttid;
-
-/// Alias of [`proto::Qtid`]
-#[cfg(feature = "prost")]
-pub type QtidProto = proto::Qtid;
+pub type CarettaIdQProto = proto::CarettaIdQ;

@@ -1,5 +1,5 @@
 [package]
-name = "mtid-fuzz"
+name = "caretta-id-fuzz"
 version = "0.0.0"
 publish = false
 edition = "2024"
@@ -8,41 +8,41 @@ edition = "2024"
 cargo-fuzz = true
 
 [features]
-arbitrary = ["mtid/arbitrary"]
+arbitrary = ["caretta-id/arbitrary"]
 
 [dependencies]
 libfuzzer-sys = "0.4"
 
-[dependencies.mtid]
+[dependencies.caretta-id]
 path = ".."
 
 [[bin]]
-name = "arbitrary_stid"
-path = "fuzz_targets/arbitrary_stid.rs"
+name = "arbitrary_single"
+path = "fuzz_targets/arbitrary_single.rs"
 test = false
 doc = false
 bench = false
 required-features = ["arbitrary"]
 
 [[bin]]
-name = "arbitrary_dtid"
-path = "fuzz_targets/arbitrary_dtid.rs"
+name = "arbitrary_double"
+path = "fuzz_targets/arbitrary_double.rs"
 test = false
 doc = false
 bench = false
 required-features = ["arbitrary"]
 
 [[bin]]
-name = "arbitrary_ttid"
-path = "fuzz_targets/arbitrary_ttid.rs"
+name = "arbitrary_triple"
+path = "fuzz_targets/arbitrary_triple.rs"
 test = false
 doc = false
 bench = false
 required-features = ["arbitrary"]
 
 [[bin]]
-name = "arbitrary_qtid"
-path = "fuzz_targets/arbitrary_qtid.rs"
+name = "arbitrary_quadruple"
+path = "fuzz_targets/arbitrary_quadruple.rs"
 test = false
 doc = false
 bench = false

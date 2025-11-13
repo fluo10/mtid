@@ -8,11 +8,11 @@ use core::str::Chars;
 ///
 /// <div class="warning">
 ///
-/// This structure should not be used directory; instead, [`Stid`](crate::Stid), [`Dtid`](crate::Dtid), [`Ttid`](crate::Ttid) and [`Qtid`](crate::Qtid) should be used.
+/// This structure should not be used directory; instead, [`CarettaIdS`](crate::CarettaIdS), [`CarettaIdD`](crate::CarettaIdD), [`CarettaIdT`](crate::CarettaIdT) and [`CarettaIdQ`](crate::CarettaIdQ) should be used.
 ///
 /// </div>
 ///
-/// This serves as a interface for converting between string and MTIDs.
+/// This serves as a interface for converting between string and caretta-ids.
 /// Internally, this is simple tuple struct of 3 charcters so:
 ///
 /// - Not memory/storage efficient.

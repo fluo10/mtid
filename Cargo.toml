@@ -1,14 +1,14 @@
 [package]
-name = "mtid"
+name = "caretta-id"
 edition.workspace = true
 version.workspace = true
-description = "Multi-length triplet id: Human-friendly id for personal distributed system"
+description = "Random human-friendly id for personal distributed system"
 categories = ["data-structures", "encoding", "no-std", "no-std::no-alloc"]
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
 keywords.workspace = true
-documentation = "https://docs.rs/mtid"
+documentation = "https://docs.rs/caretta-id"
 readme = "README.md"
 exclude = ["/.github", "/.gitignore", "/.vscode", "/CHANGELOG.md", "/SPECS.md", "/.gitmodules", "/.rustfmt.toml"]
 
@@ -46,15 +46,15 @@ tokio = { version = "1.47.1", default-features = false, features = ["macros", "r
 rand = { workspace = true, default-features = false, features = ["thread_rng"]}
 
 [workspace]
-members = [".", "examples/mtid-cli", "examples/mtid-prost-example"]
+members = [".", "examples/caretta-id-cli", "examples/caretta-id-prost-example"]
 
 [workspace.package]
 edition = "2024"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/fluo10/mtid"
-homepage = "https://github.com/fluo10/mtid"
+repository = "https://github.com/fluo10/caretta-id"
+homepage = "https://github.com/fluo10/caretta-id"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.6.0"
+version = "0.7.0"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }

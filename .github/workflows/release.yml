@@ -40,13 +40,13 @@ jobs:
     - name: Add target
       run: rustup target add ${{ matrix.target }}
     - name: Build
-      run: cargo build --release --package mtid-cli --target ${{ matrix.target }} --verbose 
+      run: cargo build --release --package caretta-id-cli --target ${{ matrix.target }} --verbose 
     - name: Rename Artifacts
       shell: bash
-      run: mv target/${{ matrix.target }}/release/mtid-cli{,-${{ github.ref_name }}-${{ matrix.target }}${{ matrix.extension }}}
+      run: mv target/${{ matrix.target }}/release/caretta-id-cli{,-${{ github.ref_name }}-${{ matrix.target }}${{ matrix.extension }}}
     - name: Uploard Artifacts
       uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       with:
-        files: target/${{ matrix.target }}/release/mtid-cli-${{ github.ref_name }}-${{ matrix.target }}${{ matrix.extension }}
+        files: target/${{ matrix.target }}/release/caretta-id-cli-${{ github.ref_name }}-${{ matrix.target }}${{ matrix.extension }}

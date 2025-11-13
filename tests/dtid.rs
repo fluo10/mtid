@@ -1,11 +1,11 @@
 #[macro_use]
 mod macros;
 
-use mtid::Dtid;
+use caretta_id::CarettaIdD;
 
 use rand::Rng;
 
 impl_tests! {
-    Self = Dtid,
+    Self = CarettaIdD,
     Uint = u32,
 }

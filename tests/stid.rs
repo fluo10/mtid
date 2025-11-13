@@ -2,11 +2,11 @@
 mod macros;
 use std::str::FromStr;
 
-use mtid::Stid;
+use caretta_id::CarettaIdS;
 use rand::Rng;
 
 impl_tests! {
-    Self = Stid,
+    Self = CarettaIdS,
     Uint = u16,
 }
 
@@ -20,6 +20,6 @@ fn random_str() {
             rng.sample(rand::distr::Alphanumeric) as char,
             rng.sample(rand::distr::Alphanumeric) as char,
         );
-        let _ = Stid::from_str(&value).unwrap();
+        let _ = CarettaIdS::from_str(&value).unwrap();
     }
 }

@@ -1,0 +1,14 @@
+syntax = "proto3";
+package caretta_id_example;
+
+import "caretta_id/caretta_id_s.proto";
+import "caretta_id/caretta_id_d.proto";
+import "caretta_id/caretta_id_t.proto";
+import "caretta_id/caretta_id_q.proto";
+
+message Example {
+    caretta_id.CarettaIdS CarettaIdS = 1;
+    caretta_id.CarettaIdD CarettaIdD = 2;
+    caretta_id.CarettaIdT CarettaIdT = 3;
+    caretta_id.CarettaIdQ CarettaIdQ = 4;
+}

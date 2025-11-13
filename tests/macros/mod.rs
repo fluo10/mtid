@@ -3,15 +3,12 @@ macro_rules! impl_tests {
         Self = $SelfT:ty,
         Uint = $Uint:ty,
     ) => {
-        fn validate_string_convertion(value: $SelfT) -> Result<bool, mtid::Error> {
+        fn validate_string_convertion(value: $SelfT) -> Result<bool, caretta_id::Error> {
             Ok(value == value.to_string().parse::<$SelfT>()?)
         }
 
-        fn validate_integer_conversion(value: $SelfT) -> Result<bool, mtid::Error> {
+        fn validate_integer_conversion(value: $SelfT) -> Result<bool, caretta_id::Error> {
             Ok(value == <$SelfT>::try_from(<$Uint>::from(value))?)
-        }
-        fn validate_bytes_conversion(value: $SelfT) -> bool {
-            value == <$SelfT>::from_bytes_lossy(&value.to_bytes())
         }
 
         #[test]
@@ -30,14 +27,6 @@ macro_rules! impl_tests {
         #[test]
         fn max_integer_conversion() {
             assert!(validate_integer_conversion(<$SelfT>::MAX).unwrap());
-        }
-        #[test]
-        fn nil_bytes_convertion() {
-            assert!(validate_bytes_conversion(<$SelfT>::NIL));
-        }
-        #[test]
-        fn max_bytes_convertion() {
-            assert!(validate_bytes_conversion(<$SelfT>::MAX));
         }
 
         #[test]

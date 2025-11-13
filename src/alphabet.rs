@@ -3,7 +3,7 @@
 /// # Examples
 ///
 /// ```
-/// # use mtid::alphabet::ENCODE_TABLE;
+/// # use caretta_id::alphabet::ENCODE_TABLE;
 /// assert_eq!(
 ///     ENCODE_TABLE,
 ///     &[
@@ -22,7 +22,7 @@ pub const ENCODE_TABLE: &[char; 32] = &[
 /// # Examples
 ///
 /// ```
-/// # use mtid::alphabet::ENCODE_DELIMITER;
+/// # use caretta_id::alphabet::ENCODE_DELIMITER;
 /// assert_eq!(ENCODE_DELIMITER, '-');
 /// ```
 pub const ENCODE_DELIMITER: char = '-';
@@ -37,7 +37,7 @@ pub(crate) const BASE: u8 = ENCODE_TABLE.len() as u8;
 /// # Examples
 ///
 /// ```
-/// # use mtid::alphabet::DECODE_TABLE;
+/// # use caretta_id::alphabet::DECODE_TABLE;
 /// assert_eq!(
 ///     DECODE_TABLE,
 ///     &[
@@ -141,7 +141,7 @@ pub const DECODE_TABLE: &[u8; 256] = &{
 /// Valid characters ('-' and '_') map to true and others map to false.
 ///
 /// ```
-/// # use mtid::alphabet::DECODE_DELIMITER_TABLE;
+/// # use caretta_id::alphabet::DECODE_DELIMITER_TABLE;
 /// assert_eq!(
 ///     DECODE_DELIMITER_TABLE,
 ///     &[

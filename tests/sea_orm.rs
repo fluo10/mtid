@@ -2,7 +2,7 @@
 
 use std::u32;
 
-use mtid::{Dtid, Stid, Ttid};
+use caretta_id::{CarettaIdD, CarettaIdS, CarettaIdT};
 use rand::Rng;
 use sea_orm::{
     DatabaseBackend, MockDatabase, MockExecResult, Transaction,
@@ -10,13 +10,13 @@ use sea_orm::{
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "mtids")]
+#[sea_orm(table_name = "caretta-ids")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: u32,
-    pub single: Stid,
-    pub double: Dtid,
-    pub triple: Ttid,
+    pub single: CarettaIdS,
+    pub double: CarettaIdD,
+    pub triple: CarettaIdT,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -42,7 +42,7 @@ async fn assert_model(model: Model) {
         [
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"INSERT INTO "mtids" ("id", "single", "double", "triple") VALUES (?, ?, ?, ?)"#,
+                r#"INSERT INTO "caretta-ids" ("id", "single", "double", "triple") VALUES (?, ?, ?, ?)"#,
                 [
                     model.id.into(),
                     model.single.into(),
@@ -52,12 +52,12 @@ async fn assert_model(model: Model) {
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "mtids"."id", "mtids"."single", "mtids"."double", "mtids"."triple" FROM "mtids" WHERE "mtids"."id" = ? LIMIT ?"#,
+                r#"SELECT "caretta-ids"."id", "caretta-ids"."single", "caretta-ids"."double", "caretta-ids"."triple" FROM "caretta-ids" WHERE "caretta-ids"."id" = ? LIMIT ?"#,
                 [1u32.into(), 1u64.into()]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "mtids"."id", "mtids"."single", "mtids"."double", "mtids"."triple" FROM "mtids" LIMIT ?"#,
+                r#"SELECT "caretta-ids"."id", "caretta-ids"."single", "caretta-ids"."double", "caretta-ids"."triple" FROM "caretta-ids" LIMIT ?"#,
                 [1u64.into()]
             )
         ]
@@ -68,9 +68,9 @@ async fn assert_model(model: Model) {
 async fn nil() {
     assert_model(Model {
         id: 1,
-        single: Stid::NIL,
-        double: Dtid::NIL,
-        triple: Ttid::NIL,
+        single: CarettaIdS::NIL,
+        double: CarettaIdD::NIL,
+        triple: CarettaIdT::NIL,
     })
     .await;
 }
@@ -79,9 +79,9 @@ async fn nil() {
 async fn max() {
     assert_model(Model {
         id: u32::MAX,
-        single: Stid::MAX,
-        double: Dtid::MAX,
-        triple: Ttid::MAX,
+        single: CarettaIdS::MAX,
+        double: CarettaIdD::MAX,
+        triple: CarettaIdT::MAX,
     })
     .await;
 }

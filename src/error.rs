@@ -1,6 +1,6 @@
 use crate::triplet::TripletError;
 
-/// A general error that can occur when working with MTIDs.
+/// A general error that can occur when working with caretta-ids.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
     ParseInteger {

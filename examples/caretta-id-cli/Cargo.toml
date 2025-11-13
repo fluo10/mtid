@@ -1,0 +1,17 @@
+[package]
+name = "caretta-id-cli"
+edition.workspace = true
+description = "Reference tool to generate/encode/decode caretta-id"
+categories = ["command-line-utilities"]
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+readme = "README.md"
+
+[dependencies]
+anyhow = "1.0.100"
+clap = { version = "4.5.48", features = ["derive"] }
+caretta-id = { path = "../..", version = "0.7.0" }
+rand.workspace = true

@@ -4,37 +4,37 @@
 mod macros;
 
 use libfuzzer_sys::fuzz_target;
-use mtid::{Stid, Dtid, Ttid, Qtid};
+use caretta_id::{CarettaIdS, CarettaIdD, CarettaIdT, CarettaIdQ};
 
 fuzz_target!(|data: u64| {
-    if let Ok(x) = Stid::try_from(data as u16) {
+    if let Ok(x) = CarettaIdS::try_from(data as u16) {
         validate!{
             id = x,
-            Mtid = Stid,
+            caretta_id = CarettaIdS,
             Int = u16
         };
     }
 
-    if let Ok(x) = Dtid::try_from(data as u32) {
+    if let Ok(x) = CarettaIdD::try_from(data as u32) {
         validate!{
             id = x,
-            Mtid = Dtid,
+            caretta_id = CarettaIdD,
             Int = u32
         };
     }
 
-    if let Ok(x) = Ttid::try_from(data as u64) {
+    if let Ok(x) = CarettaIdT::try_from(data as u64) {
         validate!{
             id = x,
-            Mtid = Ttid,
+            caretta_id = CarettaIdT,
             Int = u64
         };
     }
 
-    if let Ok(x) = Qtid::try_from(data as u64) {
+    if let Ok(x) = CarettaIdQ::try_from(data as u64) {
         validate!{
             id = x,
-            Mtid = Qtid,
+            caretta_id = CarettaIdQ,
             Int = u64
         };
     }
