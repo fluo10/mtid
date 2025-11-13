@@ -4,9 +4,7 @@ mod rusqlite;
 #[cfg(feature = "sea-orm")]
 mod sea_orm;
 
-use crate::{
-    Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet,
-};
+use crate::{Error, Stid, Ttid, alphabet::is_delimiter, dtid::Dtid, macros, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 macros::mtid_struct! {

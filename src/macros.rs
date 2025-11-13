@@ -280,7 +280,6 @@ macro_rules! mtid_bytes_impl {
     };
 }
 
-
 macro_rules! mtid_prost_impl {
     {
         Self = $SelfT:ty,
@@ -355,7 +354,7 @@ macro_rules! mtid_prost_impl {
         }
     };
 }
+pub(crate) use mtid_bytes_impl;
+pub(crate) use mtid_impl;
 pub(crate) use mtid_prost_impl;
 pub(crate) use mtid_struct;
-pub(crate) use mtid_impl;
-pub(crate) use mtid_bytes_impl;

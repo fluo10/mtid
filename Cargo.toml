@@ -2,7 +2,7 @@
 name = "mtid"
 edition.workspace = true
 version.workspace = true
-description = "Multi-length triplet id: Human-friendly id for personal distributed system"
+description = "Human-friendly id for personal distributed system (deprecated, use the caretta-id crate)"
 categories = ["data-structures", "encoding", "no-std", "no-std::no-alloc"]
 license.workspace = true
 repository.workspace = true
@@ -52,7 +52,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/fluo10/mtid"
 homepage = "https://github.com/fluo10/mtid"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.6.0"
+version = "0.6.1"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }

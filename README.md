@@ -1,5 +1,7 @@
 # MTID (Multi-length Triplet ID)
 
+The `mtid` crate has been renamed to `caretta-id`. Please use the `caretta-id` crate instead.
+
 <!-- cargo-rdme start -->
 
 A human-friendly identifier format based on 3-character blocks ("triplet").

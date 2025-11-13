@@ -1,4 +1,7 @@
 # mtid-cli
+
+The [`mtid-cli`] crate has been renamed to `caretta-id-cli`. Please use the `caretta-id-cli` crate instead.
+
 Reference tool to generate/encode/decode [MTID](https://github.com/fluo10/mtid).
 
 ## Installation

@@ -5,7 +5,7 @@ mod sea_orm;
 
 #[cfg(feature = "prost")]
 use crate::macros;
-use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, macros::mtid_impl, triplet::Triplet};
+use crate::{Error, Stid, alphabet::is_delimiter, dtid::Dtid, triplet::Triplet};
 
 use core::{fmt::Display, str::FromStr};
 
