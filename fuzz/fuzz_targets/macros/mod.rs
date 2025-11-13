@@ -1,12 +1,12 @@
 macro_rules! impl_arbitrary_test {
     {
-        Mtid = $Mtid:ty,
+        caretta_id = $caretta_id:ty,
         Int = $Int:ty,
     } => {
-        fuzz_target!(|id: $Mtid| {
+        fuzz_target!(|id: $caretta_id| {
             validate!{
                 id = id,
-                Mtid = $Mtid,
+                caretta_id = $caretta_id,
                 Int = $Int
             };
         });
@@ -16,17 +16,17 @@ macro_rules! impl_arbitrary_test {
 macro_rules! validate {
     {
         id = $id:ident,
-        Mtid = $Mtid:ty,
+        caretta_id = $caretta_id:ty,
         Int = $Int:ty
     } => {
         // validate size
-        assert!($id >= <$Mtid>::NIL);
-        assert!($id <= <$Mtid>::MAX);
+        assert!($id >= <$caretta_id>::NIL);
+        assert!($id <= <$caretta_id>::MAX);
         
         // validate string conversion
-        assert_eq!($id, (&$id.to_string()).parse::<$Mtid>().unwrap());
+        assert_eq!($id, (&$id.to_string()).parse::<$caretta_id>().unwrap());
 
         // validate integer conversion
-        assert_eq!($id, <$Mtid>::try_from(<$Int>::from($id)).unwrap());
+        assert_eq!($id, <$caretta_id>::try_from(<$Int>::from($id)).unwrap());
     };
 }
