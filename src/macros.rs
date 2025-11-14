@@ -29,6 +29,7 @@ macro_rules! caretta_id_struct {
         /// # Ok(())
         /// # }
         /// ```
+        #[deprecated(since = "0.8.0", note = "The caretta-id has been renewed. Use new CarettaId instead")]
         #[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
         pub struct $SelfT($ActualT);
     };

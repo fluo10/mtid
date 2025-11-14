@@ -139,6 +139,9 @@ mod triple;
 /// Provides [`Triplet`](triplet::Triplet) and [`TripletError`](triplet::TripletError).
 pub mod triplet;
 
+use core::str::FromStr;
+use std::fmt::Display;
+
 pub use double::CarettaIdD;
 pub use error::Error;
 pub use quadruple::CarettaIdQ;
@@ -164,3 +167,243 @@ pub type CarettaIdTProto = proto::CarettaIdT;
 /// Alias of [`proto::CarettaIdQ`]
 #[cfg(feature = "prost")]
 pub type CarettaIdQProto = proto::CarettaIdQ;
+
+/// Alias of [`proto::CarettaId`]
+#[cfg(feature = "prost")]
+pub type CarettaIdProto = proto::CarettaId;
+
+/// Caretta id struct
+#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+pub struct CarettaId(u64);
+
+impl CarettaId {
+    /// The size of the integer type in bits.
+    /// 
+    /// This is not equal actually stored size.
+    pub const BITS: u32 = 40;
+
+    /// The size of the integer type in bytes.
+    /// 
+    /// This is not equal actually stored size.
+    pub const BYTES: u32 = 5;
+
+    /// The capacity value of the caretta id
+    /// 
+    pub const CAPACITY: u64 = (u8::MAX as u64).pow(Self::BYTES);
+
+    pub(crate) const CAPACITY_MINUS_ONE: u64 = Self::CAPACITY -1;
+
+    pub(crate) const fn from_u64_unchecked(value: u64) -> Self {
+        Self(value)
+    }
+    
+    /// The smallest value that can be represented by [`CarettaId`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// # fn main() -> Result<(), Error> {
+    /// assert_eq!(CarettaId::NIL, "0000000".parse<CarettaId>()?);
+    /// assert_eq!(CarettaId::NIL, CarettaId::try_from(0)?);
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    pub const NIL: Self = Self::from_u64_unchecked(0);
+
+    /// The largest value that can be represented by [`CarettaId`].
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// # fn main() -> Result<(), Error> {
+    /// assert_eq!(CarettaId::MAX, "zzzzzzz".parse<CarettaId>()?);
+    /// assert_eq!(CarettaId::MAX, CarettaId::try_from(0)?);
+    /// # Ok(())
+    /// # }
+    /// ```
+    ///
+    pub const MAX: Self = Self::from_u64_unchecked(Self::CAPACITY_MINUS_ONE);
+
+    /// Test if the [`CarettaId`] is nil.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// # fn main() -> Result<(), Error> {
+    /// assert!("0000000".parse::<CarettaId>()?.is_nil())
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn is_nil(self) -> bool {
+        self == Self::NIL
+    }
+
+    /// Test if the [`CarettaId`] is max.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// # fn main() -> Result<(), Error> {
+    /// assert!("zzzzzzz".parse::<CarettaId>()?.is_max())
+    /// # Ok(())
+    /// # }
+    /// ```
+    pub fn is_max(self) -> bool {
+        self == Self::MAX
+    }
+
+    /// "Converts an unsigned integer to [`CarettaId`] by truncating bits that exceed the valid range.")]
+    ///
+    /// This is a lossy conversion that masks the input value to fit within the ID's bit limit.
+    /// If you need to detect out-of-range values, use [`TryFrom`] instead.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// // Values within range are preserved
+    /// let valid_int = 123;
+    /// let id = CarettaId::from_u64_lossy(valid_int);
+    /// assert_eq!(u64::from(id), valid_int);
+    ///
+    /// // values exceeding 35 bits are truncated (MSB(s) dropped
+    /// let oversized_int = 0;
+    /// let overflowed_id = CarettaId::from_uint_lossy(oversized_int);
+    /// assert_nq!(u64::from(overflowed_id), oversized_int);
+    /// // Only lower 35 bits retained
+    /// assert_eq!(u64::from(overflowed_id), valid_int)
+    /// ```
+    pub const fn from_u64_lossy(int: u64) -> Self {
+        Self::from_u64_unchecked(int & Self::CAPACITY_MINUS_ONE)
+    }
+
+    pub const fn from_u64(value: u64) -> Result<Self, crate::Error> {
+        if value < Self::CAPACITY {
+            Ok(Self::from_u64_unchecked(value))
+        } else {
+            Err(Error::ParseInteger {
+                expected: Self::CAPACITY as u64,
+                found: value,
+            })
+        }
+    }
+    pub const fn to_u64(self) -> u64 {
+        self.0
+    }
+}
+
+impl TryFrom<u64> for CarettaId {
+    type Error = Error;
+    #[doc = concat!("Attempts to convert a [`", stringify!($Uint), "`]  to [`", stringify!($SelfT), "`].")]
+    ///
+    /// Return error if the value is equal [`CAPACITY`](Self::CAPACITY) or more.
+    /// If you don't need to detect out-of-range values, use [`from_uint_lossy`](Self::from_uint_lossy).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use caretta_id::*;
+    /// assert!(CarettaId::try_from(Self::CAPACITY - 1).is_ok());
+    /// assert!(CarettaId::try_from(Self::CAPACITY).is_err());
+    /// ```
+    ///
+    fn try_from(value: u64) -> Result<Self, Self::Error> {
+        Self::from_u64(value)
+    }
+}
+
+impl From<CarettaId> for u64 {
+    fn from(value: CarettaId) -> Self {
+        value.0
+    }
+}
+
+impl Display for CarettaId {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        todo!()
+    }
+}
+impl FromStr for CarettaId {
+    type Err = Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let len = s.len();
+        if len == 7 {
+            let mut chars = s.chars();
+            todo!()
+        } else {
+            Err(Error::ParseLength { expected_without_delimiter: 7, expected_with_delimiter: None, found: len })
+        }
+    }
+}
+
+#[cfg(feature = "arbitrary")]
+mod arbitrary {
+    use ::arbitrary::{Arbitrary, Unstructured, Result};
+    use super::*;
+    impl<'a> Arbitrary<'a> for CarettaId {
+        fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
+            Ok(Self::from_u64_lossy(u64::arbitrary(u)?))
+        }
+    }
+}
+
+#[cfg(feature = "rand")]
+mod rand {
+    use super::*;
+    use ::rand::{distr::{Distribution, StandardUniform}, Rng};
+
+    impl Distribution<CarettaId> for StandardUniform {
+        fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CarettaId {
+            <CarettaId>::from_u64_lossy(rng.random())
+        }
+    }
+    impl CarettaId {
+        /// Generate a new random [`CarettaId`].
+        ///
+        /// This method generate a random ID.
+        /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
+        ///
+        /// # Examples
+        ///
+        /// ```
+        /// # use caretta_id::*;
+        /// let id = CarettaId::random();
+        /// assert_ne!(id, CarettaId::NIL);
+        /// ```
+        pub fn random() -> Self {
+            <CarettaId>::from_u64_lossy(::rand::random())
+        }
+    }
+}
+#[cfg(feature = "serde")]
+mod serde {
+    use super::*;
+    use ::serde::{Deserialize, Serialize, de::Error};
+
+    impl Serialize for CarettaId {
+        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: ::serde::Serializer,
+        {
+            serializer.serialize_str(&self.to_string())
+        }
+    }
+
+    impl<'de> Deserialize<'de> for CarettaId {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            let s = String::deserialize(deserializer)?;
+            (&s).parse::<CarettaId>().map_err(|e| D::Error::custom(e))
+        }
+    }
+}
+
+
