@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2025-11-16
+
+### Added
+
+- New `CarettaId` format like `0123abc`
+
+### Deprecated
+- All old caretta id format
+  - `CarettaIdS`
+  - `CarettaIdD`
+  - `CarettaIdT`
+  - `CarettaIdQ`
+
 ## [0.7.0] - 2025-11-14
 
 ### Added
@@ -112,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `encode`: encode integer to string
   - `decode`: to decode string to integer
 
-[Unreleased]: https://github.com/fluo10/caretta-id/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/fluo10/caretta-id/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/fluo10/caretta-id/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/fluo10/caretta-id/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/fluo10/caretta-id/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/fluo10/caretta-id/compare/v0.4.0...v0.5.0
