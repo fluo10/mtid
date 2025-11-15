@@ -35,7 +35,7 @@ impl DecodeArgs {
                     "{}",
                     u64::from(self.caretta_id.parse::<CarettaIdQ>().unwrap())
                 )
-            },
+            }
             LengthOption::Unspecified => {
                 println!(
                     "{}",

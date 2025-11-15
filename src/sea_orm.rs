@@ -19,9 +19,7 @@ impl sea_orm::TryGetable for CarettaId {
 
 impl sea_orm::sea_query::ValueType for CarettaId {
     fn try_from(v: sea_orm::Value) -> Result<Self, sea_orm::sea_query::ValueTypeErr> {
-        <u64 as sea_orm::sea_query::ValueType>::try_from(v).map(|x| {
-            CarettaId::from_u64_lossy(x)
-        })
+        <u64 as sea_orm::sea_query::ValueType>::try_from(v).map(|x| CarettaId::from_u64_lossy(x))
     }
     fn type_name() -> String {
         stringify!(CarettaId).to_owned()
@@ -42,6 +40,10 @@ impl sea_orm::sea_query::Nullable for CarettaId {
 
 impl TryFromU64 for CarettaId {
     fn try_from_u64(n: u64) -> Result<Self, sea_orm::DbErr> {
-        Self::try_from(n).map_err(|x| sea_orm::DbErr::TryIntoErr { from: stringify!(u64), into: stringify!(CarettaId), source: Box::new(x) })
+        Self::try_from(n).map_err(|x| sea_orm::DbErr::TryIntoErr {
+            from: stringify!(u64),
+            into: stringify!(CarettaId),
+            source: Box::new(x),
+        })
     }
 }

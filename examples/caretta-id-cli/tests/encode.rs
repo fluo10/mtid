@@ -46,7 +46,6 @@ fn quadruple() {
 }
 
 fn assert_encode(id: CarettaId) {
-
     let path = PathBuf::from(std::env!("CARGO_BIN_EXE_caretta-id-cli"));
     let output = Command::new(path)
         .arg("encode")

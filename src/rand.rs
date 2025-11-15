@@ -1,5 +1,8 @@
 use super::*;
-use ::rand::{distr::{Distribution, StandardUniform}, Rng};
+use ::rand::{
+    Rng,
+    distr::{Distribution, StandardUniform},
+};
 
 impl Distribution<CarettaId> for StandardUniform {
     fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CarettaId {

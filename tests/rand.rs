@@ -3,8 +3,6 @@ mod common;
 use caretta_id::*;
 use common::*;
 
-
-
 #[test]
 fn random() {
     for _ in 0..10 {

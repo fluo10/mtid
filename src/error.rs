@@ -8,17 +8,17 @@ pub enum Error {
     #[error("Invalid length, expected 7, found {0}")]
     InvalidLength(usize),
     #[error("Invalid character, alphanumeric expected, found {character} at {index}")]
-    InvalidCharacter{
-        character: char,
-        index: usize,
-    },
-    #[deprecated(since = "0.8.0", note = "The ParseInteger has been renamed. Use ValueOfRange instead.")]
+    InvalidCharacter { character: char, index: usize },
+    #[deprecated(
+        since = "0.8.0",
+        note = "The ParseInteger has been renamed. Use ValueOfRange instead."
+    )]
     #[error("Invalid integer value: epected under {expected}, found {found}.")]
-    ParseInteger {
-        expected: u64,
-        found: u64,
-    },
-    #[deprecated(since = "0.8.0", note = "The ParseLength has been renamed. Use InvalidLength instead.")]
+    ParseInteger { expected: u64, found: u64 },
+    #[deprecated(
+        since = "0.8.0",
+        note = "The ParseLength has been renamed. Use InvalidLength instead."
+    )]
     #[error("Invalid length: expected {expected_without_delimiter} {}, found {found}", expected_with_delimiter.map(|x| format!("or {}", x)).unwrap_or("".to_string()))]
     ParseLength {
         expected_without_delimiter: usize,
@@ -27,17 +27,11 @@ pub enum Error {
     },
     #[deprecated(since = "0.8.0")]
     #[error("Invalid delimiter: expected: '-' or '_', found {character} at {index}")]
-    ParseDelimiter {
-        character: char,
-        index: usize,
-    },
-    #[deprecated(since = "0.8.0")]    
+    ParseDelimiter { character: char, index: usize },
+    #[deprecated(since = "0.8.0")]
     #[error("Invalid triplet: source: {source}, index: {index}")]
-    ParseTriplet {
-        source: TripletError,
-        index: usize,
-    },
-    #[deprecated(since = "0.8.0")]    
+    ParseTriplet { source: TripletError, index: usize },
+    #[deprecated(since = "0.8.0")]
     #[error("Invalid character: expected alphanumeric character, found {character} at {index}")]
     ParseCharacter { character: char, index: usize },
 }

@@ -18,7 +18,7 @@ impl EncodeArgs {
             LengthOption::Double => println!("{}", CarettaIdD::from_uint_lossy(self.value as u32)),
             LengthOption::Triple => println!("{}", CarettaIdT::from_uint_lossy(self.value)),
             LengthOption::Quadruple => println!("{}", CarettaIdQ::from_uint_lossy(self.value)),
-            LengthOption::Unspecified => println!("{}", CarettaId::from_u64_lossy(self.value))
+            LengthOption::Unspecified => println!("{}", CarettaId::from_u64_lossy(self.value)),
         }
     }
 }

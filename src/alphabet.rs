@@ -233,7 +233,7 @@ pub(crate) fn char_to_u8(c: char) -> Option<u8> {
 }
 
 /// Test if the character is valid delimiter.
-#[deprecated(since = "v1.0.0")]
+#[deprecated(since = "0.8.0")]
 pub(crate) fn is_delimiter(c: char) -> bool {
     match TryInto::<u8>::try_into(c) {
         Ok(x) => DECODE_DELIMITER_TABLE[x as usize],

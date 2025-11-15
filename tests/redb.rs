@@ -59,8 +59,7 @@ redb_test_mod!(caretta_id_d, caretta_id::CarettaIdD);
 redb_test_mod!(caretta_id_t, caretta_id::CarettaIdT);
 redb_test_mod!(caretta_id_q, caretta_id::CarettaIdQ);
 
-const TABLE: TableDefinition<CarettaId, CarettaId> =
-    TableDefinition::new(stringify!($mod_name));
+const TABLE: TableDefinition<CarettaId, CarettaId> = TableDefinition::new(stringify!($mod_name));
 
 fn assert_insert(key: CarettaId, value: CarettaId) {
     let database = DATABASE;

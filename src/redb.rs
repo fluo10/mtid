@@ -29,4 +29,3 @@ impl Value for CarettaId {
         TypeName::new(stringify!(CarettaId))
     }
 }
-

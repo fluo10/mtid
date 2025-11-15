@@ -45,9 +45,6 @@ fn quadruple() {
     assert_decode!("-q", &id.to_string(), u64::from(id));
 }
 
-       
-       
-       
 fn assert_decode(id: CarettaId) {
     let path = PathBuf::from(std::env!("CARGO_BIN_EXE_caretta-id-cli"));
     let output = Command::new(path)
