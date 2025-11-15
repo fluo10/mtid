@@ -1,4 +1,4 @@
-use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 use clap::Args;
 
 use crate::cli::length_option::{LengthOption, LengthOptions};
@@ -34,6 +34,12 @@ impl DecodeArgs {
                 println!(
                     "{}",
                     u64::from(self.caretta_id.parse::<CarettaIdQ>().unwrap())
+                )
+            }
+            LengthOption::Unspecified => {
+                println!(
+                    "{}",
+                    u64::from(self.caretta_id.parse::<CarettaId>().unwrap())
                 )
             }
         }

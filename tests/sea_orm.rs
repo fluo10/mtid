@@ -2,7 +2,7 @@
 
 use std::u32;
 
-use caretta_id::{CarettaIdD, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdS, CarettaIdT};
 use rand::Rng;
 use sea_orm::{
     DatabaseBackend, MockDatabase, MockExecResult, Transaction,
@@ -12,8 +12,8 @@ use sea_orm::{
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
 #[sea_orm(table_name = "caretta-ids")]
 pub struct Model {
-    #[sea_orm(primary_key)]
-    pub id: u32,
+    #[sea_orm(primary_key, auto_increment = false)]
+    pub id: CarettaId,
     pub single: CarettaIdS,
     pub double: CarettaIdD,
     pub triple: CarettaIdT,
@@ -30,7 +30,7 @@ async fn assert_model(model: Model) {
     let db = MockDatabase::new(DatabaseBackend::Sqlite)
         .append_query_results([vec![model.clone()], vec![model.clone()]])
         .append_exec_results([MockExecResult {
-            last_insert_id: 1,
+            last_insert_id: model.id.into(),
             rows_affected: 1,
         }])
         .into_connection();
@@ -53,7 +53,7 @@ async fn assert_model(model: Model) {
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
                 r#"SELECT "caretta-ids"."id", "caretta-ids"."single", "caretta-ids"."double", "caretta-ids"."triple" FROM "caretta-ids" WHERE "caretta-ids"."id" = ? LIMIT ?"#,
-                [1u32.into(), 1u64.into()]
+                [model.id.into(), 1u64.into()]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
@@ -67,7 +67,7 @@ async fn assert_model(model: Model) {
 #[tokio::test]
 async fn nil() {
     assert_model(Model {
-        id: 1,
+        id: CarettaId::NIL,
         single: CarettaIdS::NIL,
         double: CarettaIdD::NIL,
         triple: CarettaIdT::NIL,
@@ -78,7 +78,7 @@ async fn nil() {
 #[tokio::test]
 async fn max() {
     assert_model(Model {
-        id: u32::MAX,
+        id: CarettaId::MAX,
         single: CarettaIdS::MAX,
         double: CarettaIdD::MAX,
         triple: CarettaIdT::MAX,

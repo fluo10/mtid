@@ -4,6 +4,6 @@
 mod macros;
 
 use libfuzzer_sys::fuzz_target;
-use caretta-id::CarettaIdQ;
+use caretta_id::CarettaIdQ;
 
-impl_arbitrary_test!{ caretta-id = CarettaIdQ, Int = u64, }
+impl_arbitrary_test!{ caretta_id = CarettaIdQ, Int = u64, }

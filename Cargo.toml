@@ -34,6 +34,7 @@ redb = { version = "3.1.0", optional = true }
 rusqlite = { version = "0.37.0", default-features = false, optional = true }
 sea-orm = { version = "1.1.16", default-features = false, optional = true }
 serde = { version = "1.0.219", default-features = false, optional = true }
+thiserror = { version = "2.0.12", default-features = false}
 
 [build-dependencies]
 prost-build.workspace = true
@@ -54,7 +55,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/fluo10/caretta-id"
 homepage = "https://github.com/fluo10/caretta-id"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.7.0"
+version = "0.8.0"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }

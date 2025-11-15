@@ -1,4 +1,4 @@
-use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 use clap::Args;
 
 use crate::cli::length_option::{LengthOption, LengthOptions};
@@ -17,6 +17,7 @@ impl GenerateArgs {
             LengthOption::Double => println!("{}", rand::random::<CarettaIdD>()),
             LengthOption::Triple => println!("{}", rand::random::<CarettaIdT>()),
             LengthOption::Quadruple => println!("{}", rand::random::<CarettaIdQ>()),
+            LengthOption::Unspecified => println!("{}", rand::random::<CarettaId>()),
         }
     }
 }

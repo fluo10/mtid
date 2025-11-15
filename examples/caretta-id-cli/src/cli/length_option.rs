@@ -5,27 +5,28 @@ use clap::Args;
 /// Specify what variant will be used.
 #[derive(Args, Debug)]
 #[command(next_help_heading = "Length options", about = None, long_about = None)]
-#[group(multiple = false, required = true)]
+#[group(multiple = false, required = false)]
 pub struct LengthOptions {
-    /// Use CarettaIdS (Single-length Caretta ID)
+    /// [deprecated] Use CarettaIdS (Single-length Caretta ID)
     #[arg(short, long)]
     pub single: bool,
 
-    /// Use CarettaIdD (Double-length Caretta ID)
+    /// [deprecated] Use CarettaIdD (Double-length Caretta ID)
     #[arg(short, long)]
     pub double: bool,
 
-    /// Use CarettaIdT (Triple-length Caretta ID)
+    /// [deprecated] Use CarettaIdT (Triple-length Caretta ID)
     #[arg(short, long)]
     pub triple: bool,
 
-    /// Use CarettaIdQ (Quadruple-length Caretta ID)
+    /// [deprecated] Use CarettaIdQ (Quadruple-length Caretta ID)
     #[arg(short, long)]
     pub quadruple: bool,
 }
 
 /// Enum parsed from LengthOptions.
 pub enum LengthOption {
+    Unspecified,
     Single,
     Double,
     Triple,
@@ -39,6 +40,7 @@ impl From<LengthOptions> for LengthOption {
             (false, true, false, false) => Self::Double,
             (false, false, true, false) => Self::Triple,
             (false, false, false, true) => Self::Quadruple,
+            (false, false, false, false) => Self::Unspecified,
             (_, _, _, _) => unreachable!("one of length options must specified!"),
         }
     }
