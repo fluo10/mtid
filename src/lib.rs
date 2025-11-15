@@ -1,20 +1,14 @@
-//! A human-friendly identifier format based on 3-character blocks.
-//! This crate provides multiple fixed-length variants:
-//!
-//! - `CarettaIdS`: Single length caretta ID (e.g. `123`)
-//! - `CarettaIdD`: Double length caretta ID (e.g. `456-789`)
-//! - `CarettaIdT`: Triple length caretta ID (e.g. `abc-def-ghj`)
-//! - `CarettaIdQ`: Quadruple length caretta ID (e.g. `kmn-pqr-stv-wxy`)
+//! A human-friendly 7 characters identifier format (e.g. `123abcd`).
 //!
 //! For a language agnostic specification of the caretta-id format, see [SPECS.md](https://github.com/fluo10/caretta-id/blob/main/SPECS.md)
 //!
 //! # Quick Start
 //!
 //! ```
-//! use caretta_id::CarettaIdD;
+//! use caretta_id::CarettaId;
 //!
-//! let id = CarettaIdD::random();
-//! println!("{}", id); // e.g. "1a2-b3c"
+//! let id = CarettaId::random();
+//! println!("{}", id); // e.g. "123abcd"
 //! ```
 //!
 //! # Why caretta-id?
@@ -27,26 +21,16 @@
 //!
 //! caretta-id bridges the gap between human readability and technical requirements.
 //!
-//! # Which length should I use?
-//!
-//! - CarettaIdD(Double length) is recommended for the personal data
-//!   because this is short enough to satisfy the Magic Number 7±2 principle and have enough range of value
-//!   (for the data entered manually by individuals (such as pocketbooks, journals, or activity logs)).
-//! - CarettaIdS(Single length) is recommended if the data is expected to be so few that they can be counted.
-//! - CarettaIdT(Triple length) is recommended if it is expected that one or more data will be added every second.
-//! - CarettaIdQ(Quadruple length) is recommended if, the number of data could potentially become so large that it's impossible to predict
-//!   (for example, in a multi-user application where the IDs must be unique across users).
-//!
 //! # Installation
 //!
 //! Add this to your `Cargo.toml`:
 //!
 //! ```toml
 //! [dependencies]
-//! caretta-id = "0.7"
+//! caretta-id = "1.0"
 //!
 //! # With optional features
-//! caretta-id = { version = "0.7", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost", "redb"] }
+//! caretta-id = { version = "1.0", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost", "redb"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -56,7 +40,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! caretta-id = { version = "0.7", default-features = false }
+//! caretta-id = { version = "1.0", default-features = false }
 //! ```
 //!
 //! # Features
@@ -79,35 +63,28 @@
 //! # Examples
 //!
 //! ```rust
-//! use caretta_id::{CarettaIdS, CarettaIdD, CarettaIdT, CarettaIdQ};
+//! use caretta_id::CarettaId;
 //! # fn main() -> Result<(), caretta_id::Error> {
 //! // Generate random caretta-id
-//! let caretta_id_s = CarettaIdS::random();
-//! let caretta_id_d = CarettaIdD::random();
-//! let caretta_id_t = CarettaIdT::random();
-//! let caretta_id_q = CarettaIdQ::random();
-//!
-//! // '123', '456-789', 'abc-def-ghj', 'kmn-pqr-stv-wxy'
-//! println!("'{}', '{}', '{}'. '{}'", caretta_id_s, caretta_id_d, caretta_id_t, caretta_id_q);
+//! let caretta_id = CarettaId::random();
+//! 
+//! // e.g. `123abcd`
+//! println!("'{}'", caretta_id);
 //!
 //! // Parse from string
-//! let valid_id: CarettaIdD = "012-tvw".parse()?;
+//! let valid_id: CarettaIdD = "012atvw".parse()?;
 //!
-//! // The code without delimiter is valid.
-//! let valid_id_without_delimiter: CarettaIdD = "012tvw".parse()?;
-//! assert_eq!(valid_id, valid_id_without_delimiter);
-//!
-//! // When decoding from BASE32, ambiguous characters (1/l/I, 0/o, v/u, -/_) are treated as 1, 0, v, and - respectively, so they do not cause errors.
-//! let also_valid_id: CarettaIdD = "ol2_tuw".parse()?;
+//! // When decoding from BASE32, ambiguous characters (1/l/I, 0/o, v/u) are treated as 1, 0 and v respectively, so they do not cause errors.
+//! let also_valid_id: CarettaIdD = "ol2atuw".parse()?;
 //! assert_eq!(valid_id, also_valid_id);
 //!
 //! // Convert to/from integer
-//! let num: u32 = valid_id.into();
-//! let id_from_int: CarettaIdD = num.try_into()?;
+//! let num: u64 = valid_id.into();
+//! let id_from_int: CarettaId = num.try_into()?;
 //! assert_eq!(valid_id, id_from_int);
 //!
 //! // Lossy conversion from oversized int is allowed.
-//! let id_from_overflowed_int = CarettaIdD::from_uint_lossy(CarettaIdD::CAPACITY + num);
+//! let id_from_overflowed_int = CarettaId::from_u64_lossy(CarettaId::CAPACITY + num);
 //! assert_eq!(valid_id, id_from_overflowed_int);
 //!
 //! # Ok(())
@@ -136,6 +113,27 @@ mod quadruple;
 mod single;
 mod triple;
 
+#[cfg(feature = "arbitrary")]
+mod arbitrary;
+
+#[cfg(feature = "rand")]
+mod rand;
+
+#[cfg(feature = "serde")]
+mod serde;
+
+#[cfg(feature = "prost")]
+mod prost;
+
+#[cfg(feature = "redb")]
+mod redb;
+
+#[cfg(feature = "rusqlite")]
+mod rusqlite;
+
+#[cfg(feature = "sea-orm")]
+mod sea_orm;
+
 /// Provides [`Triplet`](triplet::Triplet) and [`TripletError`](triplet::TripletError).
 pub mod triplet;
 
@@ -147,6 +145,8 @@ pub use error::Error;
 pub use quadruple::CarettaIdQ;
 pub use single::CarettaIdS;
 pub use triple::CarettaIdT;
+
+use crate::alphabet::{char_to_u5, char_to_u8, u5_to_char_lossy};
 
 /// Provides message types generated by prost-build.
 #[cfg(feature = "prost")]
@@ -292,8 +292,50 @@ impl CarettaId {
             })
         }
     }
+    pub const fn as_u64(&self) -> &u64 {
+        &self.0
+    }
     pub const fn to_u64(self) -> u64 {
         self.0
+    }
+    fn from_chars(value: [char;7]) -> Result<Self, Error> {
+        Ok(Self::from_u64_unchecked(u5s_to_u35_unchecked(chars_to_u5s(value)?)))
+    }
+    fn to_chars(self) -> [char;7] {
+        [
+            u5_to_char_lossy((self.0 >> 30) as u8) ,
+            u5_to_char_lossy((self.0 >> 25) as u8) ,
+            u5_to_char_lossy((self.0 >> 20) as u8) ,
+            u5_to_char_lossy((self.0 >> 15) as u8) ,
+            u5_to_char_lossy((self.0 >> 10) as u8) ,
+            u5_to_char_lossy((self.0 >> 5) as u8) ,
+            u5_to_char_lossy((self.0) as u8) ,
+        ]  
+
+    }
+}
+
+fn chars_to_u5s(value: [char;7]) -> Result<[u8;7], Error> {
+    let mut result = [0;7];
+    for i in 0 .. 7 {
+        result[i] = char_to_u5(value[i]).ok_or(Error::InvalidCharacter { character: value[i], index: i })?;
+    }
+    Ok(result)
+}
+
+fn u5s_to_u35_unchecked(value: [u8;7]) -> u64 {
+    (value[0] as u64) << 30 +
+    (value[1] as u64) << 25 +
+    (value[2] as u64) << 20 +
+    (value[3] as u64) << 15 +
+    (value[4] as u64) << 10 +
+    (value[5] as u64) << 5 +
+    (value[6] as u64)
+}
+
+impl AsRef<u64> for CarettaId {
+    fn as_ref(&self) -> &u64 {
+        self.as_u64()
     }
 }
 
@@ -325,9 +367,11 @@ impl From<CarettaId> for u64 {
 
 impl Display for CarettaId {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        todo!()
+        let chars = self.to_chars();
+        write!(f, "{}{}{}{}{}{}{}", chars[0], chars[1], chars[2], chars[3], chars[4], chars[5], chars[6])
     }
 }
+
 impl FromStr for CarettaId {
     type Err = Error;
 
@@ -335,75 +379,18 @@ impl FromStr for CarettaId {
         let len = s.len();
         if len == 7 {
             let mut chars = s.chars();
-            todo!()
+            Self::from_chars([
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+                chars.next().unwrap(),
+            ])
         } else {
-            Err(Error::ParseLength { expected_without_delimiter: 7, expected_with_delimiter: None, found: len })
+            Err(Error::InvalidLength(len))
         }
     }
 }
-
-#[cfg(feature = "arbitrary")]
-mod arbitrary {
-    use ::arbitrary::{Arbitrary, Unstructured, Result};
-    use super::*;
-    impl<'a> Arbitrary<'a> for CarettaId {
-        fn arbitrary(u: &mut Unstructured<'a>) -> Result<Self> {
-            Ok(Self::from_u64_lossy(u64::arbitrary(u)?))
-        }
-    }
-}
-
-#[cfg(feature = "rand")]
-mod rand {
-    use super::*;
-    use ::rand::{distr::{Distribution, StandardUniform}, Rng};
-
-    impl Distribution<CarettaId> for StandardUniform {
-        fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> CarettaId {
-            <CarettaId>::from_u64_lossy(rng.random())
-        }
-    }
-    impl CarettaId {
-        /// Generate a new random [`CarettaId`].
-        ///
-        /// This method generate a random ID.
-        /// The generated ID is guaranteed to not be the [`NIL`](Self::NIL) value.
-        ///
-        /// # Examples
-        ///
-        /// ```
-        /// # use caretta_id::*;
-        /// let id = CarettaId::random();
-        /// assert_ne!(id, CarettaId::NIL);
-        /// ```
-        pub fn random() -> Self {
-            <CarettaId>::from_u64_lossy(::rand::random())
-        }
-    }
-}
-#[cfg(feature = "serde")]
-mod serde {
-    use super::*;
-    use ::serde::{Deserialize, Serialize, de::Error};
-
-    impl Serialize for CarettaId {
-        fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: ::serde::Serializer,
-        {
-            serializer.serialize_str(&self.to_string())
-        }
-    }
-
-    impl<'de> Deserialize<'de> for CarettaId {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            let s = String::deserialize(deserializer)?;
-            (&s).parse::<CarettaId>().map_err(|e| D::Error::custom(e))
-        }
-    }
-}
-
 
