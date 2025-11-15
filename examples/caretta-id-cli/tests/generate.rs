@@ -1,4 +1,4 @@
-use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 use std::{path::PathBuf, process::Command};
 
 macro_rules! assert_generate {
@@ -37,4 +37,19 @@ fn triple() {
 #[test]
 fn quadruple() {
     assert_generate!("-q", CarettaIdQ);
+}
+
+#[test]
+fn random() {
+    let path = PathBuf::from(std::env!("CARGO_BIN_EXE_caretta-id-cli"));
+    let output = String::from_utf8_lossy(
+        &Command::new(path)
+            .arg("generate")
+            .output()
+            .unwrap()
+            .stdout,
+    )
+    .trim()
+    .to_owned();
+    let _ = output.parse::<CarettaId>().unwrap();
 }

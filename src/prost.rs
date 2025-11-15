@@ -30,6 +30,7 @@ impl CarettaId {
     /// assert_eq!(<CarettaIdProto>::from(id), valid_proto);
     ///
     /// // values exceeding 35 bits are truncated (MSB(s) dropped
+    /// 
     /// let oversized_proto = CarettaIdProto{value: valid_proto.value + CarettaId::CAPACITY};
     /// let overflowed_id = CarettaId::from_proto_lossy(oversized_proto);
     /// assert_ne!(CarettaIdProto::from(overflowed_id), oversized_proto);

@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 use std::process::Command;
 
-use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 
 macro_rules! assert_encode {
     (
@@ -43,4 +43,31 @@ fn triple() {
 fn quadruple() {
     let id: CarettaIdQ = rand::random();
     assert_encode!("-q", u64::from(id), &id.to_string());
+}
+
+fn assert_encode(id: CarettaId) {
+
+    let path = PathBuf::from(std::env!("CARGO_BIN_EXE_caretta-id-cli"));
+    let output = Command::new(path)
+        .arg("encode")
+        .arg(format!("{}", id.as_u64()))
+        .output()
+        .unwrap()
+        .stdout;
+    assert_eq!(output, format!("{}\n", &id.to_string()).into_bytes());
+}
+
+#[test]
+fn nil() {
+    assert_encode(CarettaId::NIL);
+}
+
+#[test]
+fn max() {
+    assert_encode(CarettaId::MAX);
+}
+
+#[test]
+fn random() {
+    assert_encode(CarettaId::random());
 }
