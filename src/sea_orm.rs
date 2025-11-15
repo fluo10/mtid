@@ -1,3 +1,5 @@
+use sea_orm::TryFromU64;
+
 use super::CarettaId;
 
 impl From<CarettaId> for sea_orm::Value {
@@ -35,5 +37,11 @@ impl sea_orm::sea_query::ValueType for CarettaId {
 impl sea_orm::sea_query::Nullable for CarettaId {
     fn null() -> sea_orm::Value {
         <u64 as sea_orm::sea_query::Nullable>::null()
+    }
+}
+
+impl TryFromU64 for CarettaId {
+    fn try_from_u64(n: u64) -> Result<Self, sea_orm::DbErr> {
+        Self::try_from(n).map_err(|x| sea_orm::DbErr::TryIntoErr { from: stringify!(u64), into: stringify!(CarettaId), source: Box::new(x) })
     }
 }

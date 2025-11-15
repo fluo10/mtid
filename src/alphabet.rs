@@ -185,7 +185,7 @@ pub const DECODE_DELIMITER_TABLE: &[bool; 256] = &{
 
 /// Encode u8 to char.
 /// First 3 bits are ignored.
-#[deprecated(since = "1.0.0")]
+#[deprecated(since = "0.8.0")]
 pub(crate) const fn u8_to_char_lossy(value: u8) -> char {
     let value = value & 0b00011111;
     ENCODE_TABLE[value as usize]
@@ -201,7 +201,7 @@ pub(crate) const fn u5_to_char_lossy(value: u8) -> char {
 
 /// Check char is valid.
 /// If valid return Some(char) and else return None.
-#[deprecated(since = "1.0.0")]
+#[deprecated(since = "0.8.0")]
 pub(crate) fn validate_char(c: char) -> Option<char> {
     if char_to_u8(c).is_some() {
         Some(c)
@@ -221,7 +221,7 @@ pub(crate) fn char_to_u5(c: char) -> Option<u8> {
     }
 }
 /// Decode char to u8
-#[deprecated(since = "1.0.0")]
+#[deprecated(since = "0.8.0")]
 pub(crate) fn char_to_u8(c: char) -> Option<u8> {
     match TryInto::<u8>::try_into(c) {
         Ok(i) => match DECODE_TABLE[i as usize] {

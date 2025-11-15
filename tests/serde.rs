@@ -1,11 +1,21 @@
 //! Test for serde feature
 #![cfg(feature = "serde")]
 
-use caretta_id::{CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
+use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 
 use serde::{Deserialize, Serialize};
 
 use serde_test::{Token, assert_tokens};
+
+#[test]
+fn nil() {
+    assert_tokens(&CarettaId::NIL, &[Token::Str("0000000")])
+}
+
+#[test]
+fn max() {
+    assert_tokens(&CarettaId::MAX, &[Token::Str("zzzzzzz")]);
+}
 
 #[test]
 fn single_nil() {
@@ -33,31 +43,4 @@ struct CarettaIdList {
     d: CarettaIdD,
     t: CarettaIdT,
     q: CarettaIdQ,
-}
-
-#[test]
-fn struct_nil() {
-    assert_tokens(
-        &CarettaIdList {
-            s: CarettaIdS::NIL,
-            d: CarettaIdD::NIL,
-            t: CarettaIdT::NIL,
-            q: CarettaIdQ::NIL,
-        },
-        &[
-            Token::Struct {
-                name: "CarettaIdList",
-                len: 4,
-            },
-            Token::Str("s"),
-            Token::Str("000"),
-            Token::Str("d"),
-            Token::Str("000-000"),
-            Token::Str("t"),
-            Token::Str("000-000-000"),
-            Token::Str("q"),
-            Token::Str("000-000-000-000"),
-            Token::StructEnd,
-        ],
-    )
 }
