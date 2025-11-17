@@ -155,22 +155,34 @@ pub mod proto;
 
 /// Alias of [`proto::CarettaIdS`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "0.8.1", note = "The caretta-id has been renewed. Use new CarettaId instead.")]
+#[deprecated(
+    since = "0.8.1",
+    note = "The caretta-id has been renewed. Use new CarettaId instead."
+)]
 pub type CarettaIdSProto = proto::CarettaIdS;
 
 /// Alias of [`proto::CarettaIdD`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "0.8.1", note = "The caretta-id has been renewed. Use new CarettaId instead.")]
+#[deprecated(
+    since = "0.8.1",
+    note = "The caretta-id has been renewed. Use new CarettaId instead."
+)]
 pub type CarettaIdDProto = proto::CarettaIdD;
 
 /// Alias of [`proto::CarettaIdT`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "0.8.1", note = "The caretta-id has been renewed. Use new CarettaId instead.")]
+#[deprecated(
+    since = "0.8.1",
+    note = "The caretta-id has been renewed. Use new CarettaId instead."
+)]
 pub type CarettaIdTProto = proto::CarettaIdT;
 
 /// Alias of [`proto::CarettaIdQ`]
 #[cfg(feature = "prost")]
-#[deprecated(since = "0.8.1", note = "The caretta-id has been renewed. Use new CarettaId instead.")]
+#[deprecated(
+    since = "0.8.1",
+    note = "The caretta-id has been renewed. Use new CarettaId instead."
+)]
 pub type CarettaIdQProto = proto::CarettaIdQ;
 
 /// Alias of [`proto::CarettaId`]
@@ -214,19 +226,19 @@ macro_rules! doc_to_byte {
 macro_rules! doc_from_bytes {
     ($endian:literal) => {
         concat!(
-            "Create new `CarettaId` from its representaion as a byte array in ", 
-            $endian, 
-            ".\n\n", 
-            "# Error\n", 
+            "Create new `CarettaId` from its representaion as a byte array in ",
+            $endian,
+            ".\n\n",
+            "# Error\n",
             "Returns error if the value is larger than [`CarettaId::MAX`]"
         )
     };
     ($endian:literal, compact) => {
         concat!(
-            "Create new `CarettaId` from its truncated representaion as a byte array in ", 
-            $endian, 
-            ".\n\n", 
-            "# Error\n", 
+            "Create new `CarettaId` from its truncated representaion as a byte array in ",
+            $endian,
+            ".\n\n",
+            "# Error\n",
             "Returns error if the value is larger than [`CarettaId::MAX`]"
         )
     };
@@ -235,14 +247,14 @@ macro_rules! doc_from_bytes {
 macro_rules! doc_from_bytes_lossy {
     ($endian:literal) => {
         concat!(
-            "Create new `CarettaId` from its representaion as a byte array in ", 
-            $endian, 
+            "Create new `CarettaId` from its representaion as a byte array in ",
+            $endian,
         )
     };
     ($endian:literal, compact) => {
         concat!(
-            "Create new `CarettaId` from its truncated representaion as a byte array in ", 
-            $endian, 
+            "Create new `CarettaId` from its truncated representaion as a byte array in ",
+            $endian,
         )
     };
 }
@@ -352,7 +364,7 @@ impl CarettaId {
 
     /// Attempts to convert a [`u64`]  to [`CarettaId`].
     ///
-    /// 
+    ///
     /// Return error if the value is larger than [`CarettaId::MAX`].
     /// If you don't need to detect out-of-range values, use [`from_uint_lossy`](Self::from_uint_lossy).
     ///
@@ -375,17 +387,14 @@ impl CarettaId {
     }
 
     /// Returns a reference of internal 64bit integer.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
     /// let id = CarettaId::from_u64(0x123456789)?;
-    /// assert_eq!(
-    ///     id.as_u64(),
-    ///     &0x123456789
-    /// );
+    /// assert_eq!(id.as_u64(), &0x123456789);
     /// # Ok(())
     /// # }
     /// ```
@@ -393,17 +402,14 @@ impl CarettaId {
         &self.0
     }
     /// Returns an internal 64bit integer value.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
     /// let id = CarettaId::from_u64(0x123456789)?;
-    /// assert_eq!(
-    ///     id.to_u64(),
-    ///     0x123456789
-    /// );
+    /// assert_eq!(id.to_u64(), 0x123456789);
     /// # Ok(())
     /// # }
     /// ```
@@ -429,28 +435,26 @@ impl CarettaId {
         ]
     }
 
-    
     #[doc = doc_to_byte!("big endian")]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
     /// let bytes = CarettaId::from_u64(0x123456789)?.to_be_bytes();
-    /// assert_eq!(bytes, [0,0,0,0x01, 0x23, 0x45, 0x67, 0x89]);
+    /// assert_eq!(bytes, [0, 0, 0, 0x01, 0x23, 0x45, 0x67, 0x89]);
     /// # Ok(())
     /// # }
     /// ```
-    /// 
-    pub const fn to_be_bytes(self) -> [u8;8] {
+    pub const fn to_be_bytes(self) -> [u8; 8] {
         self.0.to_be_bytes()
     }
 
     #[doc = doc_to_byte!("little endian")]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -459,15 +463,14 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub const fn to_le_bytes(self) -> [u8;8] {
+    pub const fn to_le_bytes(self) -> [u8; 8] {
         self.0.to_le_bytes()
     }
 
-
     #[doc = doc_from_bytes!("big endian")]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -476,14 +479,14 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_be_bytes(bytes: [u8;8]) -> Result<Self, Error> {
+    pub fn from_be_bytes(bytes: [u8; 8]) -> Result<Self, Error> {
         Self::from_u64(u64::from_be_bytes(bytes))
     }
 
     #[doc = doc_from_bytes!("little endian")]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -492,50 +495,52 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_le_bytes(bytes: [u8;8]) -> Result<Self, Error> {
+    pub fn from_le_bytes(bytes: [u8; 8]) -> Result<Self, Error> {
         Self::from_u64(u64::from_le_bytes(bytes))
     }
 
     #[doc = doc_from_bytes_lossy!("big endian")]
     ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
     /// let value = CarettaId::from_be_bytes_lossy([0, 0, 0, 0x01, 0x23, 0x45, 0x67, 0x89]);
     /// assert_eq!(value, CarettaId::from_u64(0x123456789)?);
-    /// let overflowed_value = CarettaId::from_be_bytes_lossy([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]);
+    /// let overflowed_value =
+    ///     CarettaId::from_be_bytes_lossy([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]);
     /// assert_eq!(overflowed_value, CarettaId::from_u64(0x789abcdef)?);
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_be_bytes_lossy(bytes: [u8;8]) -> Self {
+    pub fn from_be_bytes_lossy(bytes: [u8; 8]) -> Self {
         Self::from_u64_lossy(u64::from_be_bytes(bytes))
     }
     #[doc = doc_from_bytes_lossy!("little endian")]
     ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
     /// let value = CarettaId::from_le_bytes_lossy([0x89, 0x67, 0x45, 0x23, 0x01, 0, 0, 0]);
     /// assert_eq!(value, CarettaId::from_u64(0x123456789)?);
-    /// 
-    /// let overflowed_value = CarettaId::from_le_bytes_lossy([0xef, 0xcd, 0xab, 0x89, 0x67, 0x45, 0x23, 0x01]);
+    ///
+    /// let overflowed_value =
+    ///     CarettaId::from_le_bytes_lossy([0xef, 0xcd, 0xab, 0x89, 0x67, 0x45, 0x23, 0x01]);
     /// assert_eq!(overflowed_value, CarettaId::from_u64(0x789abcdef)?);
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_le_bytes_lossy(bytes: [u8;8]) -> Self {
+    pub fn from_le_bytes_lossy(bytes: [u8; 8]) -> Self {
         Self::from_u64_lossy(u64::from_le_bytes(bytes))
     }
 
     #[doc = doc_to_byte!("big endian", compact)]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -544,8 +549,7 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    /// 
-    pub const fn to_be_bytes_compact(self) -> [u8;5] {
+    pub const fn to_be_bytes_compact(self) -> [u8; 5] {
         let bytes = self.0.to_be_bytes();
         [bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]]
     }
@@ -553,9 +557,9 @@ impl CarettaId {
     #[doc = doc_to_byte!("little endian", compact)]
     ///
     /// Returns the memory representation of this id's internal integer as a byte array in little-endian byte order.
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -564,16 +568,15 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub const fn to_le_bytes_compact(self) -> [u8;5] {
+    pub const fn to_le_bytes_compact(self) -> [u8; 5] {
         let bytes = self.0.to_le_bytes();
         [bytes[0], bytes[1], bytes[2], bytes[3], bytes[4]]
-
     }
 
     #[doc = doc_from_bytes!("big endian", compact)]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -582,14 +585,14 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_be_bytes_compact(bytes: [u8;5]) -> Result<Self, Error> {
+    pub fn from_be_bytes_compact(bytes: [u8; 5]) -> Result<Self, Error> {
         Self::from_be_bytes([0, 0, 0, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4]])
     }
 
     #[doc = doc_from_bytes!("little endian", compact)]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -598,14 +601,14 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_le_bytes_compact(bytes: [u8;5]) -> Result<Self, Error> {
+    pub fn from_le_bytes_compact(bytes: [u8; 5]) -> Result<Self, Error> {
         Self::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], 0, 0, 0])
     }
 
     #[doc = doc_from_bytes_lossy!("big endian", compact)]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -614,14 +617,14 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_be_bytes_compact_lossy(bytes: [u8;5]) -> Self {
+    pub fn from_be_bytes_compact_lossy(bytes: [u8; 5]) -> Self {
         Self::from_be_bytes_lossy([0, 0, 0, bytes[0], bytes[1], bytes[2], bytes[3], bytes[4]])
     }
 
     #[doc = doc_from_bytes_lossy!("little endian", compact)]
-    /// 
+    ///
     /// # Examples
-    /// 
+    ///
     /// ```
     /// # use caretta_id::*;
     /// # fn main() -> Result<(), Error> {
@@ -630,10 +633,9 @@ impl CarettaId {
     /// # Ok(())
     /// # }
     /// ```
-    pub fn from_le_bytes_compact_lossy(bytes: [u8;5]) -> Self {
+    pub fn from_le_bytes_compact_lossy(bytes: [u8; 5]) -> Self {
         Self::from_le_bytes_lossy([bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], 0, 0, 0])
     }
-
 }
 
 fn chars_to_u5s(value: [char; 7]) -> Result<[u8; 7], Error> {
@@ -667,7 +669,7 @@ impl TryFrom<u64> for CarettaId {
     type Error = Error;
     /// Attempts to convert a [`u64`]  to [`CarettaId`].
     ///
-    /// 
+    ///
     /// Return error if the value is larger than [`CarettaId::MAX`].
     /// If you don't need to detect out-of-range values, use [`from_uint_lossy`](Self::from_uint_lossy).
     ///
