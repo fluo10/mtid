@@ -55,7 +55,7 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/fluo10/caretta-id"
 homepage = "https://github.com/fluo10/caretta-id"
 keywords = ["id", "identifier", "uuid", "distributed", "human-readable"]
-version = "0.8.0"
+version = "0.8.1"
 
 [workspace.dependencies]
 prost = { version = "0.14.1", default-features = false, features = ["derive"] }
