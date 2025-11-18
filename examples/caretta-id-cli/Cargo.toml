@@ -13,5 +13,5 @@ readme = "README.md"
 [dependencies]
 anyhow = "1.0.100"
 clap = { version = "4.5.48", features = ["derive"] }
-caretta-id = { path = "../..", version = "0.9.0" }
+caretta-id = { path = "../..", version = "0.9.1" }
 rand.workspace = true
