@@ -1,3 +1,63 @@
+macro_rules! doc_to_bytes {
+    ($endian:literal) => {
+        concat!("Returns the memory representation of the internal integer of `CarettaId` as a byte array in ", $endian, " byte order.")
+    };
+    ($endian:literal, compact) => {
+        concat!("Returns the memory representation of the internal integer of `CarettaId` as a compact byte array in ", $endian, " byte order.")
+    }
+}
+
+macro_rules! doc_from_bytes {
+    ($endian:literal, $lossy:path) => {
+        concat!(
+            "Attempt to creata new `CarettaId` from its representaion as a byte array in ",
+            $endian,
+            ".\n\n",
+            "# Error\n",
+            "Returns error if the value is larger than [`CarettaId::MAX`].\n",
+            "See [`from_u64`](CarettaId::from_u64) for more details.\n",
+            "If you don't need to detect out-of-range values, use [`",
+            stringify!($lossy),
+            "`]."
+        )
+    };
+    ($endian:literal, $lossy:literal, compact) => {
+        concat!(
+            "Attempt to create new `CarettaId` from its compact representaion as a byte array in ",
+            $endian,
+            ".\n",
+            "\n",
+            "# Error\n",
+            "Returns error if the value is larger than [`CarettaId::MAX`].\n",
+            "See [`from_u64`](CarettaId::from_u64) for more details.",
+            "If you don't need to detect out-of-range values, use ",
+            $lossy,
+            "."
+        )
+    };
+}
+
+macro_rules! doc_from_bytes_lossy {
+    ($endian:literal) => {
+        concat!(
+            "Create new `CarettaId` from its representaion as a byte array in ",
+            $endian,
+            "with truncation of the upper 29 bit.\n",
+            "\n",
+            "See [`from_u64_lossy`](CarettaId::from_u64_lossy) for more details."
+        )
+    };
+    ($endian:literal, compact) => {
+        concat!(
+            "Create new `CarettaId` from its compact representaion as a byte array in ",
+            $endian,
+            "with truncation of the upper 5 bits.\n",
+            "\n",
+            "See [`from_u64_lossy`](CarettaId::from_u64_lossy) for more details."
+        )
+    };
+}
+
 macro_rules! caretta_id_struct {
     (
         Self = $SelfT:ident,
@@ -11,7 +71,8 @@ macro_rules! caretta_id_struct {
         ///
         /// # Examples
         ///
-        /// ```
+        #[cfg_attr(feature = "default", doc = "```rust")]
+        #[cfg_attr(not(feature = "default"), doc = "```ignore")]
         /// # use caretta_id::*;
         /// # fn main() -> Result<(), Error> {
         /// // Generate random value.
@@ -233,7 +294,7 @@ macro_rules! caretta_id_impl {
                 }
             }
         }
-        #[cfg(feature = "serde")]
+        #[cfg(all(feature = "serde", feature = "std"))]
         mod serde {
             use super::*;
             use ::serde::{Deserialize, Serialize, de::Error};
@@ -252,7 +313,7 @@ macro_rules! caretta_id_impl {
                 where
                     D: ::serde::Deserializer<'de>,
                 {
-                    let s = String::deserialize(deserializer)?;
+                    let s = <String as Deserialize>::deserialize(deserializer)?;
                     (&s).parse::<$SelfT>().map_err(|e| D::Error::custom(e))
                 }
             }
@@ -396,7 +457,11 @@ macro_rules! caretta_id_redb {
         }
     };
 }
+
 pub(crate) use caretta_id_impl;
 pub(crate) use caretta_id_prost_impl;
 pub(crate) use caretta_id_redb;
 pub(crate) use caretta_id_struct;
+pub(crate) use doc_from_bytes;
+pub(crate) use doc_from_bytes_lossy;
+pub(crate) use doc_to_bytes;

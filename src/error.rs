@@ -19,7 +19,9 @@ pub enum Error {
         since = "0.8.0",
         note = "The ParseLength has been renamed. Use InvalidLength instead."
     )]
-    #[error("Invalid length: expected {expected_without_delimiter} {}, found {found}", expected_with_delimiter.map(|x| format!("or {}", x)).unwrap_or("".to_string()))]
+    #[error(
+        "Invalid length: expected {expected_without_delimiter} or {expected_with_delimiter:?}, found {found}"
+    )]
     ParseLength {
         expected_without_delimiter: usize,
         expected_with_delimiter: Option<usize>,

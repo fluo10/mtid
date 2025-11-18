@@ -10,13 +10,11 @@ use sea_orm::{
 };
 
 #[derive(Clone, Debug, PartialEq, Eq, DeriveEntityModel)]
-#[sea_orm(table_name = "caretta-ids")]
+#[sea_orm(table_name = "caretta_id")]
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: CarettaId,
-    pub single: CarettaIdS,
-    pub double: CarettaIdD,
-    pub triple: CarettaIdT,
+    pub value: CarettaId,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -42,22 +40,17 @@ async fn assert_model(model: Model) {
         [
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"INSERT INTO "caretta-ids" ("id", "single", "double", "triple") VALUES (?, ?, ?, ?)"#,
-                [
-                    model.id.into(),
-                    model.single.into(),
-                    model.double.into(),
-                    model.triple.into()
-                ]
+                r#"INSERT INTO "caretta_id" ("id", "value") VALUES (?, ?)"#,
+                [model.id.into(), model.value.into(),]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "caretta-ids"."id", "caretta-ids"."single", "caretta-ids"."double", "caretta-ids"."triple" FROM "caretta-ids" WHERE "caretta-ids"."id" = ? LIMIT ?"#,
+                r#"SELECT "caretta_id"."id", "caretta_id"."value" FROM "caretta_id" WHERE "caretta_id"."id" = ? LIMIT ?"#,
                 [model.id.into(), 1u64.into()]
             ),
             Transaction::from_sql_and_values(
                 DatabaseBackend::Sqlite,
-                r#"SELECT "caretta-ids"."id", "caretta-ids"."single", "caretta-ids"."double", "caretta-ids"."triple" FROM "caretta-ids" LIMIT ?"#,
+                r#"SELECT "caretta_id"."id", "caretta_id"."value" FROM "caretta_id" LIMIT ?"#,
                 [1u64.into()]
             )
         ]
@@ -68,9 +61,7 @@ async fn assert_model(model: Model) {
 async fn nil() {
     assert_model(Model {
         id: CarettaId::NIL,
-        single: CarettaIdS::NIL,
-        double: CarettaIdD::NIL,
-        triple: CarettaIdT::NIL,
+        value: CarettaId::NIL,
     })
     .await;
 }
@@ -79,9 +70,7 @@ async fn nil() {
 async fn max() {
     assert_model(Model {
         id: CarettaId::MAX,
-        single: CarettaIdS::MAX,
-        double: CarettaIdD::MAX,
-        triple: CarettaIdT::MAX,
+        value: CarettaId::MAX,
     })
     .await;
 }
@@ -92,9 +81,7 @@ async fn random() {
     for _ in 0..10 {
         assert_model(Model {
             id: rng.random(),
-            single: rng.random(),
-            double: rng.random(),
-            triple: rng.random(),
+            value: rng.random(),
         })
         .await;
     }

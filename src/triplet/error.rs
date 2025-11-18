@@ -1,26 +1,8 @@
 /// A general error that can occur when working with Triplet.
-#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq, thiserror::Error)]
 pub enum TripletError {
+    #[error("Invalid length: expected 3, found {0}")]
     ParseLength(usize),
+    #[error("Invalid character: expected alphanumeric character, found {character} at {index}")]
     ParseCharacter { character: char, index: usize },
 }
-
-impl core::fmt::Display for TripletError {
-    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        match self {
-            TripletError::ParseLength(length) => {
-                write!(f, "Invalid length: expected 3, found {}", length)
-            }
-            TripletError::ParseCharacter { character, index } => {
-                write!(
-                    f,
-                    "Invalid character: expected alphanumeric character, found {} at {}",
-                    character, index
-                )
-            }
-        }
-    }
-}
-
-#[cfg(feature = "std")]
-impl std::error::Error for TripletError {}

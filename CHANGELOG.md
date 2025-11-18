@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.1] - 2025-11-19
+
+- Fix errors about `no_std` and `serde` feature 
+
+## [0.9.0] - 2025-11-19
+
+### Changed
+
+- For non human readable format, update implemention of `Serialize`/`Deserialize` trait to serialize to ( and deserialize from ) `u64` if `is_human_readable` returns false.
+- Update tests and documents about serde and bytes conversion.
+
+### Removed
+
+- Tests for deprecated triplet-based IDs
+
 ## [0.8.1] - 2025-11-18
 
 ### Added
@@ -131,7 +146,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `encode`: encode integer to string
   - `decode`: to decode string to integer
 
-[Unreleased]: https://github.com/fluo10/caretta-id/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/fluo10/caretta-id/compare/v0.9.0...HEAD
+[0.9.1]: https://github.com/fluo10/caretta-id/compare/v0.9.0...v0.9.1
+[0.9.0]: https://github.com/fluo10/caretta-id/compare/v0.8.1...v0.9.0
+[0.8.1]: https://github.com/fluo10/caretta-id/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/fluo10/caretta-id/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/fluo10/caretta-id/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/fluo10/caretta-id/compare/v0.5.0...v0.6.0

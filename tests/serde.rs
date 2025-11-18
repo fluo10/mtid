@@ -5,42 +5,34 @@ use caretta_id::{CarettaId, CarettaIdD, CarettaIdQ, CarettaIdS, CarettaIdT};
 
 use serde::{Deserialize, Serialize};
 
-use serde_test::{Token, assert_tokens};
+use serde_test::assert_de_tokens;
+use serde_test::{Compact, Configure, Readable, Token, assert_ser_tokens, assert_tokens};
 
-#[test]
-fn nil() {
-    assert_tokens(&CarettaId::NIL, &[Token::Str("0000000")])
+fn assert_tokens_readable<'de>(value: &Readable<CarettaId>, tokens: &'de [Token]) {
+    assert_ser_tokens(value, tokens);
+    #[cfg(feature = "std")]
+    assert_de_tokens(value, tokens);
+}
+fn assert_tokens_compact<'de>(value: &Compact<CarettaId>, tokens: &'de [Token]) {
+    assert_tokens(value, tokens);
 }
 
 #[test]
-fn max() {
-    assert_tokens(&CarettaId::MAX, &[Token::Str("zzzzzzz")]);
+fn nil_readable() {
+    assert_tokens_readable(&CarettaId::NIL.readable(), &[Token::Str("0000000")])
 }
 
 #[test]
-fn single_nil() {
-    assert_tokens(&CarettaIdS::NIL, &[Token::Str("000")]);
+fn max_readable() {
+    assert_tokens_readable(&CarettaId::MAX.readable(), &[Token::Str("zzzzzzz")]);
 }
 
 #[test]
-fn double_nil() {
-    assert_tokens(&CarettaIdD::NIL, &[Token::Str("000-000")]);
+fn nil_compact() {
+    assert_tokens_compact(&CarettaId::NIL.compact(), &[Token::U64(0)])
 }
 
 #[test]
-fn triple_nil() {
-    assert_tokens(&CarettaIdT::NIL, &[Token::Str("000-000-000")]);
-}
-
-#[test]
-fn quadruple_nil() {
-    assert_tokens(&CarettaIdQ::NIL, &[Token::Str("000-000-000-000")]);
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
-struct CarettaIdList {
-    s: CarettaIdS,
-    d: CarettaIdD,
-    t: CarettaIdT,
-    q: CarettaIdQ,
+fn max_compact() {
+    assert_tokens_compact(&CarettaId::MAX.compact(), &[Token::U64(0x7FFFFFFFF)]);
 }
