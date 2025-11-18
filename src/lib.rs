@@ -27,10 +27,10 @@
 //!
 //! ```toml
 //! [dependencies]
-//! caretta-id = "0.8"
+//! caretta-id = "0.9"
 //!
 //! # With optional features
-//! caretta-id = { version = "0.8", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost", "redb"] }
+//! caretta-id = { version = "0.9", features = ["arbitrary", "serde", "rusqlite", "sea-orm", "prost", "redb"] }
 //! ```
 //!
 //! ## For no_std Environments
@@ -40,7 +40,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! caretta-id = { version = "0.8", default-features = false }
+//! caretta-id = { version = "0.9", default-features = false }
 //! ```
 //!
 //! # Features
