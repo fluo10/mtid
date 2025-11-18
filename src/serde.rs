@@ -6,7 +6,11 @@ impl Serialize for CarettaId {
     where
         S: ::serde::Serializer,
     {
-        serializer.serialize_str(&self.to_string())
+        if serializer.is_human_readable() {
+            serializer.serialize_str(&format!("{self}"))
+        } else {
+            serializer.serialize_u64(self.to_u64())
+        }
     }
 }
 
@@ -15,7 +19,13 @@ impl<'de> Deserialize<'de> for CarettaId {
     where
         D: ::serde::Deserializer<'de>,
     {
-        let s = String::deserialize(deserializer)?;
-        (&s).parse::<CarettaId>().map_err(|e| D::Error::custom(e))
+        if deserializer.is_human_readable() {
+            (&String::deserialize(deserializer)?)
+                .parse::<CarettaId>()
+                .map_err(D::Error::custom)
+        } else {
+            let i = u64::deserialize(deserializer)?;
+            CarettaId::from_u64(i).map_err(D::Error::custom)
+        }
     }
 }

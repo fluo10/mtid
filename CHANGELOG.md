@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- For non human readable format, update implemention of `Serialize`/`Deserialize` trait to serialize to ( and deserialize from ) `u64` if `is_human_readable` returns false.
+- Update tests and documents about serde and bytes conversion.
+
+### Removed
+
+- Tests for deprecated triplet-based IDs
+
 ## [0.8.1] - 2025-11-18
 
 ### Added

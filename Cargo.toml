@@ -23,7 +23,7 @@ arbitrary = ["std", "dep:arbitrary"]
 prost = ["dep:prost"]
 rusqlite = ["std", "dep:rusqlite"]
 sea-orm = ["std", "dep:sea-orm"]
-serde = ["dep:serde"]
+serde = [ "std", "dep:serde"]
 redb = ["std", "dep:redb"]
 
 [dependencies]
