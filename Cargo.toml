@@ -17,13 +17,13 @@ all-features = true
 
 [features]
 default=["rand", "std"]
-std = ["rand?/thread_rng",]
+std = ["rand?/thread_rng", "serde?/std"]
 rand = ["dep:rand",]
 arbitrary = ["std", "dep:arbitrary"]
 prost = ["dep:prost"]
 rusqlite = ["std", "dep:rusqlite"]
 sea-orm = ["std", "dep:sea-orm"]
-serde = [ "std", "dep:serde"]
+serde = [ "dep:serde"]
 redb = ["std", "dep:redb"]
 
 [dependencies]
@@ -33,7 +33,7 @@ rand = { workspace = true, default-features = false, optional = true }
 redb = { version = "3.1.0", optional = true }
 rusqlite = { version = "0.37.0", default-features = false, optional = true }
 sea-orm = { version = "1.1.16", default-features = false, optional = true }
-serde = { version = "1.0.219", default-features = false, optional = true }
+serde = { version = "1.0.219", default-features = false,  optional = true }
 thiserror = { version = "2.0.12", default-features = false}
 
 [build-dependencies]

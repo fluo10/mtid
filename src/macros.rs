@@ -71,7 +71,8 @@ macro_rules! caretta_id_struct {
         ///
         /// # Examples
         ///
-        /// ```
+        #[cfg_attr(feature = "default", doc = "```rust")]
+        #[cfg_attr(not(feature = "default"), doc = "```ignore")]
         /// # use caretta_id::*;
         /// # fn main() -> Result<(), Error> {
         /// // Generate random value.
@@ -293,7 +294,7 @@ macro_rules! caretta_id_impl {
                 }
             }
         }
-        #[cfg(feature = "serde")]
+        #[cfg(all(feature = "serde", feature = "std"))]
         mod serde {
             use super::*;
             use ::serde::{Deserialize, Serialize, de::Error};
@@ -312,7 +313,7 @@ macro_rules! caretta_id_impl {
                 where
                     D: ::serde::Deserializer<'de>,
                 {
-                    let s = String::deserialize(deserializer)?;
+                    let s = <String as Deserialize>::deserialize(deserializer)?;
                     (&s).parse::<$SelfT>().map_err(|e| D::Error::custom(e))
                 }
             }

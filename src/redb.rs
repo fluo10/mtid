@@ -23,7 +23,7 @@ impl Value for CarettaId {
     where
         Self: 'b,
     {
-        <u64 as Value>::as_bytes(&value.0)
+        <u64 as Value>::as_bytes(value.as_u64())
     }
     fn type_name() -> TypeName {
         TypeName::new(stringify!(CarettaId))
