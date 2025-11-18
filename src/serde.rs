@@ -7,14 +7,12 @@ impl Serialize for CarettaId {
         S: ::serde::Serializer,
     {
         if serializer.is_human_readable() {
-            let chars= self.to_chars();
-            let mut buf =  [0;7];
+            let chars = self.to_chars();
+            let mut buf = [0; 7];
             for i in 0..7 {
                 buf[i] = u8::try_from(chars[i]).unwrap();
             }
-            let s = unsafe {
-                str::from_utf8_unchecked(&buf)
-            };
+            let s = unsafe { str::from_utf8_unchecked(&buf) };
             serializer.serialize_str(s)
         } else {
             serializer.serialize_u64(self.to_u64())
@@ -31,14 +29,14 @@ impl<'de> Deserialize<'de> for CarettaId {
             #[cfg(feature = "std")]
             {
                 (&<String as Deserialize>::deserialize(deserializer)?)
-                .parse::<CarettaId>()
-                .map_err(D::Error::custom)
+                    .parse::<CarettaId>()
+                    .map_err(D::Error::custom)
             }
             #[cfg(not(feature = "std"))]
             {
                 (<&str as Deserialize>::deserialize(deserializer)?)
-                .parse::<CarettaId>()
-                .map_err(D::Error::custom)
+                    .parse::<CarettaId>()
+                    .map_err(D::Error::custom)
             }
         } else {
             let i = u64::deserialize(deserializer)?;

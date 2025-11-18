@@ -1,12 +1,13 @@
 use core::{fmt::Display, str::FromStr};
 
-use crate::{Error, alphabet::{BASE, u5_to_char_lossy}};
-
+use crate::{
+    Error,
+    alphabet::{BASE, u5_to_char_lossy},
+};
 
 /// Caretta id struct
 ///
 /// # Examples
-///
 #[cfg_attr(feature = "default", doc = "```rust")]
 #[cfg_attr(not(feature = "default"), doc = "```ignore")]
 /// # use caretta_id::*;
